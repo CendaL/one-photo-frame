@@ -12,15 +12,19 @@ const app = new Vue({
     currentRoute: window.location.pathname
   },
   computed: {
-    ViewComponent () {
+    ViewComponent() {
       const matchingView = routes[this.currentRoute]
       return matchingView
         ? require('./' + matchingView + '.vue')
         : require('./Slideshow.vue')
     }
   },
+  methods: {
+    navigate(page) {
+    }
+  },
   store,
-  render (h) {
+  render(h) {
     return h(this.ViewComponent)
   }
 });

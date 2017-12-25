@@ -4,11 +4,11 @@ import Vuex from 'vuex'
 Vue.use(Vuex)
 
 const state = {
-    photos: ['1', '3']
+    photos: ['14-before_call_start.bmp', '16-participant_joined_call.bmp']
 }
 
 const mutations = {
-    add (state, file) {
+    addPhoto(state, file) {
         state.photos.push(file)
     }
 
