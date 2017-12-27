@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import createPersistedStore from 'vuex-persistedstate'
 
 Vue.use(Vuex)
 
@@ -17,5 +18,6 @@ const mutations = {
 export default new Vuex.Store({
     strict: process.env.NODE_ENV !== 'production',
     state,
-    mutations
+    mutations,
+    plugins: [createPersistedStore()]
 })
