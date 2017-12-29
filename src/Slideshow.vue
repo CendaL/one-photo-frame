@@ -2,8 +2,9 @@
   <div>
     <p>Slideshow {{photos}}</p>
     <p>current: {{currentPhoto}}</p>
+    <p>isSlideshowRunning: {{isSlideshowRunning}}</p>
     <button @click="nextPhoto()">next</button>
-    <button @click="addPhoto('21-call_hang_up.bmp')">add</button>
+    <button @click="toggleSlideshow()">toggle slideshow</button>
     <button @click="settings">settings</button>
   </div>
 </template>
@@ -13,7 +14,16 @@ import { mapActions, mapMutations, mapState } from "vuex";
 
 export default {
   computed: {
-    ...mapState(["currentPhoto", "photos"])
+    ...mapState([
+      "currentPhoto",
+      "currentRoute",
+      "isSlideshowRunning",
+      "photos",
+      "slideshowDelay"
+    ])
+  },
+  created: function() {
+    this.slideshowNext(false);
   },
   methods: {
     nextPhoto() {
@@ -22,8 +32,21 @@ export default {
     settings() {
       this.navigate({ route: "/settings" });
     },
+    slideshowNext(doNext = true) {
+      if (this.isSlideshowRunning && this.currentRoute === "/slideshow") {
+        if (doNext) {
+          this.nextPhoto();
+        }
+        setTimeout(this.slideshowNext, this.slideshowDelay * 1000);
+      }
+    },
     ...mapActions(["navigate"]),
-    ...mapMutations(["addPhoto"])
+    ...mapMutations(["toggleSlideshow"])
+  },
+  watch: {
+    isSlideshowRunning: function() {
+      this.slideshowNext(false);
+    }
   }
 };
 </script>

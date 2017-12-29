@@ -7,7 +7,9 @@ Vue.use(Vuex)
 const state = {
     currentPhoto: null,
     currentRoute: null,
-    photos: ['14-before_call_start.bmp', '16-participant_joined_call.bmp']
+    isSlideshowRunning: false,
+    photos: ['0101_193656.jpg', '0112_114149.jpg', '0113_090252.jpg', '0113_165610.jpg', '0113_165610.mp4', '0126_134447.jpg'],
+    slideshowDelay: 1
 }
 
 const mutations = {
@@ -28,6 +30,9 @@ const mutations = {
     setRoute(state, route) {
         state.currentRoute = route
     },
+    toggleSlideshow(state) {
+        state.isSlideshowRunning = !state.isSlideshowRunning
+    }
 }
 
 const actions = {
