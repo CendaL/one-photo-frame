@@ -16,9 +16,10 @@ const mutations = {
     },
     nextPhoto(state, photo) {
         var prefix = 'nextPhoto '
-        // make sure next photo is different from current one
         if (!photo || state.photos.indexOf(photo) === -1) {
-            photo = state.photos[getRandomInt(0, state.photos.length)]
+            do {
+                photo = state.photos[getRandomInt(0, state.photos.length)]
+            } while (state.currentPhoto === photo)
             prefix = 'nextPhoto random '
         }
         console.log(prefix + state.currentPhoto + " => " + photo)
