@@ -1,18 +1,21 @@
 <template>
   <div>
     <p>Slideshow {{photos}}</p>
-    <p>current: {{currentPhoto}}</p>
-    <p>isSlideshowRunning: {{isSlideshowRunning}}</p>
     <button @click="nextPhoto()">next</button>
     <button @click="toggleSlideshow()">toggle slideshow</button>
     <button @click="settings">settings</button>
+    <photo v-bind:photo="currentPhoto"></photo>
   </div>
 </template>
 
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
+import Photo from "./Photo.vue";
 
 export default {
+  components: {
+    photo: Photo
+  },
   computed: {
     ...mapState([
       "currentPhoto",
