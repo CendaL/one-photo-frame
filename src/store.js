@@ -8,7 +8,7 @@ const state = {
     currentPhoto: null,
     currentRoute: null,
     isSlideshowRunning: false,
-    photos: ['0101_193656.jpg', '0112_114149.jpg', '0113_090252.jpg', '0113_165610.jpg', '0113_165610.mp4', '0126_134447.jpg'],
+    photos: ['0101_193656.jpg', '0112_114149.jpg', '0113_090252.jpg', '0113_165610.mp4', '0126_134447.jpg'],
     slideshowDelay: 1
 }
 

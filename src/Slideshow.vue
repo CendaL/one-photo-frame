@@ -4,16 +4,19 @@
     <button @click="nextPhoto()">next</button>
     <button @click="toggleSlideshow()">toggle slideshow</button>
     <button @click="settings">settings</button>
+    <login></login>
     <photo v-bind:photo="currentPhoto"></photo>
   </div>
 </template>
 
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
+import Login from "./Login.vue";
 import Photo from "./Photo.vue";
 
 export default {
   components: {
+    login: Login,
     photo: Photo
   },
   computed: {

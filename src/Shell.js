@@ -20,6 +20,11 @@ const app = new Vue({
         ...mapActions(["navigate"])
     },
     created() {
+        console.log(`created ${window.location.pathname}`);
+        // need to refactor - clash with authorization
+        if (window.location.pathname === "/" && window.location.hash.match(/id_token|access_token/)) {
+            return
+        }
         this.navigate({
             route: routes[window.location.pathname] ? window.location.pathname : "/slideshow",
             photo: window.location.hash.replace(/^#/, "") || this.currentPhoto,
@@ -33,6 +38,7 @@ const app = new Vue({
 
 window.addEventListener('popstate', (event) => {
     if (routes[window.location.pathname]) {
+        console.log(`popstate ${window.location.pathname}${window.location.hash}`)
         app.navigate({
             route: window.location.pathname,
             photo: window.location.hash.replace(/^#/, ""),
