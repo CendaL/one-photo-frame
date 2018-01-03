@@ -1,6 +1,6 @@
 export default class GraphService {
   constructor() {
-    this.graphUrl = 'https://graph.microsoft.com/v1.0/';
+    this.graphUrl = "https://graph.microsoft.com/v1.0/";
   }
 
   getUserInfo(token) {
@@ -13,5 +13,5 @@ export default class GraphService {
       .catch(response => {
         throw new Error(response.text());
       });
-  };
+  }
 }

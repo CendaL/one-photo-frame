@@ -20,13 +20,7 @@ export default {
     photo: Photo
   },
   computed: {
-    ...mapState([
-      "currentPhoto",
-      "currentRoute",
-      "isSlideshowRunning",
-      "photos",
-      "slideshowDelay"
-    ])
+    ...mapState(["currentPhoto", "currentRoute", "isSlideshowRunning", "photos", "slideshowDelay"])
   },
   created: function() {
     this.slideshowNext(false);
