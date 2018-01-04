@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p>User {{user}}</p>
     <p>UserInfo {{userInfo}}</p>
     <button @click="login">Login</button>
     <button @click="getUser()">get user</button>
@@ -13,13 +14,14 @@ import GraphService from "./services/graph.service";
 export default {
   data() {
     return {
-      user: null,
+      user: "?",
       userInfo: "?"
     };
   },
   created() {
     this.authService = new AuthService();
     this.graphService = new GraphService();
+    this.user = this.authService.getUser();
   },
   methods: {
     getUser() {

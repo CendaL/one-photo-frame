@@ -11,7 +11,8 @@ export default class AuthService {
         console.log("login-redirecting...");
       },
       {
-        redirectUri: "http://localhost:8080"
+        redirectUri: "http://localhost:8080",
+        cacheLocation: "localStorage"
       }
     );
   }
@@ -50,5 +51,8 @@ export default class AuthService {
         );
       }
     );
+  }
+  getUser() {
+    return this.app.getUser();
   }
 }
