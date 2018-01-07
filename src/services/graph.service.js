@@ -1,17 +1,18 @@
-export default class GraphService {
-  constructor() {
-    this.graphUrl = "https://graph.microsoft.com/v1.0/";
-  }
+import { escape } from "querystring";
+import authService from "./auth.service";
 
-  getUserInfo(token) {
-    const headers = new Headers({ Authorization: `Bearer ${token}` });
-    const options = {
-      headers
-    };
-    return fetch(`${this.graphUrl}/me`, options)
-      .then(response => response.json())
-      .catch(response => {
-        throw new Error(response.text());
+const graphUrl = "https://graph.microsoft.com/v1.0";
+
+export default {
+  getUserInfo() {
+    return authService.getToken().then(token => {
+      const headers = new Headers({
+        Authorization: `Bearer ${token}`
       });
+      const options = {
+        headers
+      };
+      return fetch(`${graphUrl}/me`, options).then(response => response.json());
+    });
   }
-}
+};

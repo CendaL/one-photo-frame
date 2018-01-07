@@ -1,58 +1,39 @@
 import * as Msal from "msal";
 import { clientId } from "../config.json";
 
-export default class AuthService {
-  constructor() {
-    this.graphScopes = ["user.read"];
-    this.app = new Msal.UserAgentApplication(
-      clientId,
-      "",
-      () => {
-        console.log("login-redirecting...");
-      },
-      {
-        redirectUri: "http://localhost:8080",
-        cacheLocation: "localStorage"
-      }
-    );
+const graphScopes = ["user.read"];
+const app = new Msal.UserAgentApplication(
+  clientId,
+  "",
+  () => {
+    console.log("login-redirecting...");
+  },
+  {
+    redirectUri: "http://localhost:8080",
+    cacheLocation: "localStorage"
   }
+);
+
+export default {
+  getToken() {
+    return app.acquireTokenSilent(graphScopes).catch(error => {
+      console.log(`acquireTokenSilent error: ${error}`);
+      return app.acquireTokenPopup(graphScopes);
+    });
+  },
+  getUser() {
+    return app.getUser();
+  },
   login() {
-    return this.app.loginPopup(this.graphScopes).then(
-      idToken => {
-        const user = this.app.getUser();
-        if (user) {
-          return user;
-        } else {
-          return null;
-        }
-      },
+    return app.loginPopup(graphScopes).then(
+      idToken => app.getUser(),
       err => {
-        console.log("token error " + err);
+        console.log(`loginPopup error: ${err}`);
         return null;
       }
     );
-  }
+  },
   logout() {
-    this.app.logout();
+    app.logout();
   }
-  getToken() {
-    return this.app.acquireTokenSilent(this.graphScopes).then(
-      accessToken => {
-        return accessToken;
-      },
-      error => {
-        return this.app.acquireTokenPopup(this.graphScopes).then(
-          accessToken => {
-            return accessToken;
-          },
-          err => {
-            console.error("access token error " + err);
-          }
-        );
-      }
-    );
-  }
-  getUser() {
-    return this.app.getUser();
-  }
-}
+};
