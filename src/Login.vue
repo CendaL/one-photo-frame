@@ -8,7 +8,6 @@
 
 <script>
 import authService from "./services/auth.service";
-import graphService from "./services/graph.service";
 import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 
 export default {

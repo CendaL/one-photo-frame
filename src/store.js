@@ -9,7 +9,7 @@ const state = {
   currentRoute: null,
   isSlideshowRunning: false,
   photos: ["0101_193656.jpg", "0112_114149.jpg", "0113_090252.jpg", "0113_165610.mp4", "0126_134447.jpg"],
-  slideshowDelay: 1,
+  slideshowDelay: 3,
   user: null
 };
 
@@ -33,6 +33,9 @@ const mutations = {
     }
     console.log(prefix + state.currentPhoto + " => " + photo);
     state.currentPhoto = photo;
+  },
+  setPhotos(state, photos) {
+    state.photos = photos;
   },
   setRoute(state, route) {
     state.currentRoute = route;

@@ -4,6 +4,7 @@
     <button @click="nextPhoto()">next</button>
     <button @click="toggleSlideshow()">toggle slideshow</button>
     <button @click="settings">settings</button>
+    <button @click="getPhotoList">get photo list</button>
     <login></login>
     <photo v-bind:photo="currentPhoto"></photo>
   </div>
@@ -11,8 +12,10 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
+import graphService from "./services/graph.service";
 import Login from "./Login.vue";
 import Photo from "./Photo.vue";
+import { folders } from "./photos.json";
 
 export default {
   components: {
@@ -26,6 +29,12 @@ export default {
     this.slideshowNext(false);
   },
   methods: {
+    getPhotoList() {
+      graphService.getPhotoList(folders[0]).then(photos => {
+        console.log(JSON.stringify(photos));
+        this.setPhotos(photos);
+      });
+    },
     nextPhoto() {
       this.navigate({ route: "/slideshow", photo: "" });
     },
@@ -41,7 +50,7 @@ export default {
       }
     },
     ...mapActions(["navigate"]),
-    ...mapMutations(["toggleSlideshow"])
+    ...mapMutations(["setPhotos", "toggleSlideshow"])
   },
   watch: {
     isSlideshowRunning: function() {

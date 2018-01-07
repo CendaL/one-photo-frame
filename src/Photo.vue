@@ -7,11 +7,12 @@
 </template>
 
 <script>
+import { isVideo } from "./utils";
 export default {
   props: ["photo"],
   computed: {
     isVideo: function() {
-      return this.photo.toLowerCase().search(".mp4$") !== -1;
+      return isVideo(this.photo);
     },
     photoUrl: function() {
       return "src/assets/" + this.photo;
