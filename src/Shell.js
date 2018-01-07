@@ -1,5 +1,6 @@
 import Vue from "vue";
 import store from "./store";
+import qs from "querystringify";
 import { mapMutations, mapState, mapActions } from "vuex";
 
 const routes = {
@@ -21,13 +22,13 @@ const app = new Vue({
   },
   created() {
     console.log(`created ${window.location.pathname}`);
-    // need to refactor - clash with authorization
-    if (window.location.pathname === "/" && window.location.hash.match(/id_token|access_token/)) {
+    const qsp = qs.parse(window.location.hash);
+    if (qsp.id_token || qsp.access_token) {
       return;
     }
     this.navigate({
       route: routes[window.location.pathname] ? window.location.pathname : "/slideshow",
-      photo: window.location.hash.replace(/^#/, "") || this.currentPhoto,
+      photo: qsp.photo || this.currentPhoto,
       replaceHistory: true
     });
   },
@@ -39,9 +40,10 @@ const app = new Vue({
 window.addEventListener("popstate", event => {
   if (routes[window.location.pathname]) {
     console.log(`popstate ${window.location.pathname}${window.location.hash}`);
+    const qsp = qs.parse(window.location.hash);
     app.navigate({
       route: window.location.pathname,
-      photo: window.location.hash.replace(/^#/, ""),
+      photo: qsp.photo,
       addToHistory: false
     });
   }

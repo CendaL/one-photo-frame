@@ -39,6 +39,9 @@ export default {
       this.navigate({ route: "/slideshow", photo: "" });
     },
     settings() {
+      if (this.isSlideshowRunning) {
+        this.toggleSlideshow();
+      }
       this.navigate({ route: "/settings" });
     },
     slideshowNext(doNext = true) {

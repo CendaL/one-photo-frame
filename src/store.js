@@ -8,7 +8,7 @@ const state = {
   currentPhoto: null,
   currentRoute: null,
   isSlideshowRunning: false,
-  photos: ["0101_193656.jpg", "0112_114149.jpg", "0113_090252.jpg", "0113_165610.mp4", "0126_134447.jpg"],
+  photos: [],
   slideshowDelay: 3,
   user: null
 };
@@ -20,16 +20,20 @@ const getters = {
 };
 
 const mutations = {
-  nextPhoto(state, photo) {
+  nextPhoto(state, newPhoto) {
+    if (state.photos.length === 0) {
+      console.log("no photos");
+      return;
+    }
     var prefix = "nextPhoto ";
-    if (!photo || state.photos.indexOf(photo) === -1) {
+    if (!newPhoto || !state.photos.some(p => p.name === newPhoto)) {
       do {
-        photo = state.photos[getRandomInt(0, state.photos.length)];
-      } while (state.currentPhoto === photo);
+        newPhoto = state.photos[getRandomInt(0, state.photos.length)];
+      } while (state.currentPhoto === newPhoto.name);
       prefix = "nextPhoto random ";
     }
-    console.log(prefix + state.currentPhoto + " => " + photo);
-    state.currentPhoto = photo;
+    console.log(prefix + state.currentPhoto.name + " => " + newPhoto.name);
+    state.currentPhoto = newPhoto;
   },
   setPhotos(state, photos) {
     state.photos = photos;
@@ -53,6 +57,10 @@ const actions = {
     if (state.currentRoute !== options.route) {
       commit("setRoute", options.route);
     }
+    if (state.photos.length === 0) {
+      console.log("no photos to navigate");
+      return;
+    }
     if (options.route === "/slideshow" && (options.photo !== undefined || state.currentPhoto == null)) {
       commit("nextPhoto", options.photo);
     }
@@ -69,7 +77,7 @@ const actions = {
 };
 
 function getLocation(route, photo) {
-  return route + (route === "/slideshow" ? "#" + photo : "");
+  return route + (route === "/slideshow" ? `#photo=${photo.name}` : "");
 }
 
 function getRandomInt(min, max) {
