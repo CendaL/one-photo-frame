@@ -9,28 +9,24 @@
 <script>
 import authService from "./services/auth.service";
 import graphService from "./services/graph.service";
+import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 
 export default {
-  data() {
-    return {
-      user: null
-    };
-  },
   computed: {
-    isSignedIn() {
-      return Boolean(this.user);
-    }
+    ...mapState(["user"]),
+    ...mapGetters(["isSignedIn"])
   },
   created() {
-    this.user = authService.getUser();
+    this.setUser(authService.getUser());
   },
   methods: {
     login() {
       authService.login().then(
         user => {
           if (user) {
-            this.user = user;
+            this.setUser(user);
           } else {
+            this.setUser(null);
             console.log("login failed 2");
           }
         },
@@ -40,9 +36,10 @@ export default {
       );
     },
     logout() {
+      this.setUser(null);
       authService.logout();
-      this.user = "?";
-    }
+    },
+    ...mapMutations(["setUser"])
   }
 };
 </script>

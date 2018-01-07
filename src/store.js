@@ -9,7 +9,14 @@ const state = {
   currentRoute: null,
   isSlideshowRunning: false,
   photos: ["0101_193656.jpg", "0112_114149.jpg", "0113_090252.jpg", "0113_165610.mp4", "0126_134447.jpg"],
-  slideshowDelay: 1
+  slideshowDelay: 1,
+  user: null
+};
+
+const getters = {
+  isSignedIn: state => {
+    return Boolean(state.user);
+  }
 };
 
 const mutations = {
@@ -29,6 +36,9 @@ const mutations = {
   },
   setRoute(state, route) {
     state.currentRoute = route;
+  },
+  setUser(state, user) {
+    state.user = user;
   },
   toggleSlideshow(state) {
     state.isSlideshowRunning = !state.isSlideshowRunning;
@@ -71,6 +81,7 @@ function getRandomInt(min, max) {
 export default new Vuex.Store({
   strict: process.env.NODE_ENV !== "production",
   state,
+  getters,
   mutations,
   actions,
   plugins: [createPersistedStore()]
