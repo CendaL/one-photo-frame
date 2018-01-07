@@ -20,9 +20,6 @@ const getters = {
 };
 
 const mutations = {
-  addPhoto(state, file) {
-    state.photos.push(file);
-  },
   nextPhoto(state, photo) {
     var prefix = "nextPhoto ";
     if (!photo || state.photos.indexOf(photo) === -1) {
