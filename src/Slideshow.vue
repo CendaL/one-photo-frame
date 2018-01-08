@@ -18,6 +18,9 @@ import Photo from "./Photo.vue";
 import { folders } from "./photos.json";
 
 export default {
+  data() {
+    return { canSlideshowNext: true };
+  },
   components: {
     login: Login,
     photo: Photo
@@ -25,8 +28,11 @@ export default {
   computed: {
     ...mapState(["currentPhoto", "currentRoute", "isSlideshowRunning", "photos", "slideshowDelay"])
   },
-  created: function() {
+  created() {
     this.slideshowNext(false);
+  },
+  beforeDestroy() {
+    this.canSlideshowNext = false;
   },
   methods: {
     getPhotoList() {
@@ -39,13 +45,10 @@ export default {
       this.navigate({ route: "/slideshow", photo: "" });
     },
     settings() {
-      if (this.isSlideshowRunning) {
-        this.toggleSlideshow();
-      }
       this.navigate({ route: "/settings" });
     },
     slideshowNext(doNext = true) {
-      if (this.isSlideshowRunning && this.currentRoute === "/slideshow") {
+      if (this.canSlideshowNext && this.isSlideshowRunning && this.currentRoute === "/slideshow") {
         if (doNext) {
           this.nextPhoto();
         }
