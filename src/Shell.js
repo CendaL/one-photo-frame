@@ -22,7 +22,7 @@ const app = new Vue({
   },
   created() {
     console.log(`created ${window.location.pathname}`);
-    const qsp = qs.parse(window.location.hash);
+    const qsp = qs.parse(window.location.search);
     if (qsp.id_token || qsp.access_token) {
       return;
     }
@@ -39,8 +39,8 @@ const app = new Vue({
 
 window.addEventListener("popstate", event => {
   if (routes[window.location.pathname]) {
-    console.log(`popstate ${window.location.pathname}${window.location.hash}`);
-    const qsp = qs.parse(window.location.hash);
+    console.log(`popstate ${window.location.pathname}${window.location.search}`);
+    const qsp = qs.parse(window.location.search);
     app.navigate({
       route: window.location.pathname,
       photo: qsp.photo,

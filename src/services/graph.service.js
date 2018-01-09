@@ -2,13 +2,14 @@ import authService from "./auth.service";
 import { baseName, isVideo } from "../utils";
 
 const graphUrl = "https://graph.microsoft.com/v1.0";
+const basePath = `${graphUrl}/me/drive/root:`;
 const listSuffix = ":/children?select=name,photo,video";
 const imageSuffix = ":/content?width=100&height=100&cropmode=none";
 
 export default {
   getPhotoList(path) {
-    const basePath = `${graphUrl}/me/drive/root:/${escape(path)}`;
-    const url = `${basePath}${listSuffix}`;
+    path = "/" + escape(path);
+    const url = `${basePath}${path}${listSuffix}`;
     return authService.getToken().then(token => {
       const headers = new Headers({
         Authorization: `Bearer ${token}`
@@ -28,9 +29,9 @@ export default {
               .map((photo, idx) => {
                 return {
                   index: idx + 1,
-                  name: photo.name
-                  // path: `${basePath}/${photo.name}`
-                  // taken: photo.photo.takenDateTime
+                  name: photo.name,
+                  path: `${path}/${photo.name}`,
+                  taken: photo.photo.takenDateTime
                 };
               })
           );

@@ -25,15 +25,16 @@ const mutations = {
       console.log("no photos");
       return;
     }
-    var prefix = "nextPhoto ";
-    if (!newPhoto || !state.photos.some(p => p.name === newPhoto)) {
+    var photo = state.photos.find(p => p.path === escape(newPhoto));
+    if (photo === undefined) {
       do {
-        newPhoto = state.photos[getRandomInt(0, state.photos.length)];
-      } while (state.currentPhoto === newPhoto.name);
-      prefix = "nextPhoto random ";
+        photo = state.photos[getRandomInt(0, state.photos.length)];
+      } while (state.currentPhoto === photo.path);
+      console.log(`next random photo ${state.currentPhoto} => ${photo.path}`);
+    } else {
+      console.log(`next photo ${newPhoto}`);
     }
-    console.log(prefix + state.currentPhoto.name + " => " + newPhoto.name);
-    state.currentPhoto = newPhoto;
+    state.currentPhoto = photo.path;
   },
   setPhotos(state, photos) {
     state.photos = photos;
@@ -52,7 +53,7 @@ const mutations = {
 const actions = {
   navigate({ state, commit }, options) {
     console.log(
-      "navigate " + window.location.pathname + window.location.hash + " => " + JSON.stringify(options)
+      "navigate " + window.location.pathname + window.location.search + " => " + JSON.stringify(options)
     );
     if (state.currentRoute !== options.route) {
       commit("setRoute", options.route);
@@ -77,7 +78,7 @@ const actions = {
 };
 
 function getLocation(route, photo) {
-  return route + (route === "/slideshow" ? `#photo=${photo.name}` : "");
+  return route + (route === "/slideshow" ? `?photo=${photo}` : "");
 }
 
 function getRandomInt(min, max) {
