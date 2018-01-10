@@ -14,7 +14,7 @@ export default {
   },
   methods: {
     startSlideshow() {
-      this.navigate({ route: "/slideshow", photo: this.currentPhoto });
+      this.navigate({ route: "/slideshow", photo: this.currentPhoto && this.currentPhoto.path });
     },
     ...mapActions(["navigate"])
   }

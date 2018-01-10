@@ -4,7 +4,6 @@ import { baseName, isVideo } from "../utils";
 const graphUrl = "https://graph.microsoft.com/v1.0";
 const basePath = `${graphUrl}/me/drive/root:`;
 const listSuffix = ":/children?select=name,photo,video";
-const imageSuffix = ":/content?width=100&height=100&cropmode=none";
 
 export default {
   getPhotoList(path) {
@@ -31,10 +30,34 @@ export default {
                   index: idx + 1,
                   name: photo.name,
                   path: `${path}/${photo.name}`,
+                  url: null,
                   taken: photo.photo.takenDateTime
                 };
               })
           );
+        });
+    });
+  },
+  getPhotoUrl(path) {
+    const url = `${basePath}/${path}`;
+    return authService.getToken().then(token => {
+      const headers = new Headers({
+        Authorization: `Bearer ${token}`
+      });
+      const options = {
+        headers
+      };
+      console.log(`getting photo url '${url}'...`);
+      return fetch(url, options)
+        .then(response => response.json())
+        .then(response => {
+          console.log(`got ${JSON.stringify(response)}`);
+          if (response.hasOwnProperty("@microsoft.graph.downloadUrl")) {
+            const suffix = isVideo(path) ? "" : "?width=100&height=100&cropmode=none";
+            return Promise.resolve(response["@microsoft.graph.downloadUrl"] + suffix);
+          } else {
+            return Promise.reject(`Error getting photo url: ${JSON.stringify(response["error"])}`);
+          }
         });
     });
   },

@@ -1,8 +1,8 @@
 <template>
   <div>
-    <p>photo {{photo}}</p>
-    <video v-if="isVideo" v-bind:src="photoUrl" controls autoplay loop></video>
-    <img v-else v-bind:src="photoUrl"/>
+    <p>photo {{p}}</p>
+    <video v-if="isVideo" v-bind:src="photo.url" controls autoplay loop></video>
+    <img v-else v-bind:src="photo.url"/>
   </div>
 </template>
 
@@ -12,10 +12,10 @@ export default {
   props: ["photo"],
   computed: {
     isVideo: function() {
-      return isVideo(this.photo);
+      return isVideo(this.photo.name);
     },
-    photoUrl: function() {
-      return "src/assets/" + this.photo;
+    p: function() {
+      return JSON.stringify(this.photo);
     }
   }
 };

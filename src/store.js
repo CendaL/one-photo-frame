@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import createPersistedStore from "vuex-persistedstate";
+import graphService from "./services/graph.service";
 
 Vue.use(Vuex);
 
@@ -20,21 +21,9 @@ const getters = {
 };
 
 const mutations = {
-  nextPhoto(state, newPhoto) {
-    if (state.photos.length === 0) {
-      console.log("no photos");
-      return;
-    }
-    var photo = state.photos.find(p => p.path === escape(newPhoto));
-    if (photo === undefined) {
-      do {
-        photo = state.photos[getRandomInt(0, state.photos.length)];
-      } while (state.currentPhoto === photo.path);
-      console.log(`next random photo ${state.currentPhoto} => ${photo.path}`);
-    } else {
-      console.log(`next photo ${newPhoto}`);
-    }
-    state.currentPhoto = photo.path;
+  setCurrentPhoto(state, payload) {
+    state.currentPhoto = payload.photo;
+    state.currentPhoto.url = payload.photoUrl;
   },
   setPhotos(state, photos) {
     state.photos = photos;
@@ -51,7 +40,7 @@ const mutations = {
 };
 
 const actions = {
-  navigate({ state, commit }, options) {
+  navigate({ state, commit, dispatch }, options) {
     console.log(
       "navigate " + window.location.pathname + window.location.search + " => " + JSON.stringify(options)
     );
@@ -62,18 +51,44 @@ const actions = {
       console.log("no photos to navigate");
       return;
     }
+    let nextPhotoAction = Promise.resolve();
     if (options.route === "/slideshow" && (options.photo !== undefined || state.currentPhoto == null)) {
-      commit("nextPhoto", options.photo);
+      nextPhotoAction = dispatch("nextPhoto", options.photo);
     }
-    if (options.addToHistory !== false) {
-      const newLocation = getLocation(state.currentRoute, state.currentPhoto);
-      if (options.replaceHistory) {
-        window.history.replaceState(null, "", newLocation);
-      } else {
-        window.history.pushState(null, "", newLocation);
+    nextPhotoAction.then(() => {
+      if (options.addToHistory !== false) {
+        const newLocation = getLocation(state.currentRoute, state.currentPhoto && state.currentPhoto.path);
+        if (options.replaceHistory) {
+          window.history.replaceState(null, "", newLocation);
+        } else {
+          window.history.pushState(null, "", newLocation);
+        }
       }
+      document.title =
+        options.route === "/slideshow" ? state.currentPhoto && state.currentPhoto.name : options.route;
+    });
+  },
+  nextPhoto({ state, commit }, newPhoto) {
+    if (state.photos.length === 0) {
+      console.log("no photos");
+      return;
     }
-    document.title = options.route === "/slideshow" ? state.currentPhoto : options.route;
+    var photo = state.photos.find(p => p.path === escape(newPhoto));
+    if (photo === undefined) {
+      do {
+        photo = state.photos[getRandomInt(0, state.photos.length)];
+      } while (state.currentPhoto && state.currentPhoto.path === photo.path);
+      console.log(`next random photo ${state.currentPhoto && state.currentPhoto.path} => ${photo.path}`);
+    } else {
+      console.log(`next photo ${newPhoto}`);
+    }
+    graphService
+      .getPhotoUrl(photo.path)
+      .then(photoUrl => {
+        console.log(`photo url: ${photoUrl}`);
+        commit("setCurrentPhoto", { photo, photoUrl });
+      })
+      .catch(e => console.error(e));
   }
 };
 

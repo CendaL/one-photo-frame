@@ -28,7 +28,7 @@ const app = new Vue({
     }
     this.navigate({
       route: routes[window.location.pathname] ? window.location.pathname : "/slideshow",
-      photo: qsp.photo || this.currentPhoto,
+      photo: qsp.photo || (this.currentPhoto && this.currentPhoto.path),
       replaceHistory: true
     });
   },
