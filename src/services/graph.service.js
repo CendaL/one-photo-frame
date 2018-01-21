@@ -7,8 +7,7 @@ const listSuffix = ":/children?select=name,photo,video";
 
 export default {
   getPhotoList(path) {
-    path = "/" + escape(path);
-    const url = `${basePath}${path}${listSuffix}`;
+    const url = `${basePath}/${path}${listSuffix}`;
     return authService.getToken().then(token => {
       const headers = new Headers({
         Authorization: `Bearer ${token}`
