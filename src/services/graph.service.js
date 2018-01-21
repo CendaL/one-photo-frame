@@ -15,6 +15,7 @@ export default {
       const options = {
         headers
       };
+      console.log(`getting photo list from url '${url}'...`);
       return fetch(url, options)
         .then(response => response.json())
         .then(response => {
@@ -23,14 +24,18 @@ export default {
             .map(photo => baseName(photo.name));
           return Promise.resolve(
             response.value
-              .filter(photo => isVideo(photo.name) || videoBaseNames.indexOf(baseName(photo.name)) === -1)
+              .filter(
+                photo =>
+                  response.hasOwnProperty("@microsoft.graph.downloadUrl") &&
+                  (isVideo(photo.name) || videoBaseNames.indexOf(baseName(photo.name)) === -1)
+              )
               .map((photo, idx) => {
                 return {
                   index: idx + 1,
                   name: photo.name,
                   path: `${path}/${photo.name}`,
                   url: null,
-                  taken: photo.photo.takenDateTime
+                  taken: photo.photo ? photo.photo.takenDateTime : null
                 };
               })
           );
