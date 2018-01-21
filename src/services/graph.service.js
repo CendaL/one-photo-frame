@@ -3,7 +3,7 @@ import { baseName, isVideo } from "../utils";
 
 const graphUrl = "https://graph.microsoft.com/v1.0";
 const basePath = `${graphUrl}/me/drive/root:`;
-const listSuffix = ":/children?select=name,photo,video";
+const listSuffix = ":/delta?select=name,photo,video,file,parentReference";
 
 export default {
   getPhotoList(path) {
@@ -24,16 +24,24 @@ export default {
             .map(photo => baseName(photo.name));
           return Promise.resolve(
             response.value
-              .filter(
-                photo =>
-                  response.hasOwnProperty("@microsoft.graph.downloadUrl") &&
+              .filter(photo => {
+                if (
+                  photo.file &&
                   (isVideo(photo.name) || videoBaseNames.indexOf(baseName(photo.name)) === -1)
-              )
+                ) {
+                  return true;
+                }
+                console.log(`Filter out ${photo.name}`);
+              })
               .map((photo, idx) => {
+                photo.parentReference.path;
+                let subfolder = photo.parentReference.path.substring(
+                  photo.parentReference.path.indexOf(path) + path.length
+                );
                 return {
                   index: idx + 1,
                   name: photo.name,
-                  path: `${path}/${photo.name}`,
+                  path: `${path}${subfolder}/${photo.name}`,
                   url: null,
                   taken: photo.photo ? photo.photo.takenDateTime : null
                 };
