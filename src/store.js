@@ -82,13 +82,11 @@ const actions = {
     } else {
       console.log(`next photo ${newPhoto}`);
     }
-    graphService
-      .getPhotoUrl(photo.path)
-      .then(photoUrl => {
-        console.log(`photo url: ${photoUrl}`);
-        commit("setCurrentPhoto", { photo, photoUrl });
-      })
-      .catch(e => console.error(e));
+    graphService.getPhotoUrl(photo.path).then(photoUrl => {
+      console.log(`photo url: ${photoUrl}`);
+      commit("setCurrentPhoto", { photo, photoUrl });
+      return Promise.resolve();
+    });
   }
 };
 
