@@ -2,7 +2,7 @@
   <div>
     <p>photo {{p}}</p>
     <video v-if="isVideo" v-bind:src="photo.url" controls autoplay loop></video>
-    <img v-else v-bind:src="photo.url"/>
+    <img v-else-if="photo" v-bind:src="photo.url"/>
   </div>
 </template>
 
@@ -12,7 +12,7 @@ export default {
   props: ["photo"],
   computed: {
     isVideo: function() {
-      return isVideo(this.photo.name);
+      return this.photo && isVideo(this.photo.name);
     },
     p: function() {
       return JSON.stringify(this.photo);
@@ -28,4 +28,3 @@ video {
   max-height: 200px;
 }
 </style>
-
