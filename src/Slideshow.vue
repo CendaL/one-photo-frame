@@ -16,7 +16,6 @@ import { mapActions, mapMutations, mapState } from "vuex";
 import graphService from "./services/graph.service";
 import Login from "./Login.vue";
 import Photo from "./Photo.vue";
-import { folders } from "./photos.json";
 
 export default {
   data() {
@@ -30,7 +29,7 @@ export default {
     photo: Photo
   },
   computed: {
-    ...mapState(["currentPhoto", "currentRoute", "isSlideshowRunning", "photos", "slideshowDelay"])
+    ...mapState(["currentPhoto", "currentRoute", "folders", "isSlideshowRunning", "photos", "slideshowDelay"])
   },
   created() {
     this.refreshPhotoFolders(false);
@@ -42,10 +41,14 @@ export default {
   },
   methods: {
     getPhotoList() {
-      graphService.getPhotoList(folders[0]).then(photos => {
-        console.log(JSON.stringify(photos));
-        this.setPhotos(photos);
-      });
+      if (this.folders.length > 0) {
+        graphService.getPhotoList(this.folders[0]).then(photos => {
+          console.log(JSON.stringify(photos));
+          this.setPhotos(photos);
+        });
+      } else {
+        console.warn("No folders");
+      }
     },
     nextPhoto() {
       this.navigate({ route: "/slideshow", photo: "" });
@@ -54,6 +57,7 @@ export default {
       if (doRefresh) {
         graphService.getPhotoFolders().then(folders => {
           console.log(JSON.stringify(folders));
+          this.setFolders(folders);
         });
       }
       // setTimeout(this.refreshPhotoList, this.slideshowDelay * 1000);
@@ -70,11 +74,19 @@ export default {
       }
     },
     ...mapActions(["navigate"]),
-    ...mapMutations(["setPhotos", "toggleSlideshow"])
+    ...mapMutations(["setFolders", "setPhotos", "toggleSlideshow"])
   },
   watch: {
+    folders: function() {
+      console.log("Folders refreshed -> refresh photos");
+      this.getPhotoList();
+    },
     isSlideshowRunning: function() {
       this.slideshowNext(false);
+    },
+    photos: function() {
+      console.log("Photos refreshed -> load next photo");
+      this.nextPhoto();
     }
   }
 };

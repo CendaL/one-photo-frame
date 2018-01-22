@@ -8,6 +8,7 @@ Vue.use(Vuex);
 const state = {
   currentPhoto: null,
   currentRoute: null,
+  folders: [],
   isSlideshowRunning: false,
   photos: [],
   slideshowDelay: 3,
@@ -24,6 +25,9 @@ const mutations = {
   setCurrentPhoto(state, payload) {
     state.currentPhoto = payload.photo;
     state.currentPhoto.url = payload.photoUrl;
+  },
+  setFolders(state, folders) {
+    state.folders = folders;
   },
   setPhotos(state, photos) {
     state.photos = photos;
