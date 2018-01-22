@@ -49,27 +49,27 @@ const actions = {
       "navigate " + window.location.pathname + window.location.search + " => " + JSON.stringify(options)
     );
     if (state.currentRoute !== options.route) {
+      console.log(`set route ${options.route}`);
       commit("setRoute", options.route);
     }
     if (state.photos.length === 0) {
       console.log("no photos to navigate");
       return;
     }
-    let nextPhotoAction = Promise.resolve();
+    let nextPhotoAction = Promise.resolve(state.currentPhoto);
     if (options.route === "/slideshow" && (options.photo !== undefined || state.currentPhoto == null)) {
       nextPhotoAction = dispatch("nextPhoto", options.photo);
     }
-    nextPhotoAction.then(() => {
+    nextPhotoAction.then(currentPhoto => {
       if (options.addToHistory !== false) {
-        const newLocation = getLocation(state.currentRoute, state.currentPhoto && state.currentPhoto.path);
+        const newLocation = getLocation(state.currentRoute, currentPhoto && currentPhoto.path);
         if (options.replaceHistory) {
           window.history.replaceState(null, "", newLocation);
         } else {
           window.history.pushState(null, "", newLocation);
         }
       }
-      document.title =
-        options.route === "/slideshow" ? state.currentPhoto && state.currentPhoto.name : options.route;
+      document.title = options.route === "/slideshow" ? currentPhoto && currentPhoto.name : options.route;
     });
   },
   nextPhoto({ state, commit }, newPhoto) {
@@ -77,7 +77,7 @@ const actions = {
       console.log("no photos");
       return;
     }
-    var photo = state.photos.find(p => p.path === escape(newPhoto));
+    var photo = state.photos.find(p => p.path === newPhoto);
     if (photo === undefined) {
       do {
         photo = state.photos[getRandomInt(0, state.photos.length)];
@@ -86,10 +86,10 @@ const actions = {
     } else {
       console.log(`next photo ${newPhoto}`);
     }
-    graphService.getPhotoUrl(photo.path).then(photoUrl => {
+    return graphService.getPhotoUrl(photo.path).then(photoUrl => {
       console.log(`photo url: ${photoUrl}`);
       commit("setCurrentPhoto", { photo, photoUrl });
-      return Promise.resolve();
+      return Promise.resolve(state.currentPhoto);
     });
   }
 };
