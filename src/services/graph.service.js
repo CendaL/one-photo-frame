@@ -19,6 +19,9 @@ function prepareRequest(url) {
 }
 
 export default {
+  getPhotoFolders() {
+    return prepareRequest(`${basePath}/one-photo-frame.json:/content`).then(response => response.json());
+  },
   getPhotoList(path) {
     return prepareRequest(`${basePath}/${path}${listSuffix}`)
       .then(response => response.json())

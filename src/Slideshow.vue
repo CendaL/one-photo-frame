@@ -5,6 +5,7 @@
     <button @click="toggleSlideshow()">toggle slideshow</button>
     <button @click="settings">settings</button>
     <button @click="getPhotoList">get photo list</button>
+    <button @click="refreshPhotoFolders">refresh photo folders</button>
     <login></login>
     <photo v-bind:photo="currentPhoto"></photo>
   </div>
@@ -19,7 +20,10 @@ import { folders } from "./photos.json";
 
 export default {
   data() {
-    return { canSlideshowNext: true };
+    return {
+      canRefreshPhotoList: true,
+      canSlideshowNext: true
+    };
   },
   components: {
     login: Login,
@@ -29,9 +33,11 @@ export default {
     ...mapState(["currentPhoto", "currentRoute", "isSlideshowRunning", "photos", "slideshowDelay"])
   },
   created() {
+    this.refreshPhotoFolders(false);
     this.slideshowNext(false);
   },
   beforeDestroy() {
+    this.canRefreshPhotoList = false;
     this.canSlideshowNext = false;
   },
   methods: {
@@ -43,6 +49,14 @@ export default {
     },
     nextPhoto() {
       this.navigate({ route: "/slideshow", photo: "" });
+    },
+    refreshPhotoFolders(doRefresh = true) {
+      if (doRefresh) {
+        graphService.getPhotoFolders().then(folders => {
+          console.log(JSON.stringify(folders));
+        });
+      }
+      // setTimeout(this.refreshPhotoList, this.slideshowDelay * 1000);
     },
     settings() {
       this.navigate({ route: "/settings" });
