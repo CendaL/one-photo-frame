@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p>User {{user}}</p>
     <button v-if="!isSignedIn" @click="login">Login</button>
     <button v-if="isSignedIn" @click="logout">Logout</button>
   </div>
@@ -26,11 +25,11 @@ export default {
             this.setUser(user);
           } else {
             this.setUser(null);
-            console.log("login failed 2");
+            console.error("login failed: no user");
           }
         },
-        () => {
-          console.log("login failed");
+        err => {
+          console.error(`login failed: ${err}`);
         }
       );
     },

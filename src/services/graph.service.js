@@ -13,7 +13,7 @@ function prepareRequest(url) {
     const options = {
       headers
     };
-    console.log(`getting data from url '${url}'...`);
+    console.debug(`getting data from url '${url}'...`);
     return fetch(url, options);
   });
 }
@@ -38,7 +38,7 @@ export default {
               ) {
                 return true;
               }
-              console.log(`Filter out ${photo.name}`);
+              console.debug(`Filter out ${photo.name}`);
             })
             .map((photo, idx) => {
               photo.parentReference.path;
@@ -60,7 +60,6 @@ export default {
     return prepareRequest(`${basePath}/${path}`)
       .then(response => response.json())
       .then(response => {
-        console.log(`got ${JSON.stringify(response)}`);
         if (response.hasOwnProperty("@microsoft.graph.downloadUrl")) {
           const suffix = isVideo(path) ? "" : "?width=100&height=100&cropmode=none";
           return Promise.resolve(response["@microsoft.graph.downloadUrl"] + suffix);

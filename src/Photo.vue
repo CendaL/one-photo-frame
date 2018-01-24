@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>photo {{p}}</p>
+    <p>{{name}}</p>
     <video v-if="isVideo" v-bind:src="photo.url" controls autoplay loop></video>
     <img v-else-if="photo" v-bind:src="photo.url"/>
   </div>
@@ -14,8 +14,8 @@ export default {
     isVideo: function() {
       return this.photo && isVideo(this.photo.name);
     },
-    p: function() {
-      return JSON.stringify(this.photo);
+    name: function() {
+      return this.photo && this.photo.name;
     }
   }
 };

@@ -21,7 +21,7 @@ const app = new Vue({
     ...mapActions(["navigate"])
   },
   created() {
-    console.log(`created ${window.location.pathname}`);
+    console.debug(`created ${window.location.pathname}`);
     const qsp = qs.parse(window.location.search);
     if (qsp.id_token || qsp.access_token) {
       return;
@@ -39,7 +39,7 @@ const app = new Vue({
 
 window.addEventListener("popstate", event => {
   if (routes[window.location.pathname]) {
-    console.log(`popstate ${window.location.pathname}${window.location.search}`);
+    console.debug(`popstate ${window.location.pathname}${window.location.search}`);
     const qsp = qs.parse(window.location.search);
     app.navigate({
       route: window.location.pathname,

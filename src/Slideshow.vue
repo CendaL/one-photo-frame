@@ -1,6 +1,5 @@
 <template>
   <div>
-    <p>Slideshow {{photos}}</p>
     <button @click="nextPhoto()">next</button>
     <button @click="toggleSlideshow()">toggle slideshow</button>
     <button @click="settings">settings</button>
@@ -51,7 +50,6 @@ export default {
     getPhotoList() {
       if (this.folders.length > 0) {
         graphService.getPhotoList(this.folders[0]).then(photos => {
-          console.log(JSON.stringify(photos));
           this.setPhotos(photos);
         });
       } else {
@@ -97,14 +95,14 @@ export default {
   },
   watch: {
     folders: function() {
-      console.log("Folders refreshed -> refresh photos");
+      console.debug("Folders refreshed -> refresh photos");
       this.getPhotoList();
     },
     isSlideshowRunning: function() {
       this.slideshowNext(false);
     },
     photos: function() {
-      console.log("Photos refreshed -> load next photo");
+      console.debug("Photos refreshed -> load next photo");
       // this.nextPhoto();
     }
   }

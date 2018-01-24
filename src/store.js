@@ -26,46 +26,52 @@ const mutations = {
   setCurrentPhoto(state, payload) {
     state.currentPhoto = payload.photo;
     state.currentPhoto.url = payload.photoUrl;
+    console.log(`set currentPhoto to ${JSON.stringify(state.currentPhoto)}`);
   },
   setFolders(state, folders) {
     state.folders = folders;
+    console.log(`set folders to ${JSON.stringify(folders)}`);
   },
   setPhotos(state, photos) {
     state.photos = photos;
+    console.log(`set photos to ${JSON.stringify(photos)}`);
   },
   setRemoteRefreshDelay(state, delay) {
     if (delay) {
-      console.log(`set remoteRefreshDelay to ${delay}`);
       state.remoteRefreshDelay = delay;
+      console.log(`set remoteRefreshDelay to ${delay}`);
     }
   },
   setRoute(state, route) {
     state.currentRoute = route;
+    console.log(`set currentRoute to ${route}`);
   },
   setSlideshowDelay(state, delay) {
     if (delay) {
       state.slideshowDelay = delay;
+      console.log(`set slideshowDelay to ${delay}`);
     }
   },
   setUser(state, user) {
     state.user = user;
+    console.log(`set user to ${JSON.stringify(user)}`);
   },
   toggleSlideshow(state) {
     state.isSlideshowRunning = !state.isSlideshowRunning;
+    console.log(`set isSlideshowRunning to ${state.isSlideshowRunning}`);
   }
 };
 
 const actions = {
   navigate({ state, commit, dispatch }, options) {
-    console.log(
-      "navigate " + window.location.pathname + window.location.search + " => " + JSON.stringify(options)
+    console.debug(
+      `navigate: ${window.location.pathname}${window.location.search} => ${JSON.stringify(options)}`
     );
     if (state.currentRoute !== options.route) {
-      console.log(`set route ${options.route}`);
       commit("setRoute", options.route);
     }
     if (state.photos.length === 0) {
-      console.log("no photos to navigate");
+      console.warn("navigate: no photos");
       return;
     }
     let nextPhotoAction = Promise.resolve(state.currentPhoto);
@@ -86,7 +92,7 @@ const actions = {
   },
   nextPhoto({ state, commit }, newPhoto) {
     if (state.photos.length === 0) {
-      console.log("no photos");
+      console.warn("nextPhoto: no photos");
       return;
     }
     var photo = state.photos.find(p => p.path === newPhoto);
@@ -99,7 +105,6 @@ const actions = {
       console.log(`next photo ${newPhoto}`);
     }
     return graphService.getPhotoUrl(photo.path).then(photoUrl => {
-      console.log(`photo url: ${photoUrl}`);
       commit("setCurrentPhoto", { photo, photoUrl });
       return Promise.resolve(state.currentPhoto);
     });

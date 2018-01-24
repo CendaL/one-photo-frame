@@ -6,7 +6,7 @@ const app = new Msal.UserAgentApplication(
   clientId,
   "",
   () => {
-    console.log("login-redirecting...");
+    console.debug("login-redirecting...");
   },
   {
     redirectUri: "http://localhost:8080",
@@ -17,7 +17,7 @@ const app = new Msal.UserAgentApplication(
 export default {
   getToken() {
     return app.acquireTokenSilent(graphScopes).catch(error => {
-      console.log(`acquireTokenSilent error: ${error}`);
+      console.warn(`acquireTokenSilent error: ${error}`);
       return app.acquireTokenPopup(graphScopes);
     });
   },
@@ -28,7 +28,7 @@ export default {
     return app.loginPopup(graphScopes).then(
       idToken => app.getUser(),
       err => {
-        console.log(`loginPopup error: ${err}`);
+        console.error(`loginPopup error: ${err}`);
         return null;
       }
     );
