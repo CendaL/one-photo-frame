@@ -61,7 +61,9 @@ export default {
       .then(response => response.json())
       .then(response => {
         if (response.hasOwnProperty("@microsoft.graph.downloadUrl")) {
-          const suffix = isVideo(path) ? "" : "?width=100&height=100&cropmode=none";
+          const suffix = isVideo(path)
+            ? ""
+            : `?width=${window.innerWidth}&height=${window.innerHeight}&cropmode=none`;
           return Promise.resolve(response["@microsoft.graph.downloadUrl"] + suffix);
         } else {
           return Promise.reject(`Error getting photo url: ${JSON.stringify(response["error"])}`);
