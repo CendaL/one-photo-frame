@@ -19,10 +19,8 @@ function prepareRequest(url) {
 }
 
 export default {
-  getPhotoFolders() {
-    return prepareRequest(`${basePath}/one-photo-frame.json:/content`)
-      .then(response => response.json())
-      .then(data => Promise.resolve(data.folders));
+  getRemoteConfig() {
+    return prepareRequest(`${basePath}/one-photo-frame.json:/content`).then(response => response.json());
   },
   getPhotoList(path) {
     return prepareRequest(`${basePath}/${path}${listSuffix}`)

@@ -11,6 +11,7 @@ const state = {
   folders: [],
   isSlideshowRunning: false,
   photos: [],
+  remoteRefreshDelay: 10,
   slideshowDelay: 3,
   user: null
 };
@@ -32,8 +33,19 @@ const mutations = {
   setPhotos(state, photos) {
     state.photos = photos;
   },
+  setRemoteRefreshDelay(state, delay) {
+    if (delay) {
+      console.log(`set remoteRefreshDelay to ${delay}`);
+      state.remoteRefreshDelay = delay;
+    }
+  },
   setRoute(state, route) {
     state.currentRoute = route;
+  },
+  setSlideshowDelay(state, delay) {
+    if (delay) {
+      state.slideshowDelay = delay;
+    }
   },
   setUser(state, user) {
     state.user = user;

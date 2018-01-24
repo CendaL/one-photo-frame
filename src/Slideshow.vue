@@ -5,7 +5,7 @@
     <button @click="toggleSlideshow()">toggle slideshow</button>
     <button @click="settings">settings</button>
     <button @click="getPhotoList">get photo list</button>
-    <button @click="refreshPhotoFolders">refresh photo folders</button>
+    <button @click="refreshRemoteConfig">refresh remote config</button>
     <login></login>
     <photo v-bind:photo="currentPhoto"></photo>
   </div>
@@ -20,7 +20,7 @@ import Photo from "./Photo.vue";
 export default {
   data() {
     return {
-      canRefreshPhotoList: true,
+      canRefreshRemoteConfig: true,
       canSlideshowNext: true
     };
   },
@@ -29,14 +29,22 @@ export default {
     photo: Photo
   },
   computed: {
-    ...mapState(["currentPhoto", "currentRoute", "folders", "isSlideshowRunning", "photos", "slideshowDelay"])
+    ...mapState([
+      "currentPhoto",
+      "currentRoute",
+      "folders",
+      "isSlideshowRunning",
+      "photos",
+      "remoteRefreshDelay",
+      "slideshowDelay"
+    ])
   },
   created() {
-    this.refreshPhotoFolders(false);
+    this.refreshRemoteConfig(false);
     this.slideshowNext(false);
   },
   beforeDestroy() {
-    this.canRefreshPhotoList = false;
+    this.canRefreshRemoteConfig = false;
     this.canSlideshowNext = false;
   },
   methods: {
@@ -53,14 +61,18 @@ export default {
     nextPhoto() {
       this.navigate({ route: "/slideshow", photo: "" });
     },
-    refreshPhotoFolders(doRefresh = true) {
-      if (doRefresh) {
-        graphService.getPhotoFolders().then(folders => {
-          console.log(JSON.stringify(folders));
-          this.setFolders(folders);
-        });
+    refreshRemoteConfig(doRefresh = true) {
+      if (this.canRefreshRemoteConfig && this.currentRoute === "/slideshow") {
+        if (doRefresh) {
+          graphService.getRemoteConfig().then(config => {
+            this.setFolders(config.folders);
+            this.setRemoteRefreshDelay(config.remoteRefreshDelay);
+            this.setSlideshowDelay(config.slideshowDelay);
+          });
+        }
+        // schedule task only once nextPhoto finishes
+        // setTimeout(this.refreshRemoteConfig, this.remoteRefreshDelay * 1000);
       }
-      // setTimeout(this.refreshPhotoList, this.slideshowDelay * 1000);
     },
     settings() {
       this.navigate({ route: "/settings" });
@@ -70,11 +82,18 @@ export default {
         if (doNext) {
           this.nextPhoto();
         }
+        // schedule task only once nextPhoto finishes
         setTimeout(this.slideshowNext, this.slideshowDelay * 1000);
       }
     },
     ...mapActions(["navigate"]),
-    ...mapMutations(["setFolders", "setPhotos", "toggleSlideshow"])
+    ...mapMutations([
+      "setFolders",
+      "setPhotos",
+      "setRemoteRefreshDelay",
+      "setSlideshowDelay",
+      "toggleSlideshow"
+    ])
   },
   watch: {
     folders: function() {
@@ -86,7 +105,7 @@ export default {
     },
     photos: function() {
       console.log("Photos refreshed -> load next photo");
-      this.nextPhoto();
+      // this.nextPhoto();
     }
   }
 };
