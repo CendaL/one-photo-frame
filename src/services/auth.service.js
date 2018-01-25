@@ -9,7 +9,7 @@ const app = new Msal.UserAgentApplication(
     console.debug("login-redirecting...");
   },
   {
-    redirectUri: "http://localhost:8080",
+    redirectUri: "MSAL_REDIRECT_URL",
     cacheLocation: "localStorage"
   }
 );

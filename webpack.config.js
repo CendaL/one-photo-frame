@@ -1,10 +1,14 @@
-var path = require("path");
-var webpack = require("webpack");
+const path = require("path");
+const webpack = require("webpack");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
+
+const outputPath = path.resolve(__dirname, "./dist");
+const isProd = process.env.NODE_ENV === "production";
 
 module.exports = {
-  entry: "./src/Shell.js",
+  entry: path.resolve(__dirname, "./src/Shell.js"),
   output: {
-    path: path.resolve(__dirname, "./dist"),
+    path: outputPath,
     publicPath: "/dist/",
     filename: "build.js"
   },
@@ -44,18 +48,23 @@ module.exports = {
   performance: {
     hints: false
   },
-  devtool: "#eval-source-map"
+  devtool: "#eval-source-map",
+  plugins: [
+    new webpack.DefinePlugin({
+      MSAL_REDIRECT_URL: isProd ? '"https://one-photo-frame.azurewebsites.net/"' : '"http://localhost:8080/"',
+      "process.env": isProd
+        ? {
+            NODE_ENV: '"production"'
+          }
+        : ""
+    })
+  ]
 };
 
-if (process.env.NODE_ENV === "production") {
+if (isProd) {
   module.exports.devtool = "#source-map";
   // http://vue-loader.vuejs.org/en/workflow/production.html
   module.exports.plugins = (module.exports.plugins || []).concat([
-    new webpack.DefinePlugin({
-      "process.env": {
-        NODE_ENV: '"production"'
-      }
-    }),
     new webpack.optimize.UglifyJsPlugin({
       sourceMap: true,
       compress: {
@@ -64,7 +73,16 @@ if (process.env.NODE_ENV === "production") {
     }),
     new webpack.LoaderOptionsPlugin({
       minimize: true
-    })
+    }),
+    new CopyWebpackPlugin([
+      {
+        from: path.resolve(__dirname, "./index.html"),
+        to: outputPath,
+        transform: (content, path) => {
+          return content.toString().replace("/dist/build.js", "build.js");
+        }
+      }
+    ])
   ]);
 } else {
   module.exports.plugins = (module.exports.plugins || []).concat([new webpack.NamedModulesPlugin()]);
