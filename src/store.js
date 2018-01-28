@@ -75,7 +75,7 @@ const actions = {
       return;
     }
     let nextPhotoAction = Promise.resolve(state.currentPhoto);
-    if (options.route === "/slideshow" && (options.photo !== undefined || state.currentPhoto == null)) {
+    if (options.route === "slideshow" && (options.photo !== undefined || state.currentPhoto == null)) {
       nextPhotoAction = dispatch("nextPhoto", options.photo);
     }
     nextPhotoAction.then(currentPhoto => {
@@ -87,7 +87,7 @@ const actions = {
           window.history.pushState(null, "", newLocation);
         }
       }
-      document.title = options.route === "/slideshow" ? currentPhoto && currentPhoto.name : options.route;
+      document.title = options.route === "slideshow" ? currentPhoto && currentPhoto.name : options.route;
     });
   },
   nextPhoto({ state, commit }, newPhoto) {
@@ -112,7 +112,7 @@ const actions = {
 };
 
 function getLocation(route, photo) {
-  return route + (route === "/slideshow" ? `?photo=${photo}` : "");
+  return `?route=${route}` + (route === "slideshow" ? `&photo=${photo}` : "");
 }
 
 function getRandomInt(min, max) {

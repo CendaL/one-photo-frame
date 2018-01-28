@@ -57,10 +57,10 @@ export default {
       }
     },
     nextPhoto() {
-      this.navigate({ route: "/slideshow", photo: "" });
+      this.navigate({ route: "slideshow", photo: "" });
     },
     refreshRemoteConfig(doRefresh = true) {
-      if (this.canRefreshRemoteConfig && this.currentRoute === "/slideshow") {
+      if (this.canRefreshRemoteConfig && this.currentRoute === "slideshow") {
         if (doRefresh) {
           graphService.getRemoteConfig().then(config => {
             this.setFolders(config.folders);
@@ -73,10 +73,10 @@ export default {
       }
     },
     settings() {
-      this.navigate({ route: "/settings" });
+      this.navigate({ route: "settings" });
     },
     slideshowNext(doNext = true) {
-      if (this.canSlideshowNext && this.isSlideshowRunning && this.currentRoute === "/slideshow") {
+      if (this.canSlideshowNext && this.isSlideshowRunning && this.currentRoute === "slideshow") {
         if (doNext) {
           this.nextPhoto();
         }

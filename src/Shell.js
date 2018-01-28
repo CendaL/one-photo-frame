@@ -4,8 +4,8 @@ import qs from "querystringify";
 import { mapMutations, mapState, mapActions } from "vuex";
 
 const routes = {
-  "/slideshow": "Slideshow",
-  "/settings": "Settings"
+  slideshow: "Slideshow",
+  settings: "Settings"
 };
 
 const app = new Vue({
@@ -14,6 +14,7 @@ const app = new Vue({
   computed: {
     ...mapState(["currentPhoto", "currentRoute"]),
     ViewComponent() {
+      console.log(`route: ${routes[this.currentRoute]}`);
       return require("./" + routes[this.currentRoute] + ".vue");
     }
   },
@@ -27,7 +28,7 @@ const app = new Vue({
       return;
     }
     this.navigate({
-      route: routes[window.location.pathname] ? window.location.pathname : "/slideshow",
+      route: routes[qsp.route] ? qsp.route : "slideshow",
       photo: qsp.photo || (this.currentPhoto && this.currentPhoto.path),
       replaceHistory: true
     });
@@ -38,11 +39,11 @@ const app = new Vue({
 });
 
 window.addEventListener("popstate", event => {
-  if (routes[window.location.pathname]) {
+  const qsp = qs.parse(window.location.search);
+  if (routes[qsp.route]) {
     console.debug(`popstate ${window.location.pathname}${window.location.search}`);
-    const qsp = qs.parse(window.location.search);
     app.navigate({
-      route: window.location.pathname,
+      route: qsp.route,
       photo: qsp.photo,
       addToHistory: false
     });
