@@ -36,7 +36,7 @@ export default {
       );
     },
     logout() {
-      this.setUser(null);
+      localStorage.removeItem("vuex");
       authService.logout();
     },
     ...mapActions(["refreshRemoteConfig"]),
