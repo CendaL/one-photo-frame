@@ -108,6 +108,16 @@ const actions = {
       commit("setCurrentPhoto", { photo, photoUrl });
       return Promise.resolve(state.currentPhoto);
     });
+  },
+  refreshRemoteConfig({ state, commit }) {
+    graphService.getRemoteConfig().then(config => {
+      commit("setFolders", config.folders);
+      commit("setRemoteRefreshDelay", config.remoteRefreshDelay);
+      commit("setSlideshowDelay", config.slideshowDelay);
+      if (state.isSlideshowRunning !== config.isSlideshowRunning) {
+        commit("toggleSlideshow");
+      }
+    });
   }
 };
 

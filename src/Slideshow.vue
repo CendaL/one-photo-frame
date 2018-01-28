@@ -4,7 +4,7 @@
     <button @click="toggleSlideshow()">toggle slideshow</button>
     <button @click="settings">settings</button>
     <button @click="getPhotoList">get photo list</button>
-    <button @click="refreshRemoteConfig">refresh remote config</button>
+    <button @click="updateRemoteConfig">refresh remote config</button>
     <login></login>
     <photo v-bind:photo="currentPhoto"></photo>
   </div>
@@ -39,7 +39,7 @@ export default {
     ])
   },
   created() {
-    this.refreshRemoteConfig(false);
+    this.updateRemoteConfig(false);
     this.slideshowNext(false);
   },
   beforeDestroy() {
@@ -59,17 +59,13 @@ export default {
     nextPhoto() {
       this.navigate({ route: "slideshow", photo: "" });
     },
-    refreshRemoteConfig(doRefresh = true) {
+    updateRemoteConfig(doRefresh = true) {
       if (this.canRefreshRemoteConfig && this.currentRoute === "slideshow") {
         if (doRefresh) {
-          graphService.getRemoteConfig().then(config => {
-            this.setFolders(config.folders);
-            this.setRemoteRefreshDelay(config.remoteRefreshDelay);
-            this.setSlideshowDelay(config.slideshowDelay);
-          });
+          this.refreshRemoteConfig();
         }
         // schedule task only once nextPhoto finishes
-        // setTimeout(this.refreshRemoteConfig, this.remoteRefreshDelay * 1000);
+        // setTimeout(this.updateRemoteConfig, this.remoteRefreshDelay * 1000);
       }
     },
     settings() {
@@ -84,7 +80,7 @@ export default {
         setTimeout(this.slideshowNext, this.slideshowDelay * 1000);
       }
     },
-    ...mapActions(["navigate"]),
+    ...mapActions(["navigate", "refreshRemoteConfig"]),
     ...mapMutations([
       "setFolders",
       "setPhotos",
@@ -102,8 +98,10 @@ export default {
       this.slideshowNext(false);
     },
     photos: function() {
-      console.debug("Photos refreshed -> load next photo");
-      // this.nextPhoto();
+      console.debug("Photos refreshed");
+      if (!this.currentPhoto) {
+        this.nextPhoto();
+      }
     }
   }
 };
