@@ -1,6 +1,7 @@
 <template>
   <div>
-    <p>{{name}}</p>
+    <p @click="nextPhoto">{{name}}</p>
+    <p class="right" @click="refreshRemoteConfig">{{taken}}</p>
     <video v-if="isVideo" v-bind:src="photo.url" controls autoplay loop></video>
     <img v-else-if="photo" v-bind:src="photo.url"/>
   </div>
@@ -8,6 +9,7 @@
 
 <script>
 import { isVideo } from "./utils";
+import { mapActions, mapMutations, mapState } from "vuex";
 export default {
   props: ["photo"],
   computed: {
@@ -16,7 +18,16 @@ export default {
     },
     name: function() {
       return this.photo && this.photo.name;
+    },
+    taken: function() {
+      return this.photo && this.photo.taken;
     }
+  },
+  methods: {
+    nextPhoto() {
+      this.navigate({ route: "slideshow", photo: "" });
+    },
+    ...mapActions(["navigate", "refreshRemoteConfig"])
   }
 };
 </script>
@@ -31,6 +42,12 @@ video {
   transform: translate(-50%, -50%);
 }
 p {
+  font-family: sans-serif;
   color: gray;
+}
+.right {
+  top: 0%;
+  right: 1%;
+  position: fixed;
 }
 </style>

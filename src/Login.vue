@@ -1,7 +1,7 @@
 <template>
   <div>
-    <button v-if="!isSignedIn" @click="login">Login</button>
-    <button v-if="isSignedIn" @click="logout">Logout</button>
+    <p v-if="!isSignedIn" @click="login">Login</p>
+    <p v-if="isSignedIn" @click="logout">Logout</p>
   </div>
 </template>
 
@@ -46,5 +46,8 @@ export default {
 </script>
 
 <style scoped>
-
+p {
+  font-family: sans-serif;
+  color: gray;
+}
 </style>

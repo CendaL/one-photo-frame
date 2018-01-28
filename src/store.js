@@ -11,8 +11,8 @@ const state = {
   folders: [],
   isSlideshowRunning: false,
   photos: [],
-  remoteRefreshDelay: 10,
-  slideshowDelay: 10,
+  remoteRefreshDelay: 3600,
+  slideshowDelay: 600,
   user: null
 };
 

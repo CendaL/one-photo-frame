@@ -1,12 +1,12 @@
 <template>
   <div>
-    <button @click="nextPhoto()">next</button>
-    <button @click="toggleSlideshow()">toggle slideshow</button>
-    <button @click="settings">settings</button>
-    <button @click="getPhotoList">get photo list</button>
-    <button @click="updateRemoteConfig">refresh remote config</button>
-    <login></login>
+    <!-- <button @click="toggleSlideshow()">toggle slideshow</button> -->
+    <!-- <button @click="settings">settings</button> -->
+    <!-- <button @click="getPhotoList">get photo list</button> -->
     <photo v-bind:photo="currentPhoto"></photo>
+    <!-- <button @click="updateRemoteConfig">refresh remote config</button> -->
+    <!-- <button @click="nextPhoto()">next</button> -->
+    <login class="leftbottom"></login>
   </div>
 </template>
 
@@ -65,7 +65,7 @@ export default {
           this.refreshRemoteConfig();
         }
         // schedule task only once nextPhoto finishes
-        // setTimeout(this.updateRemoteConfig, this.remoteRefreshDelay * 1000);
+        setTimeout(this.updateRemoteConfig, this.remoteRefreshDelay * 1000);
       }
     },
     settings() {
@@ -77,6 +77,7 @@ export default {
           this.nextPhoto();
         }
         // schedule task only once nextPhoto finishes
+        // reschedule when new slideshowDelay value is set
         setTimeout(this.slideshowNext, this.slideshowDelay * 1000);
       }
     },
@@ -108,5 +109,8 @@ export default {
 </script>
 
 <style scoped>
-
+.leftbottom {
+  bottom: 0%;
+  position: fixed;
+}
 </style>
