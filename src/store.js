@@ -12,7 +12,7 @@ const state = {
   isSlideshowRunning: false,
   photos: [],
   remoteRefreshDelay: 10,
-  slideshowDelay: 3,
+  slideshowDelay: 10,
   user: null
 };
 
