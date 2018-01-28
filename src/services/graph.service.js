@@ -1,5 +1,5 @@
 import authService from "./auth.service";
-import { baseName, isVideo } from "../utils";
+import { baseName, formatDateTime, isVideo } from "../utils";
 
 const graphUrl = "https://graph.microsoft.com/v1.0";
 const basePath = `${graphUrl}/me/drive/root:`;
@@ -50,7 +50,7 @@ export default {
                 name: photo.name,
                 path: `${path}${subfolder}/${photo.name}`,
                 url: null,
-                taken: photo.photo ? photo.photo.takenDateTime : null
+                taken: photo.photo ? formatDateTime(photo.photo.takenDateTime) : ""
               };
             })
         );
