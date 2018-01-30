@@ -2,6 +2,7 @@ import Vue from "vue";
 import store from "./store";
 import qs from "querystringify";
 import { mapMutations, mapState, mapActions } from "vuex";
+import { log } from "./utils";
 
 const routes = {
   slideshow: "Slideshow",
@@ -14,7 +15,7 @@ const app = new Vue({
   computed: {
     ...mapState(["currentPhoto", "currentRoute"]),
     ViewComponent() {
-      console.log(`route: ${routes[this.currentRoute]}`);
+      log(`route: ${routes[this.currentRoute]}`);
       return require("./" + routes[this.currentRoute] + ".vue");
     }
   },
@@ -22,7 +23,7 @@ const app = new Vue({
     ...mapActions(["navigate"])
   },
   created() {
-    console.debug(`created ${window.location.pathname}`);
+    log(`created ${window.location.pathname}`);
     const qsp = qs.parse(window.location.search);
     if (qsp.id_token || qsp.access_token) {
       return;
@@ -41,7 +42,7 @@ const app = new Vue({
 window.addEventListener("popstate", event => {
   const qsp = qs.parse(window.location.search);
   if (routes[qsp.route]) {
-    console.debug(`popstate ${window.location.pathname}${window.location.search}`);
+    log(`popstate ${window.location.pathname}${window.location.search}`);
     app.navigate({
       route: qsp.route,
       photo: qsp.photo,

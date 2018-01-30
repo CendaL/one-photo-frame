@@ -1,5 +1,6 @@
 import authService from "./auth.service";
 import { baseName, formatDateTime, isVideo } from "../utils";
+import { log } from "../utils";
 
 const graphUrl = "https://graph.microsoft.com/v1.0";
 const basePath = `${graphUrl}/me/drive/root:`;
@@ -13,7 +14,7 @@ function prepareRequest(url) {
     const options = {
       headers
     };
-    console.debug(`getting data from url '${url}'...`);
+    log(`getting data from url '${url}'...`);
     return fetch(url, options);
   });
 }
@@ -38,7 +39,7 @@ export default {
               ) {
                 return true;
               }
-              console.debug(`Filter out ${photo.name}`);
+              log(`Filter out ${photo.name}`);
             })
             .map((photo, idx) => {
               photo.parentReference.path;

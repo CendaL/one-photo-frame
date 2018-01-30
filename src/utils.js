@@ -20,3 +20,11 @@ export function isVideo(name) {
     return name.toLowerCase().search(".mp4$") !== -1;
   }
 }
+
+export function log(text) {
+  const log_element = document.querySelector("pre.log");
+  if (log_element) {
+    log_element.textContent = `${text}\n\n` + log_element.textContent;
+  }
+  console.log(text);
+}

@@ -12,6 +12,7 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
+import { log } from "./utils";
 import graphService from "./services/graph.service";
 import Login from "./Login.vue";
 import Photo from "./Photo.vue";
@@ -41,6 +42,8 @@ export default {
   created() {
     this.updateRemoteConfig(false);
     this.slideshowNext(false);
+    log("neco");
+    log("jineho");
   },
   beforeDestroy() {
     this.canRefreshRemoteConfig = false;
@@ -53,7 +56,7 @@ export default {
           this.setPhotos(photos);
         });
       } else {
-        console.warn("No folders");
+        log("No folders");
       }
     },
     nextPhoto() {
@@ -92,14 +95,14 @@ export default {
   },
   watch: {
     folders: function() {
-      console.debug("Folders refreshed -> refresh photos");
+      log("Folders refreshed -> refresh photos");
       this.getPhotoList();
     },
     isSlideshowRunning: function() {
       this.slideshowNext(false);
     },
     photos: function() {
-      console.debug("Photos refreshed");
+      log("Photos refreshed");
       if (!this.currentPhoto) {
         this.nextPhoto();
       }

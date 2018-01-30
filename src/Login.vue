@@ -8,6 +8,7 @@
 <script>
 import authService from "./services/auth.service";
 import graphService from "./services/graph.service";
+import { log } from "./utils";
 import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 
 export default {
@@ -27,11 +28,11 @@ export default {
             this.refreshRemoteConfig();
           } else {
             this.setUser(null);
-            console.error("login failed: no user");
+            log("login failed: no user");
           }
         },
         err => {
-          console.error(`login failed: ${err}`);
+          log(`login failed: ${err}`);
         }
       );
     },
