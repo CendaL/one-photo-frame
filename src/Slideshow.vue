@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- <log /> -->
     <!-- <button @click="toggleSlideshow()">toggle slideshow</button> -->
     <!-- <button @click="settings">settings</button> -->
     <!-- <button @click="getPhotoList">get photo list</button> -->
@@ -14,6 +15,7 @@
 import { mapActions, mapMutations, mapState } from "vuex";
 import { log } from "./utils";
 import graphService from "./services/graph.service";
+import Log from "./Log.vue";
 import Login from "./Login.vue";
 import Photo from "./Photo.vue";
 
@@ -25,6 +27,7 @@ export default {
     };
   },
   components: {
+    log: Log,
     login: Login,
     photo: Photo
   },
