@@ -1,3 +1,6 @@
+import "./array.find.polyfill";
+import "promise-polyfill/src/polyfill";
+import "whatwg-fetch";
 import Vue from "vue";
 import store from "./store";
 import qs from "querystringify";
