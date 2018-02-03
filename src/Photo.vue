@@ -1,7 +1,7 @@
 <template>
   <div>
     <p @click="nextPhoto">{{name}}</p>
-    <p class="right" @click="refreshRemoteConfig">{{taken}}</p>
+    <p class="right" @click="refreshRemoteConfig"><span v-html="taken"></span></p>
     <video v-if="isVideo" v-bind:src="photo.url" controls autoplay loop></video>
     <img v-else-if="photo" v-bind:src="photo.url"/>
   </div>
@@ -13,14 +13,14 @@ import { mapActions, mapMutations, mapState } from "vuex";
 export default {
   props: ["photo"],
   computed: {
-    isVideo: function() {
+    isVideo() {
       return this.photo && isVideo(this.photo.name);
     },
-    name: function() {
-      return this.photo && this.photo.name;
+    name() {
+      return this.photo && this.photo.name.substring(0, this.photo.name.lastIndexOf("."));
     },
-    taken: function() {
-      return this.photo && this.photo.taken;
+    taken() {
+      return this.photo && this.photo.taken.replace(/(.*) (\S+)/, "$1<br>$2");
     }
   },
   methods: {
@@ -49,5 +49,6 @@ p {
   top: 0%;
   right: 1%;
   position: fixed;
+  text-align: right;
 }
 </style>

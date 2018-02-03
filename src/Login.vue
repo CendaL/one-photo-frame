@@ -1,7 +1,7 @@
 <template>
   <div>
     <p v-if="!isSignedIn" @click="login">Login</p>
-    <p v-if="isSignedIn" @click="logout">Logout</p>
+    <p v-if="isSignedIn" @click="logout">L</p>
   </div>
 </template>
 
