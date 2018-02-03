@@ -1,7 +1,7 @@
 <template>
   <div>
-    <p @click="nextPhoto">{{name}}</p>
-    <p class="right" @click="refreshRemoteConfig"><span v-html="taken"></span></p>
+    <button @click="nextPhoto">{{name}}</button>
+    <button class="right" @click="refreshRemoteConfig"><span v-html="taken"></span></button>
     <video v-if="isVideo" v-bind:src="photo.url" controls autoplay loop></video>
     <img v-else-if="photo" v-bind:src="photo.url"/>
   </div>
@@ -41,12 +41,13 @@ video {
   z-index: -1;
   transform: translate(-50%, -50%);
 }
-p {
+button {
   font-family: sans-serif;
   color: gray;
+  background-color: transparent;
+  border-width: 0px;
 }
 .right {
-  top: 0%;
   right: 1%;
   position: fixed;
   text-align: right;
