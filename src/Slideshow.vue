@@ -22,8 +22,8 @@ import Photo from "./Photo.vue";
 export default {
   data() {
     return {
-      canRefreshRemoteConfig: true,
-      canSlideshowNext: true
+      refreshRemoteConfigTaskId: null,
+      slideshowNextTaskId: null
     };
   },
   components: {
@@ -45,12 +45,10 @@ export default {
   created() {
     this.updateRemoteConfig(false);
     this.slideshowNext(false);
-    log("neco");
-    log("jineho");
   },
   beforeDestroy() {
-    this.canRefreshRemoteConfig = false;
-    this.canSlideshowNext = false;
+    clearTimeout(this.refreshRemoteConfigTaskId);
+    clearTimeout(this.slideshowNextTaskId);
   },
   methods: {
     getPhotoList() {
@@ -66,26 +64,21 @@ export default {
       this.navigate({ route: "slideshow", photo: "" });
     },
     updateRemoteConfig(doRefresh = true) {
-      if (this.canRefreshRemoteConfig && this.currentRoute === "slideshow") {
-        if (doRefresh) {
-          this.refreshRemoteConfig();
-        }
-        // schedule task only once nextPhoto finishes
-        setTimeout(this.updateRemoteConfig, this.remoteRefreshDelay * 1000);
+      if (doRefresh) {
+        this.refreshRemoteConfig();
       }
+      clearTimeout(this.refreshRemoteConfigTaskId);
+      this.refreshRemoteConfigTaskId = setTimeout(this.updateRemoteConfig, this.remoteRefreshDelay * 1000);
     },
     settings() {
       this.navigate({ route: "settings" });
     },
     slideshowNext(doNext = true) {
-      if (this.canSlideshowNext && this.isSlideshowRunning && this.currentRoute === "slideshow") {
-        if (doNext) {
-          this.nextPhoto();
-        }
-        // schedule task only once nextPhoto finishes
-        // reschedule when new slideshowDelay value is set
-        setTimeout(this.slideshowNext, this.slideshowDelay * 1000);
+      if (doNext) {
+        this.nextPhoto();
       }
+      clearTimeout(this.slideshowNextTaskId);
+      this.slideshowNextTaskId = setTimeout(this.slideshowNext, this.slideshowDelay * 1000);
     },
     ...mapActions(["navigate", "refreshRemoteConfig"]),
     ...mapMutations([
