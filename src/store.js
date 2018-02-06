@@ -12,8 +12,8 @@ const state = {
   folders: [],
   isSlideshowRunning: false,
   photos: [],
-  remoteRefreshDelay: 3600,
-  slideshowDelay: 600,
+  remoteRefreshDelay: 10,
+  slideshowDelay: 6,
   user: null
 };
 
@@ -71,13 +71,13 @@ const actions = {
     }
     if (state.photos.length === 0) {
       log("navigate: no photos");
-      return;
+      return Promise.reject("no photos");
     }
     let nextPhotoAction = Promise.resolve(state.currentPhoto);
     if (options.route === "slideshow" && (options.photo !== undefined || state.currentPhoto == null)) {
       nextPhotoAction = dispatch("nextPhoto", options.photo);
     }
-    nextPhotoAction.then(currentPhoto => {
+    return nextPhotoAction.then(currentPhoto => {
       if (options.addToHistory !== false) {
         const newLocation = getLocation(state.currentRoute, currentPhoto && currentPhoto.path);
         if (options.replaceHistory) {
@@ -92,7 +92,7 @@ const actions = {
   nextPhoto({ state, commit }, newPhoto) {
     if (state.photos.length === 0) {
       log("nextPhoto: no photos");
-      return;
+      return Promise.reject("no photos");
     }
     var photo = state.photos.find(p => p.path === newPhoto);
     if (photo === undefined) {
@@ -109,7 +109,7 @@ const actions = {
     });
   },
   refreshRemoteConfig({ state, commit }) {
-    graphService.getRemoteConfig().then(config => {
+    return graphService.getRemoteConfig().then(config => {
       commit("setFolders", config.folders);
       commit("setRemoteRefreshDelay", config.remoteRefreshDelay);
       commit("setSlideshowDelay", config.slideshowDelay);

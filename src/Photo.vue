@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="nextPhoto">{{name}}</button>
+    <button @click="navigateToNextPhoto">{{name}}</button>
     <button class="right" @click="refreshRemoteConfig"><span v-html="taken"></span></button>
     <video v-if="isVideo" v-bind:src="photo.url" controls autoplay loop></video>
     <img v-else-if="photo" v-bind:src="photo.url"/>
@@ -24,7 +24,7 @@ export default {
     }
   },
   methods: {
-    nextPhoto() {
+    navigateToNextPhoto() {
       this.navigate({ route: "slideshow", photo: "" });
     },
     ...mapActions(["navigate", "refreshRemoteConfig"])

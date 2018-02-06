@@ -6,7 +6,7 @@
     <!-- <button @click="getPhotoList">get photo list</button> -->
     <photo v-bind:photo="currentPhoto"></photo>
     <!-- <button @click="updateRemoteConfig">refresh remote config</button> -->
-    <!-- <button @click="nextPhoto()">next</button> -->
+    <!-- <button @click="navigateToNextPhoto()">next</button> -->
     <login class="leftbottom"></login>
   </div>
 </template>
@@ -60,25 +60,44 @@ export default {
         log("No folders");
       }
     },
-    nextPhoto() {
-      this.navigate({ route: "slideshow", photo: "" });
+    navigateToNextPhoto() {
+      return this.navigate({ route: "slideshow", photo: "" });
     },
     updateRemoteConfig(doRefresh = true) {
+      let next = Promise.resolve();
       if (doRefresh) {
-        this.refreshRemoteConfig();
+        next = this.refreshRemoteConfig();
       }
-      clearTimeout(this.refreshRemoteConfigTaskId);
-      this.refreshRemoteConfigTaskId = setTimeout(this.updateRemoteConfig, this.remoteRefreshDelay * 1000);
+      next
+        .then(() => {
+          clearTimeout(this.refreshRemoteConfigTaskId);
+          this.refreshRemoteConfigTaskId = setTimeout(
+            this.updateRemoteConfig,
+            this.remoteRefreshDelay * 1000
+          );
+        })
+        .catch(e => {
+          log(`clearing refreshRemoteConfigTaskId because of error ${e}`);
+          clearTimeout(this.refreshRemoteConfigTaskId);
+        });
     },
     settings() {
       this.navigate({ route: "settings" });
     },
     slideshowNext(doNext = true) {
+      let next = Promise.resolve();
       if (doNext) {
-        this.nextPhoto();
+        next = this.navigateToNextPhoto();
       }
-      clearTimeout(this.slideshowNextTaskId);
-      this.slideshowNextTaskId = setTimeout(this.slideshowNext, this.slideshowDelay * 1000);
+      next
+        .then(() => {
+          clearTimeout(this.slideshowNextTaskId);
+          this.slideshowNextTaskId = setTimeout(this.slideshowNext, this.slideshowDelay * 1000);
+        })
+        .catch(e => {
+          log(`clearing slideshowNextTaskId because of error ${e}`);
+          clearTimeout(this.slideshowNextTaskId);
+        });
     },
     ...mapActions(["navigate", "refreshRemoteConfig"]),
     ...mapMutations([
@@ -100,7 +119,7 @@ export default {
     photos: function() {
       log("Photos refreshed");
       if (!this.currentPhoto) {
-        this.nextPhoto();
+        this.navigateToNextPhoto();
       }
     }
   }

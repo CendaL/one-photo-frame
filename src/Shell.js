@@ -35,7 +35,7 @@ const app = new Vue({
       route: routes[qsp.route] ? qsp.route : "slideshow",
       photo: qsp.photo || (this.currentPhoto && this.currentPhoto.path),
       replaceHistory: true
-    });
+    }).catch(e => log(`Shell created error: ${e}`));
   },
   render(h) {
     return h(this.ViewComponent);
