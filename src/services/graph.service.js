@@ -2,6 +2,7 @@ import authService from "./auth.service";
 import { baseName, formatDateTime, isVideo } from "../utils";
 import { log } from "../utils";
 
+const isProd = IS_PROD;
 const graphUrl = "https://graph.microsoft.com/v1.0";
 const basePath = `${graphUrl}/me/drive/root:`;
 const listSuffix = ":/delta?select=name,photo,video,file,parentReference";
@@ -21,7 +22,9 @@ function prepareRequest(url) {
 
 export default {
   getRemoteConfig() {
-    return prepareRequest(`${basePath}/one-photo-frame.json:/content`).then(response => response.json());
+    return prepareRequest(`${basePath}/one-photo-frame${isProd ? "" : ".debug"}.json:/content`).then(
+      response => response.json()
+    );
   },
   getPhotoList(path) {
     return prepareRequest(`${basePath}/${path}${listSuffix}`)

@@ -52,6 +52,7 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       MSAL_REDIRECT_URL: isProd ? '"https://one-photo-frame.azurewebsites.net/"' : '"http://localhost:8080/"',
+      IS_PROD: isProd ? "true" : "false",
       "process.env": isProd
         ? {
             NODE_ENV: '"production"'
