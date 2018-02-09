@@ -1,26 +1,41 @@
 <template>
   <div>
     <button @click="$emit('navigateToNextPhoto')">{{name}}</button>
-    <button class="right" v-show="isLoaded" @click="$emit('updateRemoteConfig')"><span v-html="taken"></span></button>
-    <video v-if="isVideo" v-bind:src="photo.url" v-on:load="isLoaded = true" controls autoplay loop></video>
-    <img v-else-if="photo" v-bind:src="photo.url" v-on:load="isLoaded = true"/>
+    <button class="right"
+      v-show="isLoaded"
+      @click="$emit('updateRemoteConfig')"><span v-html="taken"></span></button>
+    <transition name="fade">
+      <video v-if="isVideo"
+        v-bind:src="photoSrc"
+        v-bind:key="photoSrc"
+        v-on:load="isLoaded = true"
+        v-bind:width="width"
+        v-bind:height="height"
+        controls autoplay loop></video>
+      <img v-else-if="photo"
+        v-bind:src="photoSrc"
+        v-bind:key="photoSrc"
+        v-on:load="isLoaded = true"/>
+    </transition>
   </div>
 </template>
 
 <script>
-import { isVideo } from "./utils";
+import { isVideo, log } from "./utils";
 import { mapActions, mapMutations, mapState } from "vuex";
 export default {
   props: ["photo"],
   data() {
     return {
-      isLoaded: false
+      isLoaded: false,
+      isVideo: false,
+      photoSrc: null,
+      newPhotoSrc: null,
+      height: window.innerHeight,
+      width: window.innerWidth
     };
   },
   computed: {
-    isVideo() {
-      return this.photo && isVideo(this.photo.name);
-    },
     name() {
       if (!this.isLoaded) {
         return "nahrávám...";
@@ -34,6 +49,25 @@ export default {
   watch: {
     photo() {
       this.isLoaded = false;
+      this.height = window.innerHeight;
+      this.width = window.innerWidth;
+      this.newPhotoSrc = new Image();
+
+      if (isVideo(this.photo.name)) {
+        // do not wait until video is fully loaded
+        setTimeout(() => {
+          this.photoSrc = this.photo.url;
+          this.isVideo = true;
+          this.isLoaded = true;
+        }, 5000);
+      } else {
+        this.newPhotoSrc.onload = () => {
+          this.photoSrc = this.photo.url;
+          this.isVideo = isVideo(this.photo.name);
+        };
+      }
+
+      this.newPhotoSrc.src = this.photo.url;
     }
   }
 };
@@ -58,5 +92,19 @@ button {
   right: 1%;
   position: fixed;
   text-align: right;
+}
+.fade-enter-active {
+  transition: opacity 5s;
+}
+.fade-enter {
+  opacity: 0;
+}
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 1s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
 </style>
