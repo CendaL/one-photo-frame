@@ -1,9 +1,9 @@
 <template>
   <div>
     <button @click="navigateToNextPhoto">{{name}}</button>
-    <button class="right" @click="refreshRemoteConfig"><span v-html="taken"></span></button>
-    <video v-if="isVideo" v-bind:src="photo.url" controls autoplay loop></video>
-    <img v-else-if="photo" v-bind:src="photo.url"/>
+    <button class="right" v-show="isLoaded" @click="refreshRemoteConfig"><span v-html="taken"></span></button>
+    <video v-if="isVideo" v-bind:src="photo.url" v-on:load="isLoaded = true" controls autoplay loop></video>
+    <img v-else-if="photo" v-bind:src="photo.url" v-on:load="isLoaded = true"/>
   </div>
 </template>
 
@@ -12,11 +12,19 @@ import { isVideo } from "./utils";
 import { mapActions, mapMutations, mapState } from "vuex";
 export default {
   props: ["photo"],
+  data() {
+    return {
+      isLoaded: false
+    };
+  },
   computed: {
     isVideo() {
       return this.photo && isVideo(this.photo.name);
     },
     name() {
+      if (!this.isLoaded) {
+        return "nahrávám...";
+      }
       return this.photo && this.photo.name.substring(0, this.photo.name.lastIndexOf("."));
     },
     taken() {
@@ -28,6 +36,11 @@ export default {
       this.navigate({ route: "slideshow", photo: "" });
     },
     ...mapActions(["navigate", "refreshRemoteConfig"])
+  },
+  watch: {
+    photo() {
+      this.isLoaded = false;
+    }
   }
 };
 </script>
