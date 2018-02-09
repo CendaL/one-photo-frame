@@ -1,12 +1,11 @@
 <template>
   <div>
     <!-- <log /> -->
-    <!-- <button @click="toggleSlideshow()">toggle slideshow</button> -->
     <!-- <button @click="settings">settings</button> -->
-    <!-- <button @click="getPhotoList">get photo list</button> -->
-    <photo v-bind:photo="currentPhoto" v-on:navigateToNextPhoto="navigateToNextPhoto" v-on:updateRemoteConfig="updateRemoteConfig"></photo>
-    <!-- <button @click="updateRemoteConfig">refresh remote config</button> -->
-    <!-- <button @click="navigateToNextPhoto()">next</button> -->
+    <photo v-bind:photo="currentPhoto"
+      v-on:navigateToNextPhoto="navigateToNextPhoto"
+      v-on:updateRemoteConfig="updateRemoteConfig"></photo>
+    <label><input type="checkbox" v-model="sequential"/><span></span></label>
     <login class="leftbottom"></login>
   </div>
 </template>
@@ -23,6 +22,7 @@ export default {
   data() {
     return {
       refreshRemoteConfigTaskId: null,
+      sequential: true,
       slideshowNextTaskId: null
     };
   },
@@ -61,7 +61,7 @@ export default {
       }
     },
     navigateToNextPhoto() {
-      return this.navigate({ route: "slideshow", photo: "" });
+      return this.navigate({ route: "slideshow", photo: "", sequential: this.sequential });
     },
     updateRemoteConfig(doRefresh = true) {
       let next = Promise.resolve();
@@ -130,5 +130,27 @@ export default {
 .leftbottom {
   bottom: 0%;
   position: fixed;
+}
+label input {
+  display: none; /* <-- hide the default checkbox */
+}
+label span {
+  /* <-- style the artificial checkbox */
+  height: 10px;
+  width: 10px;
+  border: 1px solid dimgrey;
+  background-color: gray;
+  display: inline-block;
+  position: fixed;
+  bottom: 5px;
+  right: 5px;
+}
+[type="checkbox"]:checked + span:before {
+  /* <-- style its checked state..with a ticked icon */
+  content: "\2714";
+  font-size: 60%;
+  position: absolute;
+  top: -2px;
+  left: 2px;
 }
 </style>

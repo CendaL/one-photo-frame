@@ -75,7 +75,7 @@ const actions = {
     }
     let nextPhotoAction = Promise.resolve(state.currentPhoto);
     if (options.route === "slideshow" && (options.photo !== undefined || state.currentPhoto == null)) {
-      nextPhotoAction = dispatch("nextPhoto", options.photo);
+      nextPhotoAction = dispatch("nextPhoto", options);
     }
     return nextPhotoAction.then(currentPhoto => {
       if (options.addToHistory !== false) {
@@ -89,19 +89,28 @@ const actions = {
       document.title = options.route === "slideshow" ? currentPhoto && currentPhoto.name : options.route;
     });
   },
-  nextPhoto({ state, commit }, newPhoto) {
+  nextPhoto({ state, commit }, options) {
     if (state.photos.length === 0) {
       log("nextPhoto: no photos");
       return Promise.reject("no photos");
     }
-    var photo = state.photos.find(p => p.path === newPhoto);
+    var photo = state.photos.find(p => p.path === options.photo);
     if (photo === undefined) {
-      do {
-        photo = state.photos[getRandomInt(0, state.photos.length)];
-      } while (state.currentPhoto && state.currentPhoto.path === photo.path);
-      log(`next random photo ${state.currentPhoto && state.currentPhoto.path} => ${photo.path}`);
+      if (options.sequential) {
+        if (state.currentPhoto) {
+          photo = state.photos[(state.photos.indexOf(state.currentPhoto) + 1) % state.photos.length];
+        } else {
+          photo = state.photos[0];
+        }
+        log(`next sequential photo ${state.currentPhoto && state.currentPhoto.path} => ${photo.path}`);
+      } else {
+        do {
+          photo = state.photos[getRandomInt(0, state.photos.length)];
+        } while (state.currentPhoto && state.currentPhoto.path === photo.path);
+        log(`next random photo ${state.currentPhoto && state.currentPhoto.path} => ${photo.path}`);
+      }
     } else {
-      log(`next photo ${newPhoto}`);
+      log(`next photo ${options.photo}`);
     }
     return graphService.getPhotoUrl(photo.path).then(photoUrl => {
       commit("setCurrentPhoto", { photo, photoUrl });
