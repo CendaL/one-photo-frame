@@ -3,7 +3,7 @@
     <!-- <log /> -->
     <!-- <button @click="settings">settings</button> -->
     <photo v-bind:photo="currentPhoto"
-      v-on:navigateToNextPhoto="navigateToNextPhoto"
+      v-on:navigateToNextPhoto="slideshowNext"
       v-on:updateRemoteConfig="updateRemoteConfig"></photo>
     <label><input type="checkbox" v-model="sequential"/><span></span></label>
     <login class="leftbottom"></login>
@@ -64,13 +64,13 @@ export default {
       return this.navigate({ route: "slideshow", photo: "", sequential: this.sequential });
     },
     updateRemoteConfig(doRefresh = true) {
+      clearTimeout(this.refreshRemoteConfigTaskId);
       let next = Promise.resolve();
       if (doRefresh) {
         next = this.refreshRemoteConfig();
       }
       next
         .then(() => {
-          clearTimeout(this.refreshRemoteConfigTaskId);
           this.refreshRemoteConfigTaskId = setTimeout(
             this.updateRemoteConfig,
             this.remoteRefreshDelay * 1000
@@ -78,25 +78,23 @@ export default {
         })
         .catch(e => {
           log(`clearing refreshRemoteConfigTaskId because of error ${e}`);
-          clearTimeout(this.refreshRemoteConfigTaskId);
         });
     },
     settings() {
       this.navigate({ route: "settings" });
     },
     slideshowNext(doNext = true) {
+      clearTimeout(this.slideshowNextTaskId);
       let next = Promise.resolve();
       if (doNext) {
         next = this.navigateToNextPhoto();
       }
       next
         .then(() => {
-          clearTimeout(this.slideshowNextTaskId);
           this.slideshowNextTaskId = setTimeout(this.slideshowNext, this.slideshowDelay * 1000);
         })
         .catch(e => {
           log(`clearing slideshowNextTaskId because of error ${e}`);
-          clearTimeout(this.slideshowNextTaskId);
         });
     },
     ...mapActions(["navigate", "refreshRemoteConfig"]),
