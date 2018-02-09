@@ -4,7 +4,7 @@
     <!-- <button @click="toggleSlideshow()">toggle slideshow</button> -->
     <!-- <button @click="settings">settings</button> -->
     <!-- <button @click="getPhotoList">get photo list</button> -->
-    <photo v-bind:photo="currentPhoto"></photo>
+    <photo v-bind:photo="currentPhoto" v-on:navigateToNextPhoto="navigateToNextPhoto" v-on:updateRemoteConfig="updateRemoteConfig"></photo>
     <!-- <button @click="updateRemoteConfig">refresh remote config</button> -->
     <!-- <button @click="navigateToNextPhoto()">next</button> -->
     <login class="leftbottom"></login>

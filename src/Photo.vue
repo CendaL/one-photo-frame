@@ -1,7 +1,7 @@
 <template>
   <div>
-    <button @click="navigateToNextPhoto">{{name}}</button>
-    <button class="right" v-show="isLoaded" @click="refreshRemoteConfig"><span v-html="taken"></span></button>
+    <button @click="$emit('navigateToNextPhoto')">{{name}}</button>
+    <button class="right" v-show="isLoaded" @click="$emit('updateRemoteConfig')"><span v-html="taken"></span></button>
     <video v-if="isVideo" v-bind:src="photo.url" v-on:load="isLoaded = true" controls autoplay loop></video>
     <img v-else-if="photo" v-bind:src="photo.url" v-on:load="isLoaded = true"/>
   </div>
@@ -30,12 +30,6 @@ export default {
     taken() {
       return this.photo && this.photo.taken.replace(/(.*) (\S+)/, "$1<br>$2");
     }
-  },
-  methods: {
-    navigateToNextPhoto() {
-      this.navigate({ route: "slideshow", photo: "" });
-    },
-    ...mapActions(["navigate", "refreshRemoteConfig"])
   },
   watch: {
     photo() {
