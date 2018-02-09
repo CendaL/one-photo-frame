@@ -5,7 +5,7 @@
     <photo v-bind:photo="currentPhoto"
       v-on:navigateToNextPhoto="slideshowNext"
       v-on:updateRemoteConfig="updateRemoteConfig"></photo>
-    <label><input type="checkbox" v-model="sequential"/><span></span></label>
+    <label><input type="checkbox" v-model="random"/><span></span></label>
     <login class="leftbottom"></login>
   </div>
 </template>
@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       refreshRemoteConfigTaskId: null,
-      sequential: true,
+      random: false,
       slideshowNextTaskId: null
     };
   },
@@ -61,7 +61,7 @@ export default {
       }
     },
     navigateToNextPhoto() {
-      return this.navigate({ route: "slideshow", photo: "", sequential: this.sequential });
+      return this.navigate({ route: "slideshow", photo: "", sequential: !this.random });
     },
     updateRemoteConfig(doRefresh = true) {
       clearTimeout(this.refreshRemoteConfigTaskId);
