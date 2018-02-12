@@ -13,7 +13,7 @@ const state = {
   isSlideshowRunning: false,
   photos: [],
   remoteRefreshDelay: 10,
-  slideshowDelay: 6,
+  slideshowDelay: 5,
   user: null
 };
 
@@ -79,7 +79,7 @@ const actions = {
     }
     return nextPhotoAction.then(currentPhoto => {
       if (options.addToHistory !== false) {
-        const newLocation = getLocation(state.currentRoute, currentPhoto && currentPhoto.path);
+        const newLocation = getLocation(state.currentRoute, currentPhoto && currentPhoto.id);
         if (options.replaceHistory) {
           window.history.replaceState(null, "", newLocation);
         } else {
@@ -94,7 +94,7 @@ const actions = {
       log("nextPhoto: no photos");
       return Promise.reject("no photos");
     }
-    var photo = state.photos.find(p => p.path === options.photo);
+    var photo = state.photos.find(p => p.id.toLowerCase() === options.photo.toLowerCase());
     if (photo === undefined) {
       if (options.sequential) {
         if (state.currentPhoto) {
@@ -112,7 +112,7 @@ const actions = {
     } else {
       log(`next photo ${options.photo}`);
     }
-    return graphService.getPhotoUrl(photo.path).then(photoUrl => {
+    return graphService.getPhotoUrl(photo).then(photoUrl => {
       commit("setCurrentPhoto", { photo, photoUrl });
       return Promise.resolve(state.currentPhoto);
     });
@@ -129,8 +129,8 @@ const actions = {
   }
 };
 
-function getLocation(route, photo) {
-  return `?route=${route}` + (route === "slideshow" ? `&photo=${photo}` : "");
+function getLocation(route, photoId) {
+  return `?route=${route}` + (route === "slideshow" ? `&photo=${photoId}` : "");
 }
 
 function getRandomInt(min, max) {
