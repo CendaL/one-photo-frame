@@ -33,31 +33,28 @@ export default {
         const videoBaseNames = response.value
           .filter(photo => isVideo(photo.name))
           .map(photo => baseName(photo.name));
-        return Promise.resolve(
-          response.value
-            .filter(photo => {
-              if (
-                photo.file &&
-                (isVideo(photo.name) || videoBaseNames.indexOf(baseName(photo.name)) === -1)
-              ) {
-                return true;
-              }
-              log(`Filter out ${photo.name}`);
-            })
-            .map((photo, idx) => {
-              photo.parentReference.path;
-              let subfolder = photo.parentReference.path.substring(
-                photo.parentReference.path.indexOf(path) + path.length
-              );
-              return {
-                index: idx + 1,
-                name: photo.name,
-                path: `${path}${subfolder}/${photo.name}`,
-                url: null,
-                taken: photo.photo ? formatDateTime(photo.photo.takenDateTime) : ""
-              };
-            })
-        );
+        const result = response.value
+          .filter(photo => {
+            if (photo.photo && (isVideo(photo.name) || videoBaseNames.indexOf(baseName(photo.name)) === -1)) {
+              return true;
+            }
+            log(`Filter out ${photo.name}`);
+          })
+          .map((photo, idx) => {
+            photo.parentReference.path;
+            let subfolder = photo.parentReference.path.substring(
+              photo.parentReference.path.indexOf(path) + path.length
+            );
+            return {
+              index: idx + 1,
+              name: photo.name,
+              path: `${path}${subfolder}/${photo.name}`,
+              url: null,
+              taken: photo.photo ? formatDateTime(photo.photo.takenDateTime) : ""
+            };
+          });
+        result.sort((a, b) => a.path.localeCompare(b.path));
+        return Promise.resolve(result);
       });
   },
   getPhotoUrl(path) {
