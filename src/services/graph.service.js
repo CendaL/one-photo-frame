@@ -1,5 +1,5 @@
 import authService from "./auth.service";
-import { baseName, formatDateTime, isVideo } from "../utils";
+import { baseName, formatDateTime, getDriveId, isVideo } from "../utils";
 import { log } from "../utils";
 
 const isProd = IS_PROD;
@@ -27,8 +27,7 @@ export default {
     );
   },
   getPhotoList(path) {
-    const driveId = path.match(/(.*)[!]/)[1];
-    return prepareRequest(`${graphUrl}/drives/${driveId}/items/${path}${listSuffix}`)
+    return prepareRequest(`${graphUrl}/drives/${getDriveId(path)}/items/${path}${listSuffix}`)
       .then(response => response.json())
       .then(response => {
         const videoBaseNames = response.value
@@ -56,8 +55,7 @@ export default {
       });
   },
   getPhotoUrl(photo) {
-    const driveId = photo.id.match(/(.*)[!]/)[1];
-    return prepareRequest(`${graphUrl}/drives/${driveId}/items/${photo.id}`)
+    return prepareRequest(`${graphUrl}/drives/${getDriveId(photo.id)}/items/${photo.id}`)
       .then(response => response.json())
       .then(response => {
         if (response.hasOwnProperty("@microsoft.graph.downloadUrl")) {

@@ -15,6 +15,10 @@ export function formatDateTime(datetime) {
   return `${dt.getDate()}. ${dt.getMonth() + 1}. ${dt.getFullYear()} ${dt.getHours()}:${minutes}`;
 }
 
+export function getDriveId(itemId) {
+  return itemId.match(/(.*)[!]/)[1];
+}
+
 export function isVideo(name) {
   if (typeof name === "string") {
     return name.toLowerCase().search(".mp4$") !== -1;
