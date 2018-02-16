@@ -115,7 +115,7 @@ export default {
       this.slideshowNext(false);
     },
     photos: function() {
-      log("Photos refreshed");
+      log(`Photos refreshed: ${this.photos.length}`);
       if (!this.currentPhoto) {
         this.navigateToNextPhoto();
       }

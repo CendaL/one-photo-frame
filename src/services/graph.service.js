@@ -6,26 +6,6 @@ const isProd = IS_PROD;
 const graphUrl = "https://graph.microsoft.com/v1.0";
 const listSuffix = "/delta?select=id,name,photo,video,file,parentReference";
 
-function prepareRequest(url) {
-  return authService.getToken().then(token => {
-    const headers = new Headers({
-      Authorization: `Bearer ${token}`
-    });
-    const options = {
-      headers
-    };
-    log(`getting data from url '${url}'...`);
-    return fetch(url, options);
-  });
-}
-
-function parseResponse(response) {
-  if (!response.ok) {
-    throw new Error(response.statusText);
-  }
-  return response.json();
-}
-
 function getOtherConfig() {
   return prepareRequest(`${graphUrl}/me/drive/sharedWithMe`)
     .then(parseResponse)
@@ -42,40 +22,75 @@ function getOtherConfig() {
     });
 }
 
+function getPhotoList(path) {
+  function getPhotoListFromUrl(url) {
+    return prepareRequest(url)
+      .then(response => response.json())
+      .then(response => {
+        log(`add photos: ${response.value.length}`);
+        photoList.push(...response.value);
+        if (response["@odata.nextLink"]) {
+          return getPhotoListFromUrl(response["@odata.nextLink"]);
+        }
+      });
+  }
+
+  let photoList = [];
+  return getPhotoListFromUrl(`${graphUrl}/drives/${getDriveId(path)}/items/${path}${listSuffix}`).then(_ => {
+    log(`all photos: ${photoList.length}`);
+    return Promise.resolve(getPhotosFromPhotoList(photoList));
+  });
+}
+
+function getPhotosFromPhotoList(photoList) {
+  const videoBaseNames = photoList.filter(photo => isVideo(photo.name)).map(photo => baseName(photo.name));
+  const result = photoList
+    .filter(photo => {
+      if (photo.photo && (isVideo(photo.name) || videoBaseNames.indexOf(baseName(photo.name)) === -1)) {
+        return true;
+      }
+      log(`Filter out ${photo.name}`);
+    })
+    .map((photo, idx) => {
+      return {
+        id: photo.id,
+        name: photo.name,
+        path: `${photo.parentReference.path}/${photo.name}`,
+        url: null,
+        taken: photo.photo ? formatDateTime(photo.photo.takenDateTime) : ""
+      };
+    });
+  result.sort((a, b) => a.path.localeCompare(b.path));
+  return result;
+}
+
+function parseResponse(response) {
+  if (!response.ok) {
+    throw new Error(response.statusText);
+  }
+  return response.json();
+}
+
+function prepareRequest(url) {
+  return authService.getToken().then(token => {
+    const headers = new Headers({
+      Authorization: `Bearer ${token}`
+    });
+    const options = {
+      headers
+    };
+    log(`getting data from url '${url}'...`);
+    return fetch(url, options);
+  });
+}
+
 export default {
   getRemoteConfig() {
     return prepareRequest(`${graphUrl}/me/drive/root:/one-photo-frame${isProd ? "" : ".other"}.json:/content`)
       .then(response => (response.status === 404 ? getOtherConfig() : response))
       .then(parseResponse);
   },
-  getPhotoList(path) {
-    return prepareRequest(`${graphUrl}/drives/${getDriveId(path)}/items/${path}${listSuffix}`)
-      .then(response => response.json())
-      .then(response => {
-        const videoBaseNames = response.value
-          .filter(photo => isVideo(photo.name))
-          .map(photo => baseName(photo.name));
-        const result = response.value
-          .filter(photo => {
-            if (photo.photo && (isVideo(photo.name) || videoBaseNames.indexOf(baseName(photo.name)) === -1)) {
-              return true;
-            }
-            log(`Filter out ${photo.name}`);
-          })
-          .map((photo, idx) => {
-            return {
-              index: idx + 1,
-              id: photo.id,
-              name: photo.name,
-              path: `${photo.parentReference.path}/${photo.name}`,
-              url: null,
-              taken: photo.photo ? formatDateTime(photo.photo.takenDateTime) : ""
-            };
-          });
-        result.sort((a, b) => a.path.localeCompare(b.path));
-        return Promise.resolve(result);
-      });
-  },
+  getPhotoList,
   getPhotoUrl(photo) {
     return prepareRequest(`${graphUrl}/drives/${getDriveId(photo.id)}/items/${photo.id}`)
       .then(response => response.json())
