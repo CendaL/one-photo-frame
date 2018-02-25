@@ -26,7 +26,6 @@ export default {
         user => {
           if (user) {
             this.setUser(user);
-            this.refreshRemoteConfig();
           } else {
             this.setUser(null);
             logError("login failed: no user");
@@ -48,6 +47,9 @@ export default {
   watch: {
     isSignedIn() {
       this.setStatusText(this.isSignedIn ? "" : "nepřihlášený uživatel");
+      if (this.isSignedIn) {
+        this.refreshRemoteConfig();
+      }
     }
   }
 };

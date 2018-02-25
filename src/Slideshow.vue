@@ -60,8 +60,8 @@ export default {
         logError("No folders");
       }
     },
-    navigateToNextPhoto() {
-      return this.navigate({ route: "slideshow", photo: "", sequential: !this.random });
+    navigateToNextPhoto(photo = "") {
+      return this.navigate({ route: "slideshow", photo: photo, sequential: !this.random });
     },
     updateRemoteConfig(doRefresh = true) {
       clearTimeout(this.refreshRemoteConfigTaskId);
@@ -86,22 +86,22 @@ export default {
     settings() {
       this.navigate({ route: "settings" });
     },
-    slideshowNext(doNext = true) {
+    slideshowNext(doNext = true, photo = "") {
       clearTimeout(this.slideshowNextTaskId);
       let next = Promise.resolve();
       if (doNext) {
-        next = this.navigateToNextPhoto();
+        next = this.navigateToNextPhoto(photo);
       }
       next
-        .catch(e => {
-          log(`navigateToNextPhoto error ${e}`);
-        })
         .then(() => {
           if (this.isSignedIn) {
             log(`next photo in ${this.slideshowDelay}`);
             this.slideshowNextTaskId = setTimeout(this.slideshowNext, this.slideshowDelay * 1000);
           }
         })
+        .catch(e => {
+          logError(`navigateToNextPhoto error ${e}`);
+        });
     },
     ...mapActions(["navigate", "refreshRemoteConfig"]),
     ...mapMutations([
@@ -113,15 +113,13 @@ export default {
     ])
   },
   watch: {
-    folders: function() {
+    folders() {
       log("Folders refreshed -> refresh photos");
       this.getPhotoList();
     },
-    photos: function() {
+    photos() {
       log(`Photos refreshed: ${this.photos.length}`);
-      if (!this.currentPhoto) {
-        this.navigateToNextPhoto();
-      }
+      this.slideshowNext(true, this.currentPhoto ? this.currentPhoto.id : "");
     }
   }
 };

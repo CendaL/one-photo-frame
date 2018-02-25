@@ -11,16 +11,14 @@ const state = {
   currentRoute: null,
   folders: [],
   photos: [],
-  remoteRefreshDelay: 10,
-  slideshowDelay: 5,
+  remoteRefreshDelay: 14400,
+  slideshowDelay: 300,
   statusText: "inicializece...",
   user: null
 };
 
 const getters = {
-  isSignedIn: state => {
-    return Boolean(state.user);
-  }
+  isSignedIn: state => Boolean(state.user)
 };
 
 const mutations = {
@@ -143,5 +141,5 @@ export default new Vuex.Store({
   getters,
   mutations,
   actions,
-  plugins: [createPersistedStore()]
+  plugins: [createPersistedStore({ paths: ["currentPhoto", "currentRoute", "folders"] })]
 });
