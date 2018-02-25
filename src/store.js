@@ -10,7 +10,6 @@ const state = {
   currentPhoto: null,
   currentRoute: null,
   folders: [],
-  isSlideshowRunning: false,
   photos: [],
   remoteRefreshDelay: 10,
   slideshowDelay: 5,
@@ -56,10 +55,6 @@ const mutations = {
   setUser(state, user) {
     state.user = user;
     log(`set user to ${JSON.stringify(user)}`);
-  },
-  toggleSlideshow(state) {
-    state.isSlideshowRunning = !state.isSlideshowRunning;
-    log(`set isSlideshowRunning to ${state.isSlideshowRunning}`);
   }
 };
 
@@ -122,9 +117,6 @@ const actions = {
       commit("setFolders", config.folders);
       commit("setRemoteRefreshDelay", config.remoteRefreshDelay);
       commit("setSlideshowDelay", config.slideshowDelay);
-      if (state.isSlideshowRunning !== config.isSlideshowRunning) {
-        commit("toggleSlideshow");
-      }
     });
   }
 };

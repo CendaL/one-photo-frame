@@ -21,8 +21,8 @@ import Photo from "./Photo.vue";
 export default {
   data() {
     return {
-      refreshRemoteConfigTaskId: null,
       random: false,
+      refreshRemoteConfigTaskId: null,
       slideshowNextTaskId: null
     };
   },
@@ -36,7 +36,6 @@ export default {
       "currentPhoto",
       "currentRoute",
       "folders",
-      "isSlideshowRunning",
       "photos",
       "remoteRefreshDelay",
       "slideshowDelay"
@@ -110,9 +109,6 @@ export default {
     folders: function() {
       log("Folders refreshed -> refresh photos");
       this.getPhotoList();
-    },
-    isSlideshowRunning: function() {
-      this.slideshowNext(false);
     },
     photos: function() {
       log(`Photos refreshed: ${this.photos.length}`);
