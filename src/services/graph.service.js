@@ -6,15 +6,15 @@ const isProd = IS_PROD;
 const graphUrl = "https://graph.microsoft.com/v1.0";
 const listSuffix = "/delta?select=id,name,photo,video,file,parentReference";
 
-function getOtherConfig() {
+function getSharedConfig() {
   return prepareRequest(`${graphUrl}/me/drive/sharedWithMe`)
     .then(parseResponse)
     .then(response => {
-      const otherConfig = response.value.filter(item => item.name === "one-photo-frame.others.json")[0];
-      if (otherConfig && otherConfig.remoteItem) {
-        const otherConfigId = otherConfig.remoteItem.id;
+      const sharedConfig = response.value.filter(item => item.name === "one-photo-frame.json")[0];
+      if (sharedConfig && sharedConfig.remoteItem) {
+        const sharedConfigId = sharedConfig.remoteItem.id;
         return prepareRequest(
-          `${graphUrl}/drives/${getDriveId(otherConfigId)}/items/${otherConfigId}/content`
+          `${graphUrl}/drives/${getDriveId(sharedConfigId)}/items/${sharedConfigId}/content`
         );
       } else {
         throw "one-photo-frame.others.json not found";
@@ -86,8 +86,8 @@ function prepareRequest(url) {
 
 export default {
   getRemoteConfig() {
-    return prepareRequest(`${graphUrl}/me/drive/root:/one-photo-frame${isProd ? "" : ".other"}.json:/content`)
-      .then(response => (response.status === 404 ? getOtherConfig() : response))
+    return prepareRequest(`${graphUrl}/me/drive/root:/one-photo-frame${isProd ? "" : ""}.json:/content`)
+      .then(response => (response.status === 404 ? getSharedConfig() : response))
       .then(parseResponse);
   },
   getPhotoList,
