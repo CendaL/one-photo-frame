@@ -4,6 +4,13 @@ const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const outputPath = path.resolve(__dirname, "./dist");
 const isProd = process.env.NODE_ENV === "production";
+const now = new Date();
+const version =
+  now.getFullYear() +
+  ("0" + (now.getMonth() + 1)).slice(-2) +
+  ("0" + now.getDate()).slice(-2) +
+  ("0" + now.getHours()).slice(-2) +
+  ("0" + now.getMinutes()).slice(-2);
 
 module.exports = {
   entry: path.resolve(__dirname, "./src/Shell.js"),
@@ -52,6 +59,7 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       MSAL_REDIRECT_URL: isProd ? '"https://one-photo-frame.azurewebsites.net/"' : '"http://localhost:8080/"',
+      VERSION: isProd ? `${version}` : "999999999999",
       IS_PROD: isProd ? "true" : "false",
       "process.env": isProd
         ? {

@@ -2,7 +2,7 @@ import Vue from "vue";
 import Vuex from "vuex";
 import createPersistedStore from "vuex-persistedstate";
 import graphService from "./services/graph.service";
-import { log } from "./utils";
+import { log, logError } from "./utils";
 
 Vue.use(Vuex);
 
@@ -121,6 +121,10 @@ const actions = {
       commit("setFolders", config.folders);
       commit("setRemoteRefreshDelay", config.remoteRefreshDelay);
       commit("setSlideshowDelay", config.slideshowDelay);
+      if (config.version > VERSION) {
+        logError("app refresh");
+        window.location.reload(true);
+      }
     });
   }
 };
