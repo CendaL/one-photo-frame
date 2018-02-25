@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { mapActions, mapMutations, mapState } from "vuex";
+import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 import { log } from "./utils";
 import graphService from "./services/graph.service";
 import Log from "./Log.vue";
@@ -39,7 +39,8 @@ export default {
       "photos",
       "remoteRefreshDelay",
       "slideshowDelay"
-    ])
+    ]),
+    ...mapGetters(["isSignedIn"])
   },
   created() {
     this.updateRemoteConfig(false);
@@ -69,15 +70,17 @@ export default {
         next = this.refreshRemoteConfig();
       }
       next
-        .then(() => {
-          this.refreshRemoteConfigTaskId = setTimeout(
-            this.updateRemoteConfig,
-            this.remoteRefreshDelay * 1000
-          );
-        })
         .catch(e => {
-          log(`clearing refreshRemoteConfigTaskId because of error ${e}`);
-        });
+          log(`updateRemoteConfig error ${e}`);
+        })
+        .then(() => {
+          if (this.isSignedIn) {
+            this.refreshRemoteConfigTaskId = setTimeout(
+              this.updateRemoteConfig,
+              this.remoteRefreshDelay * 1000
+            );
+          }
+        })
     },
     settings() {
       this.navigate({ route: "settings" });
@@ -89,12 +92,14 @@ export default {
         next = this.navigateToNextPhoto();
       }
       next
-        .then(() => {
-          this.slideshowNextTaskId = setTimeout(this.slideshowNext, this.slideshowDelay * 1000);
-        })
         .catch(e => {
-          log(`clearing slideshowNextTaskId because of error ${e}`);
-        });
+          log(`navigateToNextPhoto error ${e}`);
+        })
+        .then(() => {
+          if (this.isSignedIn) {
+            this.slideshowNextTaskId = setTimeout(this.slideshowNext, this.slideshowDelay * 1000);
+          }
+        })
     },
     ...mapActions(["navigate", "refreshRemoteConfig"]),
     ...mapMutations([
