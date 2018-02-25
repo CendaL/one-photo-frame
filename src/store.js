@@ -10,6 +10,7 @@ const state = {
   currentPhoto: null,
   currentRoute: null,
   folders: [],
+  isNextRandom: false,
   photos: [],
   remoteRefreshDelay: 14400,
   slideshowDelay: 300,
@@ -30,6 +31,10 @@ const mutations = {
   setFolders(state, folders) {
     state.folders = folders;
     log(`set folders to ${JSON.stringify(folders)}`);
+  },
+  setIsNextRandom(state, isNextRandom) {
+    state.isNextRandom = isNextRandom;
+    log(`set isNextRandom to ${JSON.stringify(isNextRandom)}`);
   },
   setPhotos(state, photos) {
     state.photos = photos;
@@ -95,18 +100,18 @@ const actions = {
     }
     var photo = state.photos.find(p => p.id.toLowerCase() === options.photo.toLowerCase());
     if (photo === undefined) {
-      if (options.sequential) {
+      if (state.isNextRandom) {
+        do {
+          photo = state.photos[getRandomInt(0, state.photos.length)];
+        } while (state.currentPhoto && state.currentPhoto.path === photo.path);
+        log(`next random photo ${state.currentPhoto && state.currentPhoto.path} => ${photo.path}`);
+      } else {
         if (state.currentPhoto) {
           photo = state.photos[(state.photos.indexOf(state.currentPhoto) + 1) % state.photos.length];
         } else {
           photo = state.photos[0];
         }
         log(`next sequential photo ${state.currentPhoto && state.currentPhoto.path} => ${photo.path}`);
-      } else {
-        do {
-          photo = state.photos[getRandomInt(0, state.photos.length)];
-        } while (state.currentPhoto && state.currentPhoto.path === photo.path);
-        log(`next random photo ${state.currentPhoto && state.currentPhoto.path} => ${photo.path}`);
       }
     } else {
       log(`next photo ${options.photo}`);
@@ -119,6 +124,7 @@ const actions = {
   refreshRemoteConfig({ state, commit }) {
     return graphService.getRemoteConfig().then(config => {
       commit("setFolders", config.folders);
+      commit("setIsNextRandom", config.isNextRandom === true);
       commit("setRemoteRefreshDelay", config.remoteRefreshDelay);
       commit("setSlideshowDelay", config.slideshowDelay);
       if (config.version > VERSION) {
