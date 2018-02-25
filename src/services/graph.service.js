@@ -44,7 +44,7 @@ function getPhotoList(path) {
 
 function getPhotosFromPhotoList(photoList) {
   const videoBaseNames = photoList.filter(photo => isVideo(photo.name)).map(photo => baseName(photo.name));
-  const result = photoList
+  return photoList
     .filter(photo => {
       if (photo.photo && (isVideo(photo.name) || videoBaseNames.indexOf(baseName(photo.name)) === -1)) {
         return true;
@@ -62,8 +62,6 @@ function getPhotosFromPhotoList(photoList) {
         taken: photo.photo ? formatDateTime(photo.photo.takenDateTime) : ""
       };
     });
-  result.sort((a, b) => a.path.localeCompare(b.path));
-  return result;
 }
 
 function parseResponse(response) {

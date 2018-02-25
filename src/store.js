@@ -40,6 +40,25 @@ const mutations = {
     state.photos = photos;
     log(`set photos to ${JSON.stringify(photos)}`);
   },
+  shufflePhotos(state) {
+    let toRandomizeCount = state.photos.length,
+      tmp,
+      idx;
+    // While there remain elements to shuffle…
+    while (toRandomizeCount) {
+      // Pick a remaining element…
+      idx = Math.floor(Math.random() * toRandomizeCount--);
+      // And swap it with the current element.
+      tmp = state.photos[toRandomizeCount];
+      state.photos[toRandomizeCount] = state.photos[idx];
+      state.photos[idx] = tmp;
+    }
+    log(`photos shuffled ${JSON.stringify(state.photos.map(p => p.name))}`);
+  },
+  sortPhotos(state) {
+    state.photos.sort((a, b) => a.path.localeCompare(b.path));
+    log(`photos sorted ${JSON.stringify(state.photos.map(p => p.name))}`);
+  },
   setRemoteRefreshDelay(state, delay) {
     if (delay) {
       state.remoteRefreshDelay = delay;
@@ -100,21 +119,21 @@ const actions = {
     }
     var photo = state.photos.find(p => p.id.toLowerCase() === options.photo.toLowerCase());
     if (photo === undefined) {
-      if (state.isNextRandom) {
-        do {
-          photo = state.photos[getRandomInt(0, state.photos.length)];
-        } while (state.currentPhoto && state.currentPhoto.path === photo.path);
-        log(`next random photo ${state.currentPhoto && state.currentPhoto.path} => ${photo.path}`);
-      } else {
-        if (state.currentPhoto) {
-          photo = state.photos[(state.photos.indexOf(state.currentPhoto) + 1) % state.photos.length];
-        } else {
-          photo = state.photos[0];
+      if (state.currentPhoto) {
+        let nextIndex = state.photos.indexOf(state.currentPhoto) + 1;
+        if (nextIndex >= state.photos.length) {
+          if (state.isNextRandom) {
+            commit("shufflePhotos");
+          }
+          nextIndex = 0;
         }
-        log(`next sequential photo ${state.currentPhoto && state.currentPhoto.path} => ${photo.path}`);
+        photo = state.photos[nextIndex];
+      } else {
+        photo = state.photos[0];
       }
+      log(`next photo ${state.currentPhoto && state.currentPhoto.path} => ${photo.path}`);
     } else {
-      log(`next photo ${options.photo}`);
+      log(`next specific photo ${options.photo}`);
     }
     return graphService.getPhotoUrl(photo).then(photoUrl => {
       commit("setCurrentPhoto", { photo, photoUrl });
@@ -132,6 +151,14 @@ const actions = {
         window.location.reload(true);
       }
     });
+  },
+  updatePhotos({ state, commit }, photos) {
+    commit("setPhotos", photos);
+    if (state.isNextRandom) {
+      commit("shufflePhotos");
+    } else {
+      commit("sortPhotos");
+    }
   }
 };
 

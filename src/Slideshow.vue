@@ -52,7 +52,7 @@ export default {
     getPhotoList() {
       if (this.folders.length > 0) {
         graphService.getPhotoList(this.folders[0]).then(photos => {
-          this.setPhotos(photos);
+          this.updatePhotos(photos);
         });
       } else {
         logError("No folders");
@@ -101,14 +101,8 @@ export default {
           logError(`navigateToNextPhoto error ${e}`);
         });
     },
-    ...mapActions(["navigate", "refreshRemoteConfig"]),
-    ...mapMutations([
-      "setFolders",
-      "setPhotos",
-      "setRemoteRefreshDelay",
-      "setSlideshowDelay",
-      "toggleSlideshow"
-    ])
+    ...mapActions(["navigate", "refreshRemoteConfig", "updatePhotos"]),
+    ...mapMutations(["setFolders", "setRemoteRefreshDelay", "setSlideshowDelay", "toggleSlideshow"])
   },
   watch: {
     folders() {
