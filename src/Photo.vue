@@ -40,9 +40,7 @@ export default {
     name() {
       return this.statusText
         ? this.statusText
-        : this.isLoaded
-          ? this.photo && this.photo.name.substring(0, this.photo.name.lastIndexOf("."))
-          : "nahrávám...";
+        : this.isLoaded ? this.photo && this.photo.folder : "nahrávám...";
     },
     taken() {
       return this.photo && this.photo.taken.replace(/(.*) (\S+)/, "$1<br>$2");

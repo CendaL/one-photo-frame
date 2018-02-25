@@ -51,10 +51,12 @@ function getPhotosFromPhotoList(photoList) {
       }
       log(`Filter out ${photo.name}`);
     })
-    .map((photo, idx) => {
+    .map(photo => {
+      const folder = decodeURI(photo.parentReference.path.split("/").pop());
       return {
         id: photo.id,
         name: photo.name,
+        folder: folder.substring(folder.indexOf(" ") + 1),
         path: `${photo.parentReference.path}/${photo.name}`,
         url: null,
         taken: photo.photo ? formatDateTime(photo.photo.takenDateTime) : ""
