@@ -13,6 +13,7 @@ const state = {
   photos: [],
   remoteRefreshDelay: 10,
   slideshowDelay: 5,
+  statusText: "inicializece...",
   user: null
 };
 
@@ -52,6 +53,10 @@ const mutations = {
       log(`set slideshowDelay to ${delay}`);
     }
   },
+  setStatusText(state, status) {
+    state.statusText = status;
+    log(`set statusText to ${status}`);
+  },
   setUser(state, user) {
     state.user = user;
     log(`set user to ${JSON.stringify(user)}`);
@@ -60,6 +65,7 @@ const mutations = {
 
 const actions = {
   navigate({ state, commit, dispatch }, options) {
+    commit("setStatusText", "nahrávám...");
     log(`navigate: ${window.location.pathname}${window.location.search} => ${JSON.stringify(options)}`);
     if (state.currentRoute !== options.route) {
       commit("setRoute", options.route);

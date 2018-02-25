@@ -18,6 +18,7 @@ export default {
   },
   created() {
     this.setUser(authService.getUser());
+    this.setStatusText(this.isSignedIn ? "" : "nepřihlášený uživatel");
   },
   methods: {
     login() {
@@ -42,7 +43,12 @@ export default {
       authService.logout();
     },
     ...mapActions(["refreshRemoteConfig"]),
-    ...mapMutations(["setUser"])
+    ...mapMutations(["setStatusText", "setUser"])
+  },
+  watch: {
+    isSignedIn() {
+      this.setStatusText(this.isSignedIn ? "" : "nepřihlášený uživatel");
+    }
   }
 };
 </script>

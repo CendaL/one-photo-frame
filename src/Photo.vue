@@ -21,8 +21,8 @@
 </template>
 
 <script>
-import { isVideo, log } from "./utils";
-import { mapActions, mapMutations, mapState } from "vuex";
+import { isVideo } from "./utils";
+import { mapMutations, mapState } from "vuex";
 export default {
   props: ["photo"],
   data() {
@@ -36,17 +36,27 @@ export default {
     };
   },
   computed: {
+    ...mapState(["statusText"]),
     name() {
-      if (!this.isLoaded) {
-        return "nahrávám...";
-      }
-      return this.photo && this.photo.name.substring(0, this.photo.name.lastIndexOf("."));
+      return this.statusText
+        ? this.statusText
+        : this.isLoaded
+          ? this.photo && this.photo.name.substring(0, this.photo.name.lastIndexOf("."))
+          : "nahrávám...";
     },
     taken() {
       return this.photo && this.photo.taken.replace(/(.*) (\S+)/, "$1<br>$2");
     }
   },
+  methods: {
+    ...mapMutations(["setStatusText"])
+  },
   watch: {
+    isLoaded() {
+      if (this.isLoaded) {
+        this.setStatusText("");
+      }
+    },
     photo() {
       this.isLoaded = false;
       this.height = window.innerHeight;
