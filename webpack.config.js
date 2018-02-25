@@ -12,6 +12,10 @@ const version =
   ("0" + now.getHours()).slice(-2) +
   ("0" + now.getMinutes()).slice(-2);
 
+if (isProd) {
+  console.log(`Building version ${version}\n`);
+}
+
 module.exports = {
   entry: path.resolve(__dirname, "./src/Shell.js"),
   output: {
