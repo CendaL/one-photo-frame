@@ -9,10 +9,11 @@ export function baseName(name) {
 }
 
 export function formatDateTime(datetime) {
+  // datetime is string "2016-08-14T19:20:40Z" so we must use UTC variant to not convert it to local timezone
   const dt = new Date(datetime);
-  let minutes = dt.getMinutes();
+  let minutes = dt.getUTCMinutes();
   minutes = minutes < 10 ? "0" + minutes : minutes;
-  return `${dt.getDate()}. ${dt.getMonth() + 1}. ${dt.getFullYear()} ${dt.getHours()}:${minutes}`;
+  return `${dt.getUTCDate()}. ${dt.getUTCMonth() + 1}. ${dt.getUTCFullYear()} ${dt.getUTCHours()}:${minutes}`;
 }
 
 export function getDriveId(itemId) {
