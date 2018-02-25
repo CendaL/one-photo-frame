@@ -1,6 +1,6 @@
 import * as Msal from "msal";
 import { clientId } from "../config.json";
-import { log } from "../utils";
+import { log, logError } from "../utils";
 
 const graphScopes = ["User.Read", "Files.Read.All"];
 const app = new Msal.UserAgentApplication(
@@ -33,7 +33,7 @@ export default {
         return app.getUser();
       },
       err => {
-        log(`loginPopup error: ${err}`);
+        logError(`loginPopup error: ${err}`);
         return null;
       }
     );

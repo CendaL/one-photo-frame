@@ -32,3 +32,11 @@ export function log(text) {
   }
   console.log(text);
 }
+
+export function logError(text) {
+  const log_element = document.querySelector("pre.logError");
+  if (log_element) {
+    log_element.textContent = `${text}\n\n` + log_element.textContent;
+  }
+  log(text);
+}

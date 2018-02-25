@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <log /> -->
+    <log />
     <!-- <button @click="settings">settings</button> -->
     <photo v-bind:photo="currentPhoto"
       v-on:navigateToNextPhoto="slideshowNext"
@@ -12,7 +12,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
-import { log } from "./utils";
+import { log, logError } from "./utils";
 import graphService from "./services/graph.service";
 import Log from "./Log.vue";
 import Login from "./Login.vue";
@@ -57,7 +57,7 @@ export default {
           this.setPhotos(photos);
         });
       } else {
-        log("No folders");
+        logError("No folders");
       }
     },
     navigateToNextPhoto() {
@@ -71,16 +71,17 @@ export default {
       }
       next
         .catch(e => {
-          log(`updateRemoteConfig error ${e}`);
+          logError(`updateRemoteConfig error ${e}`);
         })
         .then(() => {
           if (this.isSignedIn) {
+            log(`update remote config in ${this.remoteRefreshDelay}`);
             this.refreshRemoteConfigTaskId = setTimeout(
               this.updateRemoteConfig,
               this.remoteRefreshDelay * 1000
             );
           }
-        })
+        });
     },
     settings() {
       this.navigate({ route: "settings" });
@@ -97,6 +98,7 @@ export default {
         })
         .then(() => {
           if (this.isSignedIn) {
+            log(`next photo in ${this.slideshowDelay}`);
             this.slideshowNextTaskId = setTimeout(this.slideshowNext, this.slideshowDelay * 1000);
           }
         })
