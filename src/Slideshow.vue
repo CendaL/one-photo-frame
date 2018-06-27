@@ -51,8 +51,21 @@ export default {
   methods: {
     getPhotoList() {
       if (this.folders.length > 0) {
-        graphService.getPhotoList(this.folders[0]).then(photos => {
-          this.updatePhotos(photos);
+        let allPhotos = [];
+
+        function getPhotosFromFolder(folders) {
+          if (folders.length <= 0) {
+            return Promise.resolve();
+          }
+          log(`get photos for ${folders[0]}`);
+          return graphService.getPhotoList(folders[0]).then(photos => {
+            allPhotos.push(...photos);
+            return getPhotosFromFolder(folders.slice(1));
+          });
+        }
+
+        getPhotosFromFolder(this.folders).then(_ => {
+          this.updatePhotos(allPhotos);
         });
       } else {
         logError("No folders");
