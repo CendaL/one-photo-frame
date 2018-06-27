@@ -106,8 +106,12 @@ export default {
       next
         .then(() => {
           if (this.isSignedIn) {
-            log(`next photo in ${this.slideshowDelay}`);
-            this.slideshowNextTaskId = setTimeout(this.slideshowNext, this.slideshowDelay * 1000);
+            const delay =
+              this.currentPhoto.duration + 10 > this.slideshowDelay
+                ? this.currentPhoto.duration + 10
+                : this.slideshowDelay;
+            log(`next photo in ${delay}`);
+            this.slideshowNextTaskId = setTimeout(this.slideshowNext, delay * 1000);
           }
         })
         .catch(e => {
