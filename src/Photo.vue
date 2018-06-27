@@ -1,6 +1,6 @@
 <template>
   <div>
-    <button @click="$emit('navigateToNextPhoto')">{{name}}</button>
+    <button @click="$emit('navigateToNextPhoto')"><span v-html="name"></span></button>
     <button class="right"
       v-show="isLoaded"
       @click="$emit('updateRemoteConfig')"><span v-html="taken"></span></button>
@@ -38,9 +38,15 @@ export default {
   computed: {
     ...mapState(["statusText"]),
     name() {
-      return this.statusText
-        ? this.statusText
-        : this.isLoaded ? this.photo && this.photo.folder : "nahrávám...";
+      if (this.statusText) {
+        return this.statusText;
+      }
+      if (!this.isLoaded) {
+        return "nahrávám...";
+      }
+      if (this.photo) {
+        return `${this.photo.folder}<br>${this.photo.description}`;
+      }
     },
     taken() {
       return this.photo && this.photo.taken.replace(/(.*) (\S+)/, "$1<br>$2");
@@ -95,6 +101,7 @@ button {
   color: gray;
   background-color: transparent;
   border-width: 0px;
+  text-align: left;
 }
 .right {
   right: 1%;

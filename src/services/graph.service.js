@@ -5,7 +5,7 @@ import * as fetch_retry from "fetch-retry";
 
 const isProd = IS_PROD;
 const graphUrl = "https://graph.microsoft.com/v1.0";
-const listSuffix = "/delta?select=id,name,photo,video,file,parentReference";
+const listSuffix = "/delta?select=id,name,description,photo,video,file,parentReference";
 
 function getSharedConfig() {
   return prepareRequest(`${graphUrl}/me/drive/sharedWithMe`)
@@ -57,6 +57,7 @@ function getPhotosFromPhotoList(photoList) {
       return {
         id: photo.id,
         name: photo.name,
+        description: photo.description ? photo.description : "",
         folder: folder.substring(folder.indexOf(" ") + 1),
         path: `${photo.parentReference.path}/${photo.name}`,
         url: null,
