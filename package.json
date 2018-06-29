@@ -9,6 +9,7 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
+    "es6-promise": "^4.2.4",
     "fetch-retry": "^1.2.1",
     "isomorphic-fetch": "^2.2.1",
     "msal": "^0.1.7",
