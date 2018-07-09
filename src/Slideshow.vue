@@ -107,8 +107,8 @@ export default {
         .then(() => {
           if (this.isSignedIn) {
             const delay =
-              this.currentPhoto.duration + 10 > this.slideshowDelay
-                ? this.currentPhoto.duration + 10
+              this.currentPhoto.duration*2.5 > this.slideshowDelay
+                ? this.currentPhoto.duration*2.5
                 : this.slideshowDelay;
             log(`next photo in ${delay}`);
             this.slideshowNextTaskId = setTimeout(this.slideshowNext, delay * 1000);
