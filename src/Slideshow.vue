@@ -50,6 +50,9 @@ export default {
   },
   methods: {
     getPhotoList() {
+      const that = this;
+      const foldersCount = this.folders.length;
+
       if (this.folders.length > 0) {
         let allPhotos = [];
 
@@ -58,6 +61,7 @@ export default {
             return Promise.resolve();
           }
           log(`get photos for ${folders[0]}`);
+          that.setStatusText(`nahrávám ${folders[0]} (${foldersCount - folders.length + 1}/${foldersCount})`);
           return graphService.getPhotoList(folders[0]).then(photos => {
             allPhotos.push(...photos);
             return getPhotosFromFolder(folders.slice(1));
@@ -107,8 +111,8 @@ export default {
         .then(() => {
           if (this.isSignedIn) {
             const delay =
-              this.currentPhoto.duration*2.5 > this.slideshowDelay
-                ? this.currentPhoto.duration*2.5
+              this.currentPhoto.duration * 2.5 > this.slideshowDelay
+                ? this.currentPhoto.duration * 2.5
                 : this.slideshowDelay;
             log(`next photo in ${delay}`);
             this.slideshowNextTaskId = setTimeout(this.slideshowNext, delay * 1000);
@@ -119,7 +123,13 @@ export default {
         });
     },
     ...mapActions(["navigate", "refreshRemoteConfig", "updatePhotos"]),
-    ...mapMutations(["setFolders", "setRemoteRefreshDelay", "setSlideshowDelay", "toggleSlideshow"])
+    ...mapMutations([
+      "setFolders",
+      "setRemoteRefreshDelay",
+      "setSlideshowDelay",
+      "setStatusText",
+      "toggleSlideshow"
+    ])
   },
   watch: {
     folders() {
