@@ -9,13 +9,13 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
-    "fetch-retry": "^1.2.1",
-    "isomorphic-fetch": "^2.2.1",
     "msal": "^0.1.7",
+    "promise-polyfill": "^7.1.2",
     "querystringify": "^1.0.0",
     "vue": "^2.5.16",
     "vuex": "^2.4.0",
-    "vuex-persistedstate": "^2.5.4"
+    "vuex-persistedstate": "^2.5.4",
+    "whatwg-fetch": "^2.0.4"
   },
   "devDependencies": {
     "babel-core": "^6.26.3",

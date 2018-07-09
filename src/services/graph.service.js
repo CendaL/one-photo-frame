@@ -1,7 +1,6 @@
 import authService from "./auth.service";
 import { baseName, formatDateTime, getDriveId, isVideo } from "../utils";
 import { log } from "../utils";
-import * as fetch_retry from "fetch-retry";
 
 const isProd = IS_PROD;
 const graphUrl = "https://graph.microsoft.com/v1.0";
@@ -85,7 +84,7 @@ function prepareRequest(url) {
       retryDelay: 3000
     };
     log(`getting data from url '${url}'...`);
-    return fetch_retry(url, options);
+    return fetch(url, options);
   });
 }
 
@@ -120,7 +119,7 @@ export default {
         retries: 3,
         retryDelay: 3000
       };
-      return fetch_retry(`${graphUrl}/me`, options).then(response => response.json());
+      return fetch(`${graphUrl}/me`, options).then(response => response.json());
     });
   }
 };
