@@ -79,9 +79,7 @@ function prepareRequest(url) {
       Authorization: `Bearer ${token}`
     });
     const options = {
-      headers,
-      retries: 3,
-      retryDelay: 3000
+      headers
     };
     log(`getting data from url '${url}'...`);
     return fetch(url, options);
@@ -115,9 +113,7 @@ export default {
         Authorization: `Bearer ${token}`
       });
       const options = {
-        headers,
-        retries: 3,
-        retryDelay: 3000
+        headers
       };
       return fetch(`${graphUrl}/me`, options).then(response => response.json());
     });
