@@ -41,3 +41,30 @@ export function logError(text) {
   }
   log(text);
 }
+
+export function fetchRetry(url, options) {
+  var retries = 3;
+  var retryDelay = 3000;
+
+  return new Promise(function(resolve, reject) {
+    var wrappedFetch = function(n) {
+      fetch(url, options)
+        .then(resolve)
+        .catch(error => {
+          if (n > 0) {
+            retry(n);
+          } else {
+            reject(error);
+          }
+        });
+    };
+
+    function retry(n) {
+      setTimeout(function() {
+        wrappedFetch(--n);
+      }, retryDelay);
+    }
+
+    wrappedFetch(retries);
+  });
+}

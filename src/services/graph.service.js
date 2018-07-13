@@ -1,5 +1,5 @@
 import authService from "./auth.service";
-import { baseName, formatDateTime, getDriveId, isVideo } from "../utils";
+import { baseName, formatDateTime, getDriveId, fetchRetry, isVideo } from "../utils";
 import { log } from "../utils";
 
 const isProd = IS_PROD;
@@ -82,7 +82,7 @@ function prepareRequest(url) {
       headers
     };
     log(`getting data from url '${url}'...`);
-    return fetch(url, options);
+    return fetchRetry(url, options);
   });
 }
 
@@ -115,7 +115,7 @@ export default {
       const options = {
         headers
       };
-      return fetch(`${graphUrl}/me`, options).then(response => response.json());
+      return fetchRetry(`${graphUrl}/me`, options).then(response => response.json());
     });
   }
 };
