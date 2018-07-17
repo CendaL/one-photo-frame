@@ -117,5 +117,35 @@ export default {
       };
       return fetchRetry(`${graphUrl}/me`, options).then(response => response.json());
     });
+  },
+  listPhotoFolders(baseFolder) {
+    if (!baseFolder) {
+      const photoFolder = prepareRequest(`${graphUrl}/drive/special/photos?select=id,name`).then(response =>
+        response.json()
+      );
+      const sharedFolders = prepareRequest(
+        `${graphUrl}/drive/sharedWithMe?filter=remoteItem/folder%20ne%20null&select=remoteItem`
+      )
+        .then(response => response.json())
+        .then(data =>
+          data.value.map(item => {
+            return {
+              id: item.remoteItem.id,
+              name: item.remoteItem.name
+            };
+          })
+        );
+
+      return Promise.all([photoFolder, sharedFolders]).then(folderData => {
+        return [].concat.apply([], folderData);
+      });
+
+      // https://graph.microsoft.com/v1.0/me/drive/special/photos?select=id,name
+      // https://graph.microsoft.com/v1.0/me/drive/sharedWithMe?filter=remoteItem/folder%20ne%20null&select=remoteItem
+      // https://graph.microsoft.com/v1.0/me/drives/F0DE34C068729EDC/items/F0DE34C068729EDC!403863/children?filter=folder%20ne%20null&select=name
+    }
+    return prepareRequest(`${graphUrl}/drives/${getDriveId(photo.id)}/items/${photo.id}`)
+      .then(response => response.json())
+      .then(response => {});
   }
 };

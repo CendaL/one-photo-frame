@@ -9,7 +9,8 @@ import { log } from "./utils";
 
 const routes = {
   slideshow: "Slideshow",
-  settings: "Settings"
+  settings: "Settings",
+  test: "test"
 };
 
 const app = new Vue({
@@ -32,7 +33,7 @@ const app = new Vue({
       return;
     }
     this.navigate({
-      route: routes[qsp.route] ? qsp.route : "slideshow",
+      route: routes[qsp.route] ? qsp.route : "test",
       photo: qsp.photo || (this.currentPhoto && this.currentPhoto.path),
       replaceHistory: true
     }).catch(e => log(`Shell created error: ${e}`));
