@@ -119,7 +119,8 @@ export default {
     });
   },
   listPhotoFolders(baseFolder) {
-    if (!baseFolder) {
+    console.log(`listPhotoFolders ${JSON.stringify(baseFolder)}`);
+    if (!baseFolder || !baseFolder.id) {
       const photoFolder = prepareRequest(`${graphUrl}/drive/special/photos?select=id,name`).then(response =>
         response.json()
       );
@@ -139,13 +140,20 @@ export default {
       return Promise.all([photoFolder, sharedFolders]).then(folderData => {
         return [].concat.apply([], folderData);
       });
-
-      // https://graph.microsoft.com/v1.0/me/drive/special/photos?select=id,name
-      // https://graph.microsoft.com/v1.0/me/drive/sharedWithMe?filter=remoteItem/folder%20ne%20null&select=remoteItem
-      // https://graph.microsoft.com/v1.0/me/drives/F0DE34C068729EDC/items/F0DE34C068729EDC!403863/children?filter=folder%20ne%20null&select=name
+    } else {
+      const folder = baseFolder.id.split("!")[0];
+      return prepareRequest(
+        `${graphUrl}/drives/${folder}/items/${
+          baseFolder.id
+        }/children?filter=folder%20ne%20null&select=id,name,parentReference`
+      )
+        .then(response => response.json())
+        .then(data => {
+          console.log(`Found ${data.value.length} subfolders in ${baseFolder.name}`);
+          const parentId = baseFolder.parentReference && baseFolder.parentReference.id;
+          data.value.splice(0, 0, { id: parentId, name: ".." });
+          return data.value;
+        });
     }
-    return prepareRequest(`${graphUrl}/drives/${getDriveId(photo.id)}/items/${photo.id}`)
-      .then(response => response.json())
-      .then(response => {});
   }
 };

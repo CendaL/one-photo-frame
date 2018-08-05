@@ -1,9 +1,9 @@
 <template>
   <div>
-    <button @click="load">load</button>
+    <button @click="load()">load</button>
     <ul>
       <li v-for="item in folders" :key="item.id">
-        {{ item.name }}
+        <span @click="load(item)">{{ item.name }}</span>
       </li>
     </ul>
   </div>
@@ -32,9 +32,8 @@ export default {
   methods: {
     ...mapActions([]),
     ...mapMutations(["setFolders", "setStatusText"]),
-    load() {
-      graphService.listPhotoFolders().then(data => {
-        debugger;
+    load(baseFolder) {
+      graphService.listPhotoFolders(baseFolder).then(data => {
         this.folders = data;
       });
     }
