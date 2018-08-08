@@ -142,6 +142,11 @@ export default {
       });
     } else {
       const folder = baseFolder.id.split("!")[0];
+      let sep = " / ";
+      const prefix = baseFolder.name + sep;
+      let parent = baseFolder.name.split(sep);
+      parent.pop();
+      parent = parent.join(sep) || "/";
       return prepareRequest(
         `${graphUrl}/drives/${folder}/items/${
           baseFolder.id
@@ -151,8 +156,12 @@ export default {
         .then(data => {
           console.log(`Found ${data.value.length} subfolders in ${baseFolder.name}`);
           const parentId = baseFolder.parentReference && baseFolder.parentReference.id;
-          data.value.splice(0, 0, { id: parentId, name: ".." });
-          return data.value;
+          let res = data.value.map(i => {
+            i.name = prefix + i.name;
+            return i;
+          });
+          res.splice(0, 0, { id: parentId, name: parent });
+          return res;
         });
     }
   }
