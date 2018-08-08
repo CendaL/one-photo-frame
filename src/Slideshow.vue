@@ -111,7 +111,7 @@ export default {
         .then(() => {
           if (this.isSignedIn) {
             const delay =
-              this.currentPhoto.duration * 2.5 > this.slideshowDelay
+              this.currentPhoto.duration && this.currentPhoto.duration * 2.5 > this.slideshowDelay
                 ? this.currentPhoto.duration * 2.5
                 : this.slideshowDelay;
             log(`next photo in ${delay}`);
