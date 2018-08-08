@@ -1,11 +1,11 @@
 <template>
   <div>
     <log />
-    <!-- <button @click="settings">settings</button> -->
     <photo v-bind:photo="currentPhoto"
       v-on:navigateToNextPhoto="slideshowNext"
       v-on:updateRemoteConfig="updateRemoteConfig"></photo>
     <login class="leftbottom"></login>
+    <button class="rightbottom" @click="settings">⚙</button>
   </div>
 </template>
 
@@ -146,7 +146,16 @@ export default {
 
 <style scoped>
 .leftbottom {
-  bottom: 0%;
+  bottom: 0;
   position: fixed;
+}
+button.rightbottom {
+  bottom: 0;
+  right: 1em;
+  position: fixed;
+  font-family: sans-serif;
+  color: gray;
+  background-color: transparent;
+  border-width: 0px;
 }
 </style>

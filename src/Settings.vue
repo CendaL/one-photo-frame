@@ -1,6 +1,5 @@
 <template>
   <div>
-    <button @click="startSlideshow" class="ok-button">OK</button>
     <div class="photo-folders">
       <h2>Přidat fotky:</h2>
       <ul>
@@ -18,7 +17,7 @@
         </li>
       </ul>
     </div>
-  </div>
+    <button @click="startSlideshow" class="ok-button">OK</button>
   </div>
 </template>
 
@@ -48,6 +47,7 @@ export default {
       });
     },
     startSlideshow() {
+      this.setFolders(this.manualFolders.map(i => i.id));
       this.navigate({ route: "slideshow", photo: this.currentPhoto && this.currentPhoto.path });
     }
   }
