@@ -33,7 +33,7 @@ const app = new Vue({
       return;
     }
     this.navigate({
-      route: routes[qsp.route] ? qsp.route : "test",
+      route: routes[qsp.route] ? qsp.route : "settings",
       photo: qsp.photo || (this.currentPhoto && this.currentPhoto.path),
       replaceHistory: true
     }).catch(e => log(`Shell created error: ${e}`));

@@ -11,6 +11,8 @@ const state = {
   currentRoute: null,
   folders: [],
   isNextRandom: false,
+  manualFolders: [],
+  manualTimestamp: null,
   photos: [],
   remoteRefreshDelay: 14400,
   slideshowDelay: 300,
@@ -23,6 +25,23 @@ const getters = {
 };
 
 const mutations = {
+  addManualFolder(state, folder) {
+    log(`add manual folder ${JSON.stringify(folder)}`);
+    if (
+      folder &&
+      folder.id &&
+      folder.name !== ".." &&
+      state.manualFolders.filter(i => i.id === folder.id).length === 0
+    ) {
+      state.manualFolders.push({ id: folder.id, name: folder.name || folder.id });
+    }
+    log(`manualFolders: ${JSON.stringify(state.manualFolders)}`);
+  },
+  removeManualFolder(state, folder) {
+    log(`remove ${JSON.stringify(folder)}`);
+    state.manualFolders = state.manualFolders.filter(i => i.id !== folder.id);
+    log(`manualFolders: ${JSON.stringify(state.manualFolders)}`);
+  },
   setCurrentPhoto(state, payload) {
     state.currentPhoto = payload.photo;
     state.currentPhoto.url = payload.photoUrl;
@@ -178,5 +197,9 @@ export default new Vuex.Store({
   getters,
   mutations,
   actions,
-  plugins: [createPersistedStore({ paths: ["currentPhoto", "currentRoute", "folders"] })]
+  plugins: [
+    createPersistedStore({
+      paths: ["currentPhoto", "currentRoute", "folders", "manualFolders", "manualTimestamp"]
+    })
+  ]
 });
