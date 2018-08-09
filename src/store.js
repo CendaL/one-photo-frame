@@ -185,12 +185,6 @@ function getLocation(route, photoId) {
   return `?route=${route}` + (route === "slideshow" ? `&photo=${photoId}` : "");
 }
 
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min)) + min;
-}
-
 export default new Vuex.Store({
   strict: process.env.NODE_ENV !== "production",
   state,

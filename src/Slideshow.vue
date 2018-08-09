@@ -30,14 +30,7 @@ export default {
     photo: Photo
   },
   computed: {
-    ...mapState([
-      "currentPhoto",
-      "currentRoute",
-      "folders",
-      "photos",
-      "remoteRefreshDelay",
-      "slideshowDelay"
-    ]),
+    ...mapState(["currentPhoto", "folders", "photos", "remoteRefreshDelay", "slideshowDelay"]),
     ...mapGetters(["isSignedIn"])
   },
   created() {
