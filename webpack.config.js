@@ -17,7 +17,7 @@ if (isProd) {
 }
 
 module.exports = {
-  entry: path.resolve(__dirname, "./src/Shell.js"),
+  entry: path.resolve(__dirname, "./src/App.js"),
   output: {
     path: outputPath,
     publicPath: "/dist/",

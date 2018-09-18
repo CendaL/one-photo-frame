@@ -1,41 +1,39 @@
 <template>
   <div>
+    <span>Shell</span>
     <log />
-    <photo v-bind:photo="currentPhoto"
-      v-on:navigateToNextPhoto="slideshowNext">
     <login class="leftbottom"></login>
     <button class="rightbottom" @click="settings">⚙</button>
+    <!-- <component v-bind:is="cr"></component> -->
   </div>
 </template>
 
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 import { log, logError } from "./utils";
-import graphService from "./services/graph.service";
 import Log from "./Log.vue";
 import Login from "./Login.vue";
-import Photo from "./Photo.vue";
 
 export default {
   data() {
     return {
-      slideshowNextTaskId: null
+      refreshRemoteConfigTaskId: null
     };
   },
   components: {
     log: Log,
-    login: Login,
-    photo: Photo
+    login: Login
   },
   computed: {
-    ...mapState(["currentPhoto", "folders", "photos", "slideshowDelay"]),
+    ...mapState(["remoteRefreshDelay"]),
     ...mapGetters(["isSignedIn"])
   },
-  created() {
-    this.slideshowNext(false);
+  mounted() {
+    log(`mounted Shell: isSignedIn = ${this.isSignedIn}`);
+    this.updateRemoteConfig(false);
   },
   beforeDestroy() {
-    clearTimeout(this.slideshowNextTaskId);
+    clearTimeout(this.refreshRemoteConfigTaskId);
   },
   methods: {
     getPhotoList() {
@@ -64,44 +62,37 @@ export default {
         logError("No folders");
       }
     },
-    navigateToNextPhoto(photo = "") {
-      return this.navigate({ route: "slideshow", photo: photo });
+    updateRemoteConfig(doRefresh = true) {
+      clearTimeout(this.refreshRemoteConfigTaskId);
+      (doRefresh ? this.refreshRemoteConfig() : Promise.resolve())
+        .catch(e => {
+          logError(`updateRemoteConfig error ${e}`);
+        })
+        .then(() => {
+          log(`update remote config in ${this.remoteRefreshDelay}`);
+          this.refreshRemoteConfigTaskId = setTimeout(
+            this.updateRemoteConfig,
+            this.remoteRefreshDelay * 1000
+          );
+        });
     },
     settings() {
       this.navigate({ route: "settings" });
     },
-    slideshowNext(doNext = true, photo = "") {
-      clearTimeout(this.slideshowNextTaskId);
-      let next = Promise.resolve();
-      if (doNext) {
-        next = this.navigateToNextPhoto(photo);
-      }
-      next
-        .then(() => {
-          if (this.isSignedIn) {
-            const delay =
-              this.currentPhoto.duration && this.currentPhoto.duration * 2.5 > this.slideshowDelay
-                ? this.currentPhoto.duration * 2.5
-                : this.slideshowDelay;
-            log(`next photo in ${delay}`);
-            this.slideshowNextTaskId = setTimeout(this.slideshowNext, delay * 1000);
-          }
-        })
-        .catch(e => {
-          logError(`navigateToNextPhoto error ${e}`);
-        });
-    },
-    ...mapActions(["navigate", "updatePhotos"]),
-    ...mapMutations(["setStatusText"])
+    ...mapActions(["navigate", "refreshRemoteConfig", "updatePhotos"])
   },
   watch: {
+    isSignedIn(val) {
+      log(`shell watch isSignedIn: ${val}`);
+      if (this.isSignedIn) {
+        // this.refreshRemoteConfig().catch(e => {
+        //   logError(`refreshRemoteConfig error: ${e}`);
+        // });
+      }
+    },
     folders() {
       log("Folders refreshed -> refresh photos");
       this.getPhotoList();
-    },
-    photos() {
-      log(`Photos refreshed: ${this.photos.length}`);
-      this.slideshowNext(true, this.currentPhoto ? this.currentPhoto.id : "");
     }
   }
 };
@@ -120,5 +111,8 @@ button.rightbottom {
   color: gray;
   background-color: transparent;
   border-width: 0px;
+}
+span {
+  color: white;
 }
 </style>

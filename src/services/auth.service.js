@@ -19,6 +19,7 @@ export default {
   getToken() {
     return app.acquireTokenSilent(graphScopes).catch(error => {
       log(`acquireTokenSilent error: ${error}`);
+      // think of removing it and just retry later...
       return app.acquireTokenPopup(graphScopes);
     });
   },
@@ -27,16 +28,7 @@ export default {
   },
   login() {
     log("loging in...");
-    return app.loginPopup(graphScopes).then(
-      idToken => {
-        log("got token");
-        return app.getUser();
-      },
-      err => {
-        logError(`loginPopup error: ${err}`);
-        return null;
-      }
-    );
+    app.loginRedirect(graphScopes);
   },
   logout() {
     app.logout();

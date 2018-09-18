@@ -14,7 +14,7 @@ const state = {
   manualFolders: [],
   manualTimestamp: null,
   photos: [],
-  remoteRefreshDelay: 14400,
+  remoteRefreshDelay: 10,
   slideshowDelay: 300,
   statusText: "inicializece...",
   user: null
@@ -36,6 +36,10 @@ const mutations = {
       state.manualFolders.push({ id: folder.id, name: folder.name || folder.id });
     }
     log(`manualFolders: ${JSON.stringify(state.manualFolders)}`);
+  },
+  addPhotos(state, photos) {
+    state.photos.push(photos);
+    log(`add photos to ${JSON.stringify(photos)}`);
   },
   removeManualFolder(state, folder) {
     log(`remove ${JSON.stringify(folder)}`);
@@ -159,7 +163,13 @@ const actions = {
       return Promise.resolve(state.currentPhoto);
     });
   },
-  refreshRemoteConfig({ state, commit }) {
+  refreshRemoteConfig({ getters, commit }) {
+    if (!getters.isSignedIn) {
+      log("skip refreshing remote config - user not signed in");
+      return Promise.resolve();
+    }
+    log("refreshing remote config...");
+    return Promise.resolve();
     return graphService.getRemoteConfig().then(config => {
       commit("setFolders", config.folders);
       commit("setIsNextRandom", config.isNextRandom === true);

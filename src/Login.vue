@@ -22,20 +22,7 @@ export default {
   },
   methods: {
     login() {
-      authService.login().then(
-        user => {
-          if (user) {
-            this.setUser(user);
-          } else {
-            this.setUser(null);
-            logError("login failed: no user");
-          }
-        },
-        err => {
-          this.setUser(null);
-          logError(`login failed: ${err}`);
-        }
-      );
+      authService.login();
     },
     logout() {
       localStorage.removeItem("vuex");
@@ -48,9 +35,9 @@ export default {
     isSignedIn() {
       this.setStatusText(this.isSignedIn ? "" : "nepřihlášený uživatel");
       if (this.isSignedIn) {
-        this.refreshRemoteConfig().catch(e => {
-          logError(`refreshRemoteConfig error: ${e}`);
-        });
+        // this.refreshRemoteConfig().catch(e => {
+        //   logError(`refreshRemoteConfig error: ${e}`);
+        // });
       }
     }
   }

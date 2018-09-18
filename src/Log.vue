@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- <pre class="log"></pre> -->
+    <pre class="log"></pre>
     <pre class="logError"></pre>
   </div>
 </template>
@@ -24,7 +24,7 @@ pre.log {
 }
 pre.logError {
   background-color: transparent;
-  color:red;
+  color: red;
   left: 2.5%;
   top: 10%;
   position: fixed;

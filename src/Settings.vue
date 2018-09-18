@@ -47,6 +47,8 @@ export default {
       });
     },
     startSlideshow() {
+      log("start");
+      debugger;
       this.setFolders(this.manualFolders.map(i => i.id));
       this.navigate({ route: "slideshow", photo: this.currentPhoto && this.currentPhoto.path });
     }

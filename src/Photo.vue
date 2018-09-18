@@ -2,8 +2,7 @@
   <div>
     <button @click="$emit('navigateToNextPhoto')"><span v-html="name"></span></button>
     <button class="right"
-      v-show="isLoaded"
-      @click="$emit('updateRemoteConfig')"><span v-html="taken"></span></button>
+      v-show="isLoaded"><span v-html="taken"></span></button>
     <transition name="fade">
       <video v-if="isVideo"
         v-bind:src="photoSrc"
