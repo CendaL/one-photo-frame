@@ -9,10 +9,10 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
-    "msal": "^0.1.7",
+    "msal": "^0.2",
     "promise-polyfill": "^7.1.2",
     "querystringify": "^1.0.0",
-    "vue": "^2.5.16",
+    "vue": "^2.5.17",
     "vuex": "^2.4.0",
     "vuex-persistedstate": "^2.5.4",
     "whatwg-fetch": "^2.0.4"
@@ -27,7 +27,7 @@
     "css-loader": "^0.25.0",
     "file-loader": "^0.9.0",
     "vue-loader": "^12.1.0",
-    "vue-template-compiler": "^2.5.16",
+    "vue-template-compiler": "^2.5.17",
     "webpack": "^2.6.1",
     "webpack-dev-server": "^2.11.2"
   }
