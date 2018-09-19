@@ -5,8 +5,18 @@ import { log } from "./utils";
 import { mapState, mapActions, mapGetters } from "vuex";
 import qs from "querystringify";
 import Shell from "./Shell.vue";
-import store from "./store";
+import storeConfig from "./store-config";
+import createPersistedStore from "vuex-persistedstate";
 import Vue from "vue";
+
+Vue.use(Vuex);
+
+const store = new Vuex.Store(storeConfig);
+store.plugins = [
+  createPersistedStore({
+    paths: ["currentPhoto", "currentRoute", "folders", "manualFolders", "manualTimestamp"]
+  })
+];
 
 const routes = {
   slideshow: "Slideshow",

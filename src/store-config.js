@@ -1,10 +1,5 @@
-import Vue from "vue";
-import Vuex from "vuex";
-import createPersistedStore from "vuex-persistedstate";
 import graphService from "./services/graph.service";
 import { log, logError } from "./utils";
-
-Vue.use(Vuex);
 
 const state = {
   currentPhoto: null,
@@ -195,15 +190,10 @@ function getLocation(route, photoId) {
   return `?route=${route}` + (route === "slideshow" ? `&photo=${photoId}` : "");
 }
 
-export default new Vuex.Store({
+export default {
   strict: process.env.NODE_ENV !== "production",
   state,
   getters,
   mutations,
-  actions,
-  plugins: [
-    createPersistedStore({
-      paths: ["currentPhoto", "currentRoute", "folders", "manualFolders", "manualTimestamp"]
-    })
-  ]
-});
+  actions
+};
