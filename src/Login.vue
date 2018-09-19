@@ -13,7 +13,6 @@ import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 
 export default {
   computed: {
-    ...mapState(["user"]),
     ...mapGetters(["isSignedIn"])
   },
   created() {

@@ -6,7 +6,34 @@
   "private": true,
   "scripts": {
     "dev": "cross-env NODE_ENV=development webpack-dev-server --hot",
-    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules",
+    "test": "jest"
+  },
+  "jest": {
+    "collectCoverage": false,
+    "collectCoverageFrom": [
+      "**/*.{js,vue}",
+      "!**/node_modules/**",
+      "!**/dist/**"
+    ],
+    "coverageReporters": [
+      "html",
+      "text-summary"
+    ],
+    "globals": {
+      "IS_PROD": false,
+      "MSAL_REDIRECT_URL": "http://localhost:8080/",
+      "VERSION": "999999999999"
+    },
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "vue"
+    ],
+    "transform": {
+      ".*\\.(vue)$": "vue-jest",
+      "^.+\\.js$": "<rootDir>/node_modules/babel-jest"
+    }
   },
   "dependencies": {
     "msal": "^0.2",
@@ -18,7 +45,9 @@
     "whatwg-fetch": "^2.0.4"
   },
   "devDependencies": {
+    "@vue/test-utils": "^1.0.0-beta.25",
     "babel-core": "^6.26.3",
+    "babel-jest": "^23.6.0",
     "babel-loader": "^6.0.0",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
@@ -26,6 +55,8 @@
     "cross-env": "^3.0.0",
     "css-loader": "^0.25.0",
     "file-loader": "^0.9.0",
+    "jest": "^23.6.0",
+    "vue-jest": "^2.6.0",
     "vue-loader": "^12.1.0",
     "vue-template-compiler": "^2.5.17",
     "webpack": "^2.6.1",
