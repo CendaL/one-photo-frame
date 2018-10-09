@@ -1,24 +1,73 @@
-import { shallowMount } from "@vue/test-utils";
+import { createLocalVue, shallowMount } from "@vue/test-utils";
+import Vuex from "vuex";
+import storeConfig from "../store-config";
+import cloneDeep from "lodash.clonedeep";
+jest.mock("../utils");
+import { logError } from "../utils";
 import Login from "../Login";
 
-const mockFn = jest.fn().mockReturnValue(42);
-const wrapper = shallowMount(Login, {
-  computed: {
-    isSignedIn: () => false
-  },
-  methods: {
-    setUser: mockFn,
-    setStatusText: () => {}
-  }
-});
+const _log = console.log;
+console.log = () => {};
 
-// You can access the actual Vue instance via `wrapper.vm`
-const vm = wrapper.vm;
+const localVue = createLocalVue();
+localVue.use(Vuex);
 
-// To inspect the wrapper deeper just log it to the console
-// and your adventure with the Vue Test Utils begins
-test("component", () => {
-  console.log(wrapper);
-  console.log(wrapper.vm.setUser);
-  console.log(mockFn.mock);
+describe("Login", () => {
+  let store;
+  const refreshRemoteConfigMock = jest.fn();
+  const setStatusTextMock = jest.fn();
+
+  beforeEach(() => {
+    refreshRemoteConfigMock.mockReset();
+    setStatusTextMock.mockReset();
+    store = new Vuex.Store(cloneDeep(storeConfig));
+    shallowMount(Login, {
+      localVue,
+      store,
+      methods: {
+        setUser: () => {},
+        setStatusText: setStatusTextMock,
+        refreshRemoteConfig: refreshRemoteConfigMock
+      }
+    });
+  });
+
+  test.only("flow", done => {
+    const expectedStatus = [["nepřihlášený uživatel"]];
+    const expectedRefresh = [];
+    refreshRemoteConfigMock.mockResolvedValue("pass");
+    expect(setStatusTextMock.mock.calls).toEqual(expectedStatus);
+    expect(refreshRemoteConfigMock.mock.calls).toEqual(expectedRefresh);
+
+    store.commit("setUser", "user");
+    expectedStatus.push([""]);
+    expectedRefresh.push([]);
+    expect(setStatusTextMock.mock.calls).toEqual(expectedStatus);
+    expect(refreshRemoteConfigMock.mock.calls).toEqual(expectedRefresh);
+
+    process.nextTick(() => {
+      store.commit("setUser", null);
+      expectedStatus.push(["nepřihlášený uživatel"]);
+      expect(setStatusTextMock.mock.calls).toEqual(expectedStatus);
+      expect(refreshRemoteConfigMock.mock.calls).toEqual(expectedRefresh);
+
+      process.nextTick(() => {
+        expect(logError).toHaveBeenCalledTimes(0);
+        done();
+      });
+    });
+  });
+
+  test("flow fail refresh remote config", done => {
+    refreshRemoteConfigMock.mockRejectedValueOnce("x");
+    expect(refreshRemoteConfigMock.mock.calls).toEqual([]);
+
+    store.commit("setUser", "user");
+    expect(refreshRemoteConfigMock.mock.calls).toEqual([[]]);
+
+    process.nextTick(() => {
+      expect(logError.mock.calls).toEqual([["refreshRemoteConfig error: x"]]);
+      done();
+    });
+  });
 });

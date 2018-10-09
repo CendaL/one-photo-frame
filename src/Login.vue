@@ -34,9 +34,9 @@ export default {
     isSignedIn() {
       this.setStatusText(this.isSignedIn ? "" : "nepřihlášený uživatel");
       if (this.isSignedIn) {
-        // this.refreshRemoteConfig().catch(e => {
-        //   logError(`refreshRemoteConfig error: ${e}`);
-        // });
+        this.refreshRemoteConfig().catch(e => {
+          logError(`refreshRemoteConfig error: ${e}`);
+        });
       }
     }
   }
