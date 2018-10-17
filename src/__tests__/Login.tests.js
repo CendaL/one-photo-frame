@@ -32,7 +32,7 @@ describe("Login", () => {
     });
   });
 
-  test.only("flow", done => {
+  test("flow", done => {
     const expectedStatus = [["nepřihlášený uživatel"]];
     const expectedRefresh = [];
     refreshRemoteConfigMock.mockResolvedValue("pass");
