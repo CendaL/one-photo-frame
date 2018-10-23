@@ -84,15 +84,7 @@ export default {
   watch: {
     isSignedIn(val) {
       log(`shell watch isSignedIn: ${val}`);
-      if (this.isSignedIn) {
-        // this.refreshRemoteConfig().catch(e => {
-        //   logError(`refreshRemoteConfig error: ${e}`);
-        // });
-      }
-    },
-    folders() {
-      log("Folders refreshed -> refresh photos");
-      this.getPhotoList();
+      this.updateRemoteConfig();
     }
   }
 };
