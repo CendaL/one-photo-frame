@@ -30,6 +30,7 @@ describe("Shell", () => {
   });
   test("mounting sets update remote config task", async () => {
     // https://stackoverflow.com/questions/52177631
+    expect(store.state.remoteRefreshDelay).toBe(10);
     expect(setTimeout).toBeCalledTimes(1);
     expect(setTimeout).lastCalledWith(wrapper.vm.updateRemoteConfig, 10000);
     await Promise.resolve().then(); // allow any pending jobs in the PromiseJobs queue to run
