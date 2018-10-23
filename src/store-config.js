@@ -104,6 +104,14 @@ const mutations = {
 };
 
 const actions = {
+  setFolders({ commit, dispatch }, folders) {
+    console.log(`setFolders action ${folders}`);
+    commit("setFolders", folders);
+    dispatch("getPhotos", folders);
+  },
+  getPhotoList({ state, commit, dispatch }, folders) {
+    console.log(`getPhotoList ${folders}`);
+  },
   navigate({ state, commit, dispatch }, options) {
     commit("setStatusText", "nahrávám...");
     log(`navigate: ${window.location.pathname}${window.location.search} => ${JSON.stringify(options)}`);
@@ -158,15 +166,14 @@ const actions = {
       return Promise.resolve(state.currentPhoto);
     });
   },
-  refreshRemoteConfig({ getters, commit }) {
+  refreshRemoteConfig({ getters, commit, dispatch }) {
     if (!getters.isSignedIn) {
       log("skip refreshing remote config - user not signed in");
       return Promise.resolve();
     }
     log("refreshing remote config...");
-    return Promise.resolve();
     return graphService.getRemoteConfig().then(config => {
-      commit("setFolders", config.folders);
+      dispatch("setFolders", config.folders);
       commit("setIsNextRandom", config.isNextRandom === true);
       commit("setRemoteRefreshDelay", config.remoteRefreshDelay);
       commit("setSlideshowDelay", config.slideshowDelay);
