@@ -33,8 +33,8 @@ const mutations = {
     log(`manualFolders: ${JSON.stringify(state.manualFolders)}`);
   },
   addPhotos(state, photos) {
-    state.photos.push(photos);
-    log(`add photos to ${JSON.stringify(photos)}`);
+    state.photos.push(...photos);
+    log(`add photos: ${JSON.stringify(photos)}`);
   },
   removeManualFolder(state, folder) {
     log(`remove ${JSON.stringify(folder)}`);
@@ -109,8 +109,28 @@ const actions = {
     commit("setFolders", folders);
     dispatch("getPhotos", folders);
   },
-  getPhotoList({ state, commit, dispatch }, folders) {
-    console.log(`getPhotoList ${folders}`);
+  getPhotos({ state, commit, dispatch }) {
+    function getPhotosFromFolders(folders) {
+      if (folders.length <= 0) {
+        return Promise.resolve();
+      }
+      log(`get photos for ${folders[0]}`);
+      commit(
+        "setStatusText",
+        `nahrávám ${folders[0]} (${foldersCount - folders.length + 1}/${foldersCount})`
+      );
+      return graphService.getPhotoList(folders[0]).then(photos => {
+        if (folders.length === foldersCount) {
+          commit("setPhotos", photos);
+        } else {
+          commit("addPhotos", photos);
+        }
+        return getPhotosFromFolders(folders.slice(1));
+      });
+    }
+    console.log(`getPhotos '${state.folders}'`);
+    const foldersCount = (state.folders && state.folders.length) || 0;
+    return getPhotosFromFolders(state.folders);
   },
   navigate({ state, commit, dispatch }, options) {
     commit("setStatusText", "nahrávám...");
