@@ -1,7 +1,7 @@
 <template>
   <div>
     <span>Shell</span>
-    <log />
+    <log/>
     <login class="leftbottom"></login>
     <button class="rightbottom" @click="settings">⚙</button>
     <!-- <component v-bind:is="cr"></component> -->
@@ -36,32 +36,6 @@ export default {
     clearTimeout(this.refreshRemoteConfigTaskId);
   },
   methods: {
-    getPhotoList() {
-      const that = this;
-      const foldersCount = this.folders.length;
-
-      if (this.folders.length > 0) {
-        let allPhotos = [];
-
-        function getPhotosFromFolder(folders) {
-          if (folders.length <= 0) {
-            return Promise.resolve();
-          }
-          log(`get photos for ${folders[0]}`);
-          that.setStatusText(`nahrávám ${folders[0]} (${foldersCount - folders.length + 1}/${foldersCount})`);
-          return graphService.getPhotoList(folders[0]).then(photos => {
-            allPhotos.push(...photos);
-            return getPhotosFromFolder(folders.slice(1));
-          });
-        }
-
-        getPhotosFromFolder(this.folders).then(_ => {
-          this.updatePhotos(allPhotos);
-        });
-      } else {
-        logError("No folders");
-      }
-    },
     updateRemoteConfig(doRefresh = true) {
       clearTimeout(this.refreshRemoteConfigTaskId);
       (doRefresh ? this.refreshRemoteConfig() : Promise.resolve())
