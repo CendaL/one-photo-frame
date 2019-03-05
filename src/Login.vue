@@ -7,9 +7,7 @@
 
 <script>
 import authService from "./services/auth.service";
-import graphService from "./services/graph.service";
-import { logError } from "./utils";
-import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
+import { mapGetters, mapMutations } from "vuex";
 
 export default {
   computed: {
@@ -27,17 +25,11 @@ export default {
       localStorage.removeItem("vuex");
       authService.logout();
     },
-    ...mapActions(["refreshRemoteConfig"]),
     ...mapMutations(["setStatusText", "setUser"])
   },
   watch: {
     isSignedIn() {
       this.setStatusText(this.isSignedIn ? "" : "nepřihlášený uživatel");
-      if (this.isSignedIn) {
-        this.refreshRemoteConfig().catch(e => {
-          logError(`refreshRemoteConfig error: ${e}`);
-        });
-      }
     }
   }
 };
