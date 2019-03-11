@@ -1,9 +1,9 @@
 const path = require("path");
 const webpack = require("webpack");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 
 const outputPath = path.resolve(__dirname, "./dist");
-const isProd = process.env.NODE_ENV === "production";
 const now = new Date();
 const version =
   now.getFullYear() +
@@ -12,40 +12,37 @@ const version =
   ("0" + now.getHours()).slice(-2) +
   ("0" + now.getMinutes()).slice(-2);
 
-if (isProd) {
-  console.log(`Building version ${version}\n`);
-}
-
-module.exports = {
+var config = {
   entry: path.resolve(__dirname, "./src/App.js"),
   output: {
     path: outputPath,
     publicPath: "/dist/",
     filename: "build.js"
   },
+  plugins: [
+    new VueLoaderPlugin()
+  ],
   module: {
-    rules: [
-      {
-        test: /\.vue$/,
-        loader: "vue-loader",
-        options: {
-          loaders: {}
-          // other vue-loader options go here
-        }
-      },
-      {
-        test: /\.js$/,
-        loader: "babel-loader",
-        exclude: /node_modules/
-      },
-      {
-        test: /\.(png|jpg|gif|svg)$/,
-        loader: "file-loader",
-        options: {
-          name: "[name].[ext]?[hash]"
-        }
+    rules: [{
+      test: /\.vue$/,
+      use: ["vue-loader"]
+    }, {
+      test: /\.js$/,
+      use: ["babel-loader"],
+      exclude: /node_modules/
+    }, {
+      test: /\.css$/,
+      use: [
+        "vue-style-loader",
+        "css-loader"
+      ]
+    }, {
+      test: /\.(png|jpg|gif|svg)$/,
+      loader: "file-loader",
+      options: {
+        name: "[name].[ext]?[hash]"
       }
-    ]
+    }]
   },
   resolve: {
     alias: {
@@ -53,50 +50,42 @@ module.exports = {
     }
   },
   devServer: {
-    historyApiFallback: true,
-    noInfo: true
+    historyApiFallback: true
   },
   performance: {
     hints: false
   },
-  devtool: "#eval-source-map",
-  plugins: [
-    new webpack.DefinePlugin({
-      MSAL_REDIRECT_URL: isProd ? '"https://one-photo-frame.azurewebsites.net/"' : '"http://localhost:8080/"',
-      VERSION: isProd ? `${version}` : "999999999999",
-      IS_PROD: isProd ? "true" : "false",
-      "process.env": isProd
-        ? {
-            NODE_ENV: '"production"'
-          }
-        : {}
-    })
-  ]
+  devtool: "eval-source-map",
+  stats: "minimal"
 };
 
-if (isProd) {
-  module.exports.devtool = "#source-map";
-  // http://vue-loader.vuejs.org/en/workflow/production.html
-  module.exports.plugins = (module.exports.plugins || []).concat([
-    new webpack.optimize.UglifyJsPlugin({
-      sourceMap: true,
-      compress: {
-        warnings: false
-      }
-    }),
-    new webpack.LoaderOptionsPlugin({
-      minimize: true
-    }),
-    new CopyWebpackPlugin([
-      {
+module.exports = (env, argv) => {
+  config.mode = argv.mode;
+  const isProd = config.mode === "production";
+
+  if (isProd) {
+    console.log(`Building version ${version}\n`);
+    config.devtool = "source-map";
+    config.plugins = (config.plugins || []).concat([
+      new webpack.DefinePlugin({
+        MSAL_REDIRECT_URL: isProd ? '"https://one-photo-frame.azurewebsites.net/"' : '"http://localhost:8080/"',
+        VERSION: isProd ? `${version}` : "999999999999",
+        IS_PROD: isProd ? "true" : "false",
+        "process.env": isProd ? {
+          NODE_ENV: '"production"'
+        } : {}
+      }),
+      new CopyWebpackPlugin([{
         from: path.resolve(__dirname, "./index.html"),
         to: outputPath,
         transform: (content, path) => {
           return content.toString().replace("/dist/build.js", "build.js");
         }
-      }
-    ])
-  ]);
-} else {
-  module.exports.plugins = (module.exports.plugins || []).concat([new webpack.NamedModulesPlugin()]);
+      }])
+    ]);
+  } else {
+    console.log(`Building dev version\n`);
+  }
+
+  return config;
 }
