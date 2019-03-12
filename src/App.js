@@ -8,6 +8,7 @@ import Shell from "./Shell.vue";
 import storeConfig from "./store-config";
 import createPersistedStore from "vuex-persistedstate";
 import Vue from "vue";
+import Vuex from "vuex";
 
 Vue.use(Vuex);
 
