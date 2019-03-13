@@ -23,7 +23,7 @@ describe("Login", () => {
       store,
       methods: {
         setUser: () => {},
-        setStatusText: setStatusTextMock,
+        setStatusText: setStatusTextMock
       }
     });
   });

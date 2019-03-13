@@ -2,11 +2,11 @@ import "./array.find.polyfill";
 import "promise-polyfill/src/polyfill";
 import "whatwg-fetch";
 import { log } from "./utils";
-import { mapState, mapActions, mapGetters } from "vuex";
+import { mapActions } from "vuex";
+import createPersistedStore from "vuex-persistedstate";
 import qs from "querystringify";
 import Shell from "./Shell.vue";
 import storeConfig from "./store-config";
-import createPersistedStore from "vuex-persistedstate";
 import Vue from "vue";
 import Vuex from "vuex";
 

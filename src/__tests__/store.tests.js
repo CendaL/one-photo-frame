@@ -4,7 +4,6 @@ import storeConfig from "../store-config";
 import cloneDeep from "lodash.clonedeep";
 import graphService from "../services/graph.service";
 
-const _log = console.log;
 console.log = () => {};
 
 const localVue = createLocalVue();

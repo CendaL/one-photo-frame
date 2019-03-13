@@ -5,7 +5,6 @@ import cloneDeep from "lodash.clonedeep";
 jest.mock("../utils");
 import Shell from "../Shell";
 
-const _log = console.log;
 console.log = () => {};
 
 const localVue = createLocalVue();
