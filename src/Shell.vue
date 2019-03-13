@@ -4,7 +4,7 @@
     <log/>
     <login class="leftbottom"></login>
     <button class="rightbottom" @click="settings">⚙</button>
-    <!-- <component v-bind:is="cr"></component> -->
+    <component v-bind:is="currentRoute"></component>
   </div>
 </template>
 
@@ -13,6 +13,7 @@ import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 import { log, logError } from "./utils";
 import Log from "./Log.vue";
 import Login from "./Login.vue";
+import Settings from "./Settings.vue";
 
 export default {
   data() {
@@ -22,10 +23,11 @@ export default {
   },
   components: {
     log: Log,
-    login: Login
+    login: Login,
+    settings: Settings
   },
   computed: {
-    ...mapState(["remoteRefreshDelay"]),
+    ...mapState(["currentRoute", "remoteRefreshDelay"]),
     ...mapGetters(["isSignedIn"])
   },
   mounted() {

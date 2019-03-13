@@ -28,7 +28,10 @@ describe("Shell", () => {
   beforeEach(() => {
     jest.useFakeTimers();
     refreshRemoteConfigMock.mockClear();
-    store = new Vuex.Store(cloneDeep(storeConfig));
+    var s = cloneDeep(storeConfig);
+    // find better way
+    s.state.currentRoute = "settings";
+    store = new Vuex.Store(s);
   });
 
   test("mounting sets update remote config task", async () => {
