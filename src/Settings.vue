@@ -33,24 +33,29 @@ export default {
     };
   },
   computed: {
-    ...mapState(["currentPhoto", "manualFolders"])
+    ...mapState(["manualFolders"])
   },
   created() {
     this.load();
   },
   methods: {
-    ...mapActions(["navigate"]),
-    ...mapMutations(["addManualFolder", "removeManualFolder", "setFolders"]),
+    ...mapActions(["navigate", "setFolders"]),
+    ...mapMutations(["addManualFolder", "removeManualFolder"]),
     load(baseFolder) {
-      graphService.listPhotoFolders(baseFolder).then(data => {
-        this.onedriveFolders = data;
-      });
+      graphService
+        .listPhotoFolders(baseFolder)
+        .then(data => {
+          this.onedriveFolders = data;
+        })
+        .catch(error => {
+          logError(`listPhotoFolders error ${e}`);
+          this.onedriveFolders = [{ name: "zkusit znovu" }];
+        });
     },
     startSlideshow() {
-      log("start");
-      debugger;
+      log("settings - startSlideshow");
       this.setFolders(this.manualFolders.map(i => i.id));
-      this.navigate({ route: "slideshow", photo: this.currentPhoto && this.currentPhoto.path });
+      this.navigate({ route: "slideshow" });
     }
   }
 };

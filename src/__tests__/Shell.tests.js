@@ -29,7 +29,6 @@ describe("Shell", () => {
     jest.useFakeTimers();
     refreshRemoteConfigMock.mockClear();
     var s = cloneDeep(storeConfig);
-    // find better way
     s.state.currentRoute = "settings";
     store = new Vuex.Store(s);
   });

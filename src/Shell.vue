@@ -55,7 +55,7 @@ export default {
     settings() {
       this.navigate({ route: "settings" });
     },
-    ...mapActions(["navigate", "refreshRemoteConfig", "updatePhotos"])
+    ...mapActions(["navigate", "refreshRemoteConfig"])
   },
   watch: {
     isSignedIn(val) {
