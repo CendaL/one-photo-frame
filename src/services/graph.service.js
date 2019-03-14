@@ -119,7 +119,7 @@ export default {
     });
   },
   listPhotoFolders(baseFolder) {
-    console.log(`listPhotoFolders ${JSON.stringify(baseFolder)}`);
+    log(`listPhotoFolders ${JSON.stringify(baseFolder)}`);
     if (!baseFolder || !baseFolder.id) {
       const photoFolder = prepareRequest(`${graphUrl}/drive/special/photos?select=id,name`).then(response =>
         response.json()
@@ -154,7 +154,7 @@ export default {
       )
         .then(response => response.json())
         .then(data => {
-          console.log(`Found ${data.value.length} subfolders in ${baseFolder.name}`);
+          log(`Found ${data.value.length} subfolders in ${baseFolder.name}`);
           const parentId = baseFolder.parentReference && baseFolder.parentReference.id;
           let res = data.value.map(i => {
             i.name = prefix + i.name;

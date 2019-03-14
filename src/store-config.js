@@ -105,7 +105,7 @@ const mutations = {
 
 const actions = {
   setFolders({ commit, dispatch }, folders) {
-    console.log(`setFolders action ${folders}`);
+    log(`setFolders action ${folders}`);
     commit("setFolders", folders);
     dispatch("getPhotos", folders);
   },
@@ -128,7 +128,7 @@ const actions = {
         return getPhotosFromFolders(folders.slice(1));
       });
     }
-    console.log(`getPhotos '${state.folders}'`);
+    log(`getPhotos '${state.folders}'`);
     const foldersCount = (state.folders && state.folders.length) || 0;
     return getPhotosFromFolders(state.folders);
   },
