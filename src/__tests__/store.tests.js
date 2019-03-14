@@ -45,13 +45,25 @@ describe("Store", () => {
   });
 
   describe("getPhotos", () => {
+    let testStore;
+    const sortPhotosMock = jest.fn();
+    const shufflePhotosMock = jest.fn();
+
+    beforeEach(() => {
+      sortPhotosMock.mockClear();
+      testStore = cloneDeep(storeConfig);
+      testStore.mutations.sortPhotos = sortPhotosMock;
+      testStore.mutations.shufflePhotos = shufflePhotosMock;
+    });
+
     test("with empty folders", done => {
-      const testStore = cloneDeep(storeConfig);
       testStore.state.photos = ["p", "q"];
       store = new Vuex.Store(testStore);
       store.dispatch("getPhotos").then(() => {
         expect(store.state.folders).toEqual([]);
         expect(store.state.photos).toEqual(["p", "q"]);
+        expect(sortPhotosMock).toBeCalledTimes(1);
+        expect(shufflePhotosMock).not.toBeCalled();
         done();
       });
     });
@@ -59,12 +71,13 @@ describe("Store", () => {
     describe("with", () => {
       test("one folder", done => {
         graphService.getPhotoList = jest.fn().mockResolvedValue(["a"]);
-        const testStore = cloneDeep(storeConfig);
         testStore.state.folders = ["f"];
         testStore.state.photos = ["p", "q"];
         store = new Vuex.Store(testStore);
         store.dispatch("getPhotos").then(() => {
           expect(store.state.photos).toEqual(["a"]);
+          expect(sortPhotosMock).toBeCalledTimes(1);
+          expect(shufflePhotosMock).not.toBeCalled();
           done();
         });
       });
@@ -73,12 +86,14 @@ describe("Store", () => {
           .fn()
           .mockResolvedValueOnce(["a"])
           .mockResolvedValueOnce(["b"]);
-        const testStore = cloneDeep(storeConfig);
         testStore.state.folders = ["f", "g"];
         testStore.state.photos = ["p", "q"];
+        testStore.state.isNextRandom = true;
         store = new Vuex.Store(testStore);
         store.dispatch("getPhotos").then(() => {
           expect(store.state.photos).toEqual(["a", "b"]);
+          expect(sortPhotosMock).not.toBeCalled();
+          expect(shufflePhotosMock).toBeCalledTimes(1);
           done();
         });
       });

@@ -112,6 +112,12 @@ const actions = {
   getPhotos({ state, commit, dispatch }) {
     function getPhotosFromFolders(folders) {
       if (folders.length <= 0) {
+        // loading folders is finished
+        if (state.isNextRandom) {
+          commit("shufflePhotos");
+        } else {
+          commit("sortPhotos");
+        }
         return Promise.resolve();
       }
       log(`get photos for ${folders[0]}`);
@@ -202,14 +208,6 @@ const actions = {
         window.location.reload(true);
       }
     });
-  },
-  updatePhotos({ state, commit }, photos) {
-    commit("setPhotos", photos);
-    if (state.isNextRandom) {
-      commit("shufflePhotos");
-    } else {
-      commit("sortPhotos");
-    }
   }
 };
 
