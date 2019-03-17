@@ -3,7 +3,6 @@ import "promise-polyfill/src/polyfill";
 import "whatwg-fetch";
 import { log } from "./utils";
 import { mapActions } from "vuex";
-import createPersistedStore from "vuex-persistedstate";
 import qs from "querystringify";
 import Shell from "./Shell.vue";
 import storeConfig from "./store-config";
@@ -13,11 +12,6 @@ import Vuex from "vuex";
 Vue.use(Vuex);
 
 const store = new Vuex.Store(storeConfig);
-store.plugins = [
-  createPersistedStore({
-    paths: ["currentPhoto", "currentRoute", "folders", "manualFolders", "manualTimestamp"]
-  })
-];
 
 const app = new Vue({
   el: "#app",
