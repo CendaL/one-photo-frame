@@ -1,5 +1,5 @@
 <template>
-  <photo v-bind:photo="currentPhoto" v-on:navigateToNextPhoto="slideshowNext"></photo>
+  <photo v-bind:photo="currentPhoto"></photo>
 </template>
 
 <script>

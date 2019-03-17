@@ -1,20 +1,27 @@
 <template>
   <div>
-    <button @click="$emit('navigateToNextPhoto')"><span v-html="name"></span></button>
-    <button class="right"
-      v-show="isLoaded"><span v-html="taken"></span></button>
+    <span v-html="name"></span>
+    <button class="right" v-show="isLoaded">
+      <span v-html="taken"></span>
+    </button>
     <transition name="fade">
-      <video v-if="isVideo"
+      <video
+        v-if="isVideo"
         v-bind:src="photoSrc"
         v-bind:key="photoSrc"
         v-on:load="isLoaded = true"
         v-bind:width="width"
         v-bind:height="height"
-        controls autoplay loop></video>
-      <img v-else-if="photo"
+        controls
+        autoplay
+        loop
+      ></video>
+      <img
+        v-else-if="photo"
         v-bind:src="photoSrc"
         v-bind:key="photoSrc"
-        v-on:load="isLoaded = true"/>
+        v-on:load="isLoaded = true"
+      >
     </transition>
   </div>
 </template>
