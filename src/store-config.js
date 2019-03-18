@@ -6,6 +6,7 @@ const state = {
   currentRoute: null,
   folders: [],
   isNextRandom: false,
+  loadingPhotos: false,
   manualFolders: [],
   manualTimestamp: null,
   photos: [],
@@ -49,6 +50,10 @@ const mutations = {
   setFolders(state, folders) {
     state.folders = folders;
     log(`set folders to ${JSON.stringify(folders)}`);
+  },
+  setLoadingPhotos(state, value) {
+    state.loadingPhotos = value;
+    log(`set loadingPhotos to ${JSON.stringify(value)}`);
   },
   setIsNextRandom(state, isNextRandom) {
     state.isNextRandom = isNextRandom;
@@ -113,6 +118,7 @@ const actions = {
     function getPhotosFromFolders(folders) {
       if (folders.length <= 0) {
         // loading folders is finished
+        commit("setLoadingPhotos", false);
         if (state.isNextRandom) {
           commit("shufflePhotos");
         } else {
@@ -128,6 +134,11 @@ const actions = {
       return graphService.getPhotoList(folders[0]).then(photos => {
         if (folders.length === foldersCount) {
           commit("setPhotos", photos);
+          if (state.isNextRandom) {
+            commit("shufflePhotos");
+          } else {
+            commit("sortPhotos");
+          }
         } else {
           commit("addPhotos", photos);
         }
@@ -135,6 +146,7 @@ const actions = {
       });
     }
     log(`getPhotos '${state.folders}'`);
+    commit("setLoadingPhotos", true);
     const foldersCount = (state.folders && state.folders.length) || 0;
     return getPhotosFromFolders(state.folders);
   },
