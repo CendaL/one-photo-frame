@@ -156,53 +156,40 @@ const actions = {
     if (state.currentRoute !== options.route) {
       commit("setRoute", options.route);
     }
-    if (state.photos.length === 0) {
-      log("navigate: no photos");
-      return Promise.reject("no photos");
-    }
-    let nextPhotoAction = Promise.resolve(state.currentPhoto);
-    if (options.route === "slideshow" && (options.photo !== undefined || state.currentPhoto == null)) {
-      nextPhotoAction = dispatch("nextPhoto", options);
-    }
-    return nextPhotoAction.then(currentPhoto => {
-      if (options.addToHistory !== false) {
-        const newLocation = getLocation(state.currentRoute, currentPhoto && currentPhoto.id);
-        if (options.replaceHistory) {
-          window.history.replaceState(null, "", newLocation);
-        } else {
-          window.history.pushState(null, "", newLocation);
-        }
-      }
-      document.title = options.route === "slideshow" ? currentPhoto && currentPhoto.name : options.route;
-    });
   },
-  nextPhoto({ state, commit }, options) {
+  showNextPhoto({ state, commit }, options) {
+    if (state.loadingPhotos) {
+      log("showNextPhoto - loadingPhotos");
+      return Promise.resolve();
+    }
     if (state.photos.length === 0) {
-      log("nextPhoto: no photos");
+      log("showNextPhoto: no photos");
       return Promise.reject("no photos");
     }
-    var photo = state.photos.find(p => p.id.toLowerCase() === options.photo.toLowerCase());
-    if (photo === undefined) {
-      if (state.currentPhoto) {
-        let nextIndex = state.photos.indexOf(state.currentPhoto) + 1;
-        if (nextIndex >= state.photos.length) {
-          if (state.isNextRandom) {
-            commit("shufflePhotos");
-          }
-          nextIndex = 0;
+    log("showNextPhoto");
+    let nextIndex = 0;
+    if (state.currentPhoto) {
+      nextIndex = state.photos.indexOf(state.currentPhoto) + 1;
+      if (nextIndex >= state.photos.length) {
+        if (state.isNextRandom) {
+          commit("shufflePhotos");
         }
-        photo = state.photos[nextIndex];
-      } else {
-        photo = state.photos[0];
+        nextIndex = 0;
       }
-      log(`next photo ${state.currentPhoto && state.currentPhoto.path} => ${photo.path}`);
-    } else {
-      log(`next specific photo ${options.photo}`);
     }
-    return graphService.getPhotoUrl(photo).then(photoUrl => {
-      commit("setCurrentPhoto", { photo, photoUrl });
-      return Promise.resolve(state.currentPhoto);
-    });
+    const photo = state.photos[nextIndex];
+    log(`showNextPhoto ${state.currentPhoto && state.currentPhoto.path} => ${photo.path}`);
+
+    return graphService
+      .getPhotoUrl(photo)
+      .then(photoUrl => {
+        commit("setCurrentPhoto", { photo, photoUrl });
+      })
+      .then(_ => {
+        const newLocation = `?route=${state.currentRoute}&photo=${state.currentPhoto.id}`;
+        window.history.pushState(null, "", newLocation);
+        document.title = state.currentPhoto && state.currentPhoto.name;
+      });
   },
   refreshRemoteConfig({ getters, commit, dispatch }) {
     if (!getters.isSignedIn) {

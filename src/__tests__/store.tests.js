@@ -110,4 +110,60 @@ describe("Store", () => {
       });
     });
   });
+
+  const dummyPhoto = id => {
+    return { id, name: id, path: id };
+  };
+
+  describe("showNextPhoto", () => {
+    let mockedStoreConfig;
+    const mockedShufflePhotos = jest.fn();
+
+    beforeEach(() => {
+      mockedStoreConfig = cloneDeep(storeConfig);
+      mockedStoreConfig.state.photos = [dummyPhoto("p"), dummyPhoto("q"), dummyPhoto("r")];
+      mockedShufflePhotos.mockClear();
+      mockedStoreConfig.mutations.shufflePhotos = mockedShufflePhotos;
+    });
+
+    test("third after second", done => {
+      mockedStoreConfig.state.currentPhoto = mockedStoreConfig.state.photos[1];
+      graphService.getPhotoUrl = jest.fn().mockResolvedValue("r_url");
+      store = new Vuex.Store(mockedStoreConfig);
+      store.dispatch("showNextPhoto").then(() => {
+        const expectedPhoto = cloneDeep(mockedStoreConfig.state.photos[2]);
+        expectedPhoto.url = "r_url";
+        expect(store.state.currentPhoto).toEqual(expectedPhoto);
+        expect(mockedShufflePhotos).not.toBeCalled();
+        done();
+      });
+    });
+
+    test("first after last", done => {
+      mockedStoreConfig.state.currentPhoto = mockedStoreConfig.state.photos[2];
+      graphService.getPhotoUrl = jest.fn().mockResolvedValue("p_url");
+      store = new Vuex.Store(mockedStoreConfig);
+      store.dispatch("showNextPhoto").then(() => {
+        const expectedPhoto = cloneDeep(mockedStoreConfig.state.photos[0]);
+        expectedPhoto.url = "p_url";
+        expect(store.state.currentPhoto).toEqual(expectedPhoto);
+        expect(mockedShufflePhotos).not.toBeCalled();
+        done();
+      });
+    });
+
+    test("first after last shuffled", done => {
+      mockedStoreConfig.state.isNextRandom = true;
+      mockedStoreConfig.state.currentPhoto = mockedStoreConfig.state.photos[2];
+      graphService.getPhotoUrl = jest.fn().mockResolvedValue("p_url");
+      store = new Vuex.Store(mockedStoreConfig);
+      store.dispatch("showNextPhoto").then(() => {
+        const expectedPhoto = cloneDeep(mockedStoreConfig.state.photos[0]);
+        expectedPhoto.url = "p_url";
+        expect(store.state.currentPhoto).toEqual(expectedPhoto);
+        expect(mockedShufflePhotos).toBeCalledTimes(1);
+        done();
+      });
+    });
+  });
 });

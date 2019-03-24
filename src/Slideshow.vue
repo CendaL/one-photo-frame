@@ -18,26 +18,22 @@ export default {
     photo: Photo
   },
   computed: {
-    ...mapState(["currentPhoto", "photos", "slideshowDelay"]),
+    ...mapState(["currentPhoto", "slideshowDelay"]),
     ...mapGetters(["isSignedIn"])
   },
-  created() {
-    this.slideshowNext(false);
+  mounted() {
+    log("Slideshow: mounted");
+    this.slideshowNext();
   },
   beforeDestroy() {
+    log("Slideshow: beforeDestroy");
     clearTimeout(this.slideshowNextTaskId);
   },
   methods: {
-    navigateToNextPhoto(photo = "") {
-      return this.navigate({ route: "slideshow", photo: photo });
-    },
-    slideshowNext(doNext = true, photo = "") {
+    ...mapActions(["showNextPhoto"]),
+    slideshowNext() {
       clearTimeout(this.slideshowNextTaskId);
-      let next = Promise.resolve();
-      if (doNext) {
-        next = this.navigateToNextPhoto(photo);
-      }
-      next
+      this.showNextPhoto()
         .then(() => {
           if (this.isSignedIn) {
             const delay =
