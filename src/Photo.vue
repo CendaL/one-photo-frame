@@ -42,11 +42,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["statusText"]),
     name() {
-      if (this.statusText) {
-        return this.statusText;
-      }
       if (!this.isLoaded) {
         return "nahrávám...";
       }

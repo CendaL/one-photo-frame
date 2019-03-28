@@ -1,5 +1,6 @@
 <template>
   <div>
+    <p class="center infotext">{{statusText}}</p>
     <log/>
     <login class="leftbottom"></login>
     <button class="rightbottom" @click="settings">⚙</button>
@@ -28,7 +29,7 @@ export default {
     slideshow: Slideshow
   },
   computed: {
-    ...mapState(["currentRoute", "remoteRefreshDelay"]),
+    ...mapState(["currentRoute", "remoteRefreshDelay", "statusText"]),
     ...mapGetters(["isSignedIn"])
   },
   mounted() {
@@ -67,6 +68,17 @@ export default {
 };
 </script>
 
+<style>
+.infotext {
+  font-family: sans-serif;
+  color: gray;
+  background-color: transparent;
+}
+.center {
+  text-align: center;
+}
+</style>
+
 <style scoped>
 .leftbottom {
   bottom: 0;
@@ -80,8 +92,5 @@ button.rightbottom {
   color: gray;
   background-color: transparent;
   border-width: 0px;
-}
-span {
-  color: white;
 }
 </style>
