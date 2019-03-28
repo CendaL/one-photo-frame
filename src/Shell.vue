@@ -1,6 +1,5 @@
 <template>
   <div>
-    <span>Shell</span>
     <log/>
     <login class="leftbottom"></login>
     <button class="rightbottom" @click="settings">⚙</button>
@@ -14,6 +13,7 @@ import { log, logError } from "./utils";
 import Log from "./Log.vue";
 import Login from "./Login.vue";
 import Settings from "./Settings.vue";
+import Slideshow from "./Slideshow.vue";
 
 export default {
   data() {
@@ -24,7 +24,8 @@ export default {
   components: {
     log: Log,
     login: Login,
-    settings: Settings
+    settings: Settings,
+    slideshow: Slideshow
   },
   computed: {
     ...mapState(["currentRoute", "remoteRefreshDelay"]),
