@@ -49,15 +49,18 @@ describe("Store", () => {
     const sortPhotosMock = jest.fn();
     const shufflePhotosMock = jest.fn();
     const setLoadingPhotosMock = jest.fn();
+    const showNextPhotoMock = jest.fn();
 
     beforeEach(() => {
       sortPhotosMock.mockClear();
       shufflePhotosMock.mockClear();
       setLoadingPhotosMock.mockClear();
+      showNextPhotoMock.mockClear();
       testStore = cloneDeep(storeConfig);
       testStore.mutations.sortPhotos = sortPhotosMock;
       testStore.mutations.shufflePhotos = shufflePhotosMock;
       testStore.mutations.setLoadingPhotos = setLoadingPhotosMock;
+      testStore.actions.showNextPhoto = showNextPhotoMock;
     });
 
     test("with empty folders", done => {
@@ -71,6 +74,7 @@ describe("Store", () => {
         expect(shufflePhotosMock).not.toBeCalled();
         expect(store.state.loadingPhotos).toEqual(false);
         expect(setLoadingPhotosMock.mock.calls.map(p => p[1])).toEqual([true, false]);
+        expect(showNextPhotoMock).toBeCalledTimes(1);
         done();
       });
     });
@@ -87,6 +91,7 @@ describe("Store", () => {
           expect(shufflePhotosMock).not.toBeCalled();
           expect(store.state.loadingPhotos).toEqual(false);
           expect(setLoadingPhotosMock.mock.calls.map(p => p[1])).toEqual([true, false]);
+          expect(showNextPhotoMock).toBeCalledTimes(1);
           done();
         });
       });
@@ -105,6 +110,7 @@ describe("Store", () => {
           expect(shufflePhotosMock).toBeCalledTimes(2);
           expect(store.state.loadingPhotos).toEqual(false);
           expect(setLoadingPhotosMock.mock.calls.map(p => p[1])).toEqual([true, false]);
+          expect(showNextPhotoMock).toBeCalledTimes(1);
           done();
         });
       });
