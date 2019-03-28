@@ -37,6 +37,7 @@ export default {
         .then(() => {
           if (this.isSignedIn) {
             const delay =
+              this.currentPhoto &&
               this.currentPhoto.duration &&
               this.currentPhoto.duration * 2.5 > this.slideshowDelay
                 ? this.currentPhoto.duration * 2.5
@@ -51,13 +52,6 @@ export default {
         .catch(e => {
           logError(`navigateToNextPhoto error ${e}`);
         });
-    },
-    ...mapActions(["navigate"])
-  },
-  watch: {
-    photos() {
-      log(`Photos refreshed: ${this.photos.length}`);
-      this.slideshowNext(true, this.currentPhoto ? this.currentPhoto.id : "");
     }
   }
 };

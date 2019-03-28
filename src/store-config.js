@@ -124,6 +124,7 @@ const actions = {
         } else {
           commit("sortPhotos");
         }
+        dispatch("showNextPhoto");
         return Promise.resolve();
       }
       log(`get photos for ${folders[0]}`);
@@ -164,7 +165,7 @@ const actions = {
     }
     if (state.photos.length === 0) {
       log("showNextPhoto: no photos");
-      return Promise.reject("no photos");
+      return Promise.resolve("no photos");
     }
     log("showNextPhoto");
     let nextIndex = 0;
@@ -198,10 +199,10 @@ const actions = {
     }
     log("refreshing remote config...");
     return graphService.getRemoteConfig().then(config => {
-      dispatch("setFolders", config.folders);
       commit("setIsNextRandom", config.isNextRandom === true);
       commit("setRemoteRefreshDelay", config.remoteRefreshDelay);
       commit("setSlideshowDelay", config.slideshowDelay);
+      dispatch("setFolders", config.folders);
       if (config.version > VERSION) {
         logError("app refresh");
         window.location.reload(true);
