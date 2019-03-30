@@ -77,7 +77,8 @@ export default {
 <style>
 .infotext {
   font-family: sans-serif;
-  color: gray;
+  color: #dddddd;
+  text-shadow: 2px 2px 3px rgba(0, 0, 0, 1);
   background-color: transparent;
 }
 .center {
