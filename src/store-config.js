@@ -115,10 +115,14 @@ const mutations = {
 };
 
 const actions = {
-  setFolders({ commit, dispatch }, folders) {
-    log(`setFolders action ${folders}`);
-    commit("setFolders", folders);
-    dispatch("getPhotos", folders);
+  setFolders({ commit, dispatch, state }, folders) {
+    if (state.folders.toString() !== folders.toString()) {
+      log(`setFolders action ${folders}`);
+      commit("setFolders", folders);
+      dispatch("getPhotos", folders);
+    } else {
+      log(`setFolders got the same folders ${folders}`);
+    }
   },
   getPhotos({ state, commit, dispatch }) {
     function getPhotosFromFolders(folders) {
