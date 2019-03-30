@@ -3,7 +3,11 @@
     <p class="center infotext" v-bind:style="{ fontSize: fontSize }">{{statusText}}</p>
     <log/>
     <login class="leftbottom"></login>
-    <button class="rightbottom infotext" v-bind:style="{ fontSize: fontSize }" @click="settings">⚙</button>
+    <button
+      class="rightbottom infotext z5"
+      v-bind:style="{ fontSize: fontSize }"
+      @click="settings"
+    >⚙</button>
     <component v-bind:is="currentRoute"></component>
   </div>
 </template>
@@ -96,8 +100,12 @@ button.rightbottom {
   right: 0;
   position: fixed;
   border-width: 0px;
+  padding: 1em 0 0 1em;
 }
 p.infotext {
   margin: 0;
+}
+.z5 {
+  z-index: 5;
 }
 </style>

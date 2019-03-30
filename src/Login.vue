@@ -1,13 +1,13 @@
 <template>
   <div>
     <button
-      class="infotext"
+      class="infotext z5"
       v-if="!isSignedIn"
       v-bind:style="{ fontSize: fontSize }"
       @click="login"
     >Login</button>
     <button
-      class="infotext"
+      class="infotext z5"
       v-if="isSignedIn"
       v-bind:style="{ fontSize: fontSize }"
       @click="logout"
@@ -49,5 +49,6 @@ export default {
 <style scoped>
 button {
   border-width: 0px;
+  padding: 1em 1em 0 0;
 }
 </style>

@@ -1,5 +1,8 @@
 <template>
-  <photo v-bind:photo="currentPhoto"></photo>
+  <div>
+    <photo v-bind:photo="currentPhoto"></photo>
+    <button class="next" @click="slideshowNext"></button>
+  </div>
 </template>
 
 <script>
@@ -59,4 +62,15 @@ export default {
 </script>
 
 <style scoped>
+button.next {
+  height: 100%;
+  left: 30%;
+  top: 0;
+  width: 70%;
+  position: fixed;
+  z-index: 1;
+  background-color: transparent;
+  border-color: transparent;
+  outline: 0;
+}
 </style>
