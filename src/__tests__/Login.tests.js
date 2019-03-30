@@ -3,7 +3,6 @@ import Vuex from "vuex";
 import storeConfig from "../store-config";
 import cloneDeep from "lodash.clonedeep";
 jest.mock("../utils");
-import { logError } from "../utils";
 import Login from "../Login";
 
 console.log = () => {};
@@ -14,14 +13,17 @@ localVue.use(Vuex);
 describe("Login", () => {
   let store;
   const setStatusTextMock = jest.fn();
+  const logErrorMock = jest.fn();
 
   beforeEach(() => {
     setStatusTextMock.mockReset();
+    logErrorMock.mockReset();
     store = new Vuex.Store(cloneDeep(storeConfig));
     shallowMount(Login, {
       localVue,
       store,
       methods: {
+        logError: logErrorMock,
         setUser: () => {},
         setStatusText: setStatusTextMock
       }
@@ -42,7 +44,7 @@ describe("Login", () => {
       expect(setStatusTextMock.mock.calls).toEqual(expectedStatus);
 
       process.nextTick(() => {
-        expect(logError).toHaveBeenCalledTimes(0);
+        expect(logErrorMock).toHaveBeenCalledTimes(0);
         done();
       });
     });

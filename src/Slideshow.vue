@@ -3,8 +3,8 @@
 </template>
 
 <script>
-import { mapActions, mapGetters, mapState } from "vuex";
-import { log, logError } from "./utils";
+import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
+import { log } from "./utils";
 import graphService from "./services/graph.service";
 import Photo from "./Photo.vue";
 
@@ -31,6 +31,7 @@ export default {
   },
   methods: {
     ...mapActions(["showNextPhoto"]),
+    ...mapMutations(["logError"]),
     slideshowNext() {
       clearTimeout(this.slideshowNextTaskId);
       this.showNextPhoto()
@@ -50,7 +51,7 @@ export default {
           }
         })
         .catch(e => {
-          logError(`navigateToNextPhoto error ${e}`);
+          this.logError(`navigateToNextPhoto error ${e}`);
         });
     }
   }

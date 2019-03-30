@@ -10,7 +10,7 @@
 
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
-import { log, logError } from "./utils";
+import { log } from "./utils";
 import Log from "./Log.vue";
 import Login from "./Login.vue";
 import Settings from "./Settings.vue";
@@ -45,11 +45,13 @@ export default {
     clearTimeout(this.refreshRemoteConfigTaskId);
   },
   methods: {
+    ...mapActions(["navigate", "refreshRemoteConfig"]),
+    ...mapMutations(["logError"]),
     updateRemoteConfig(doRefresh = true) {
       clearTimeout(this.refreshRemoteConfigTaskId);
       (doRefresh ? this.refreshRemoteConfig() : Promise.resolve())
         .catch(e => {
-          logError(`updateRemoteConfig error ${e}`);
+          this.logError(`updateRemoteConfig error ${e}`);
         })
         .then(() => {
           log(`update remote config in ${this.remoteRefreshDelay}`);
@@ -61,8 +63,7 @@ export default {
     },
     settings() {
       this.navigate({ route: "settings" });
-    },
-    ...mapActions(["navigate", "refreshRemoteConfig"])
+    }
   },
   watch: {
     isSignedIn(val) {

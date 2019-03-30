@@ -23,7 +23,7 @@
 
 <script>
 import { mapActions, mapMutations, mapState } from "vuex";
-import { log, logError } from "./utils";
+import { log } from "./utils";
 import graphService from "./services/graph.service";
 
 export default {
@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     ...mapActions(["navigate", "setFolders"]),
-    ...mapMutations(["addManualFolder", "removeManualFolder"]),
+    ...mapMutations(["addManualFolder", "logError", "removeManualFolder"]),
     load(baseFolder) {
       graphService
         .listPhotoFolders(baseFolder)
@@ -48,7 +48,7 @@ export default {
           this.onedriveFolders = data;
         })
         .catch(error => {
-          logError(`listPhotoFolders error ${error}`);
+          this.logError(`listPhotoFolders error ${error}`);
           this.onedriveFolders = [{ name: "zkusit znovu" }];
         });
     },

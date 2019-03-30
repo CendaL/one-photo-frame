@@ -38,6 +38,11 @@ const mutations = {
     state.photos.push(...photos);
     log(`add photos: ${JSON.stringify(photos)}`);
   },
+  logError(state, text) {
+    state.statusText = text;
+    log(`logError set statusText to ${status}`);
+    logError(text);
+  },
   removeManualFolder(state, folder) {
     log(`remove ${JSON.stringify(folder)}`);
     state.manualFolders = state.manualFolders.filter(i => i.id !== folder.id);
@@ -153,7 +158,6 @@ const actions = {
     return getPhotosFromFolders(state.folders);
   },
   navigate({ state, commit, dispatch }, options) {
-    commit("setStatusText", "nahrávám...");
     log(`navigate: ${window.location.pathname}${window.location.search} => ${JSON.stringify(options)}`);
     if (state.currentRoute !== options.route) {
       commit("setRoute", options.route);
@@ -206,7 +210,7 @@ const actions = {
       commit("setSlideshowDelay", config.slideshowDelay);
       dispatch("setFolders", config.folders);
       if (config.version > VERSION) {
-        logError("app refresh");
+        commit("logError", "app refresh");
         window.location.reload(true);
       }
     });

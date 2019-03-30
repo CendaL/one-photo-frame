@@ -1,6 +1,6 @@
 import * as Msal from "msal";
 import { clientId } from "../config.json";
-import { log, logError } from "../utils";
+import { log } from "../utils";
 
 const graphScopes = ["User.Read", "Files.Read.All"];
 const app = new Msal.UserAgentApplication(
