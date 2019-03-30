@@ -1,17 +1,28 @@
 <template>
   <div>
-    <button v-if="!isSignedIn" @click="login">Login</button>
-    <button v-if="isSignedIn" @click="logout">L</button>
+    <button
+      class="infotext"
+      v-if="!isSignedIn"
+      v-bind:style="{ fontSize: fontSize }"
+      @click="login"
+    >Login</button>
+    <button
+      class="infotext"
+      v-if="isSignedIn"
+      v-bind:style="{ fontSize: fontSize }"
+      @click="logout"
+    >L</button>
   </div>
 </template>
 
 <script>
 import authService from "./services/auth.service";
-import { mapGetters, mapMutations } from "vuex";
+import { mapGetters, mapMutations, mapState } from "vuex";
 
 export default {
   computed: {
-    ...mapGetters(["isSignedIn"])
+    ...mapGetters(["isSignedIn"]),
+    ...mapState(["fontSize"])
   },
   created() {
     this.setUser(authService.getUser());
@@ -37,9 +48,6 @@ export default {
 
 <style scoped>
 button {
-  font-family: sans-serif;
-  color: gray;
-  background-color: transparent;
   border-width: 0px;
 }
 </style>

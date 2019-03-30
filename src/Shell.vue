@@ -1,9 +1,9 @@
 <template>
   <div>
-    <p class="center infotext">{{statusText}}</p>
+    <p class="center infotext" v-bind:style="{ fontSize: fontSize }">{{statusText}}</p>
     <log/>
     <login class="leftbottom"></login>
-    <button class="rightbottom" @click="settings">⚙</button>
+    <button class="rightbottom infotext" v-bind:style="{ fontSize: fontSize }" @click="settings">⚙</button>
     <component v-bind:is="currentRoute"></component>
   </div>
 </template>
@@ -29,7 +29,12 @@ export default {
     slideshow: Slideshow
   },
   computed: {
-    ...mapState(["currentRoute", "remoteRefreshDelay", "statusText"]),
+    ...mapState([
+      "currentRoute",
+      "fontSize",
+      "remoteRefreshDelay",
+      "statusText"
+    ]),
     ...mapGetters(["isSignedIn"])
   },
   mounted() {
@@ -86,11 +91,11 @@ export default {
 }
 button.rightbottom {
   bottom: 0;
-  right: 1em;
+  right: 0;
   position: fixed;
-  font-family: sans-serif;
-  color: gray;
-  background-color: transparent;
   border-width: 0px;
+}
+p.infotext {
+  margin: 0;
 }
 </style>

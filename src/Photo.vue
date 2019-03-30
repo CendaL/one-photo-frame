@@ -1,9 +1,7 @@
 <template>
   <div>
     <span v-html="name"></span>
-    <button class="right" v-show="isLoaded">
-      <span v-html="taken"></span>
-    </button>
+    <span class="right infotext" v-show="isLoaded" v-html="taken"></span>
     <transition name="fade">
       <video
         v-if="isVideo"
@@ -97,13 +95,6 @@ video {
   position: fixed;
   z-index: -1;
   transform: translate(-50%, -50%);
-}
-button {
-  font-family: sans-serif;
-  color: gray;
-  background-color: transparent;
-  border-width: 0px;
-  text-align: left;
 }
 .right {
   right: 1%;

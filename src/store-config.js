@@ -5,6 +5,7 @@ const state = {
   currentPhoto: null,
   currentRoute: null,
   folders: [],
+  fontSize: "150%",
   isNextRandom: false,
   loadingPhotos: false,
   manualFolders: [],
@@ -167,6 +168,7 @@ const actions = {
       log("showNextPhoto: no photos");
       return Promise.resolve("no photos");
     }
+    commit("setStatusText", "nahrávám...");
     log("showNextPhoto");
     let nextIndex = 0;
     if (state.currentPhoto) {

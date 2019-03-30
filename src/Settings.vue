@@ -1,23 +1,23 @@
 <template>
   <div>
     <div class="photo-folders">
-      <h2>Přidat fotky:</h2>
+      <h2 class="infotext">Přidat fotky:</h2>
       <ul>
         <li v-for="item in onedriveFolders" :key="item.id">
-          <button @click="addManualFolder(item)">+</button>
-          <button @click="load(item)">{{ item.name }}</button>
+          <button class="infotext" @click="addManualFolder(item)">+</button>
+          <button class="infotext" @click="load(item)">{{ item.name }}</button>
         </li>
       </ul>
     </div>
     <div class="selected-photos">
-      <h2>Vybrané fotky:</h2>
+      <h2 class="infotext">Vybrané fotky:</h2>
       <ul>
         <li v-for="item in manualFolders" :key="item.id">
-          <button @click="removeManualFolder(item)">{{ item.name }}</button>
+          <button class="infotext" @click="removeManualFolder(item)">{{ item.name }}</button>
         </li>
       </ul>
     </div>
-    <button @click="startSlideshow" class="ok-button">OK</button>
+    <button class="infotext ok-button" @click="startSlideshow">OK</button>
   </div>
 </template>
 
@@ -48,7 +48,7 @@ export default {
           this.onedriveFolders = data;
         })
         .catch(error => {
-          logError(`listPhotoFolders error ${e}`);
+          logError(`listPhotoFolders error ${error}`);
           this.onedriveFolders = [{ name: "zkusit znovu" }];
         });
     },
@@ -81,14 +81,9 @@ li {
   list-style-type: none;
 }
 h2 {
-  color: gray;
-  font-family: sans-serif;
   padding-left: 0.4em;
 }
 button {
-  font-family: sans-serif;
-  color: gray;
-  background-color: transparent;
   border-width: 1px;
   border-color: gray;
   border-style: groove;
