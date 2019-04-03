@@ -10,6 +10,7 @@ const state = {
   loadingPhotos: false,
   manualFolders: [],
   manualTimestamp: null,
+  nextPhotoId: null,
   photos: [],
   remoteRefreshDelay: 10,
   slideshowDelay: 300,
@@ -60,6 +61,10 @@ const mutations = {
   setLoadingPhotos(state, value) {
     state.loadingPhotos = value;
     log(`set loadingPhotos to ${JSON.stringify(value)}`);
+  },
+  setNextPhotoId(state, photoId) {
+    state.nextPhotoId = photoId;
+    log(`set nextPhotoId to ${JSON.stringify(photoId)}`);
   },
   setIsNextRandom(state, isNextRandom) {
     state.isNextRandom = isNextRandom;
@@ -161,7 +166,7 @@ const actions = {
     const foldersCount = (state.folders && state.folders.length) || 0;
     return getPhotosFromFolders(state.folders);
   },
-  showNextPhoto({ state, commit }, options) {
+  showNextPhoto({ state, commit }) {
     if (state.loadingPhotos) {
       log("showNextPhoto - loadingPhotos");
       return Promise.resolve();
@@ -173,7 +178,10 @@ const actions = {
     commit("setStatusText", "nahrávám...");
     log("showNextPhoto");
     let nextIndex = 0;
-    if (state.currentPhoto) {
+    const nextPhoto = state.photos.filter(p => state.nextPhotoId && p.id == state.nextPhotoId);
+    if (nextPhoto.length > 0) {
+      nextIndex = state.photos.indexOf(nextPhoto[0]);
+    } else if (state.currentPhoto) {
       nextIndex = state.photos.indexOf(state.currentPhoto) + 1;
       if (nextIndex >= state.photos.length) {
         if (state.isNextRandom) {
@@ -184,6 +192,7 @@ const actions = {
     }
     const photo = state.photos[nextIndex];
     log(`showNextPhoto ${state.currentPhoto && state.currentPhoto.path} => ${photo.path}`);
+    commit("setNextPhotoId", null);
 
     return graphService
       .getPhotoUrl(photo)

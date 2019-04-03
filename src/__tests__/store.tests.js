@@ -171,5 +171,37 @@ describe("Store", () => {
         done();
       });
     });
+
+    describe("with nextPhotoId", () => {
+      test("p after second", done => {
+        mockedStoreConfig.state.nextPhotoId = "p";
+        mockedStoreConfig.state.currentPhoto = mockedStoreConfig.state.photos[1];
+        graphService.getPhotoUrl = jest.fn().mockResolvedValue("p_url");
+        store = new Vuex.Store(mockedStoreConfig);
+        store.dispatch("showNextPhoto").then(() => {
+          const expectedPhoto = cloneDeep(mockedStoreConfig.state.photos[0]);
+          expectedPhoto.url = "p_url";
+          expect(store.state.currentPhoto).toEqual(expectedPhoto);
+          expect(mockedShufflePhotos).not.toBeCalled();
+          expect(store.state.nextPhotoId).toEqual(null);
+          done();
+        });
+      });
+
+      test("third after second for non-existing nextPhotoId", done => {
+        mockedStoreConfig.state.nextPhotoId = "s";
+        mockedStoreConfig.state.currentPhoto = mockedStoreConfig.state.photos[1];
+        graphService.getPhotoUrl = jest.fn().mockResolvedValue("r_url");
+        store = new Vuex.Store(mockedStoreConfig);
+        store.dispatch("showNextPhoto").then(() => {
+          const expectedPhoto = cloneDeep(mockedStoreConfig.state.photos[2]);
+          expectedPhoto.url = "r_url";
+          expect(store.state.currentPhoto).toEqual(expectedPhoto);
+          expect(mockedShufflePhotos).not.toBeCalled();
+          expect(store.state.nextPhotoId).toEqual(null);
+          done();
+        });
+      });
+    });
   });
 });
