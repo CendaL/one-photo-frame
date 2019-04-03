@@ -35,12 +35,16 @@ export default {
   computed: {
     ...mapState(["manualFolders"])
   },
-  created() {
+  mounted() {
+    log("Settings: mounted");
     this.load();
   },
+  beforeDestroy() {
+    log("Settings: beforeDestroy");
+  },
   methods: {
-    ...mapActions(["navigate", "setFolders"]),
-    ...mapMutations(["addManualFolder", "logError", "removeManualFolder"]),
+    ...mapActions(["setFolders"]),
+    ...mapMutations(["addManualFolder", "logError", "removeManualFolder", "setRoute"]),
     load(baseFolder) {
       graphService
         .listPhotoFolders(baseFolder)
@@ -55,7 +59,7 @@ export default {
     startSlideshow() {
       log("settings - startSlideshow");
       this.setFolders(this.manualFolders.map(i => i.id));
-      this.navigate({ route: "slideshow" });
+      this.setRoute("slideshow");
     }
   }
 };

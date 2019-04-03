@@ -2,7 +2,7 @@ import "./array.find.polyfill";
 import "promise-polyfill/src/polyfill";
 import "whatwg-fetch";
 import { log } from "./utils";
-import { mapActions } from "vuex";
+import { mapMutations } from "vuex";
 import qs from "querystringify";
 import Shell from "./Shell.vue";
 import storeConfig from "./store-config";
@@ -17,7 +17,7 @@ const app = new Vue({
   el: "#app",
   store,
   methods: {
-    ...mapActions(["navigate"])
+    ...mapMutations(["setNextPhotoId", "setRoute"])
   },
   created() {
     log(`created ${window.location.pathname}`);
@@ -26,10 +26,7 @@ const app = new Vue({
       log("auth redirect detected");
       return;
     }
-    this.navigate({
-      route: qsp.route || "settings",
-      replaceHistory: true
-    }).catch(e => log(`Shell created error: ${e}`));
+    this.setRoute(qsp.route || "slideshow");
   },
   render(h) {
     return h(Shell);
@@ -37,14 +34,10 @@ const app = new Vue({
 });
 
 window.addEventListener("popstate", event => {
-  debugger;
   const qsp = qs.parse(window.location.search);
   if (qsp.route) {
     log(`popstate ${window.location.pathname}${window.location.search}`);
-    // app.navigate({
-    //   route: qsp.route,
-    //   photo: qsp.photo,
-    //   addToHistory: false
-    // });
+    app.setNextPhotoId(qsp.photo);
+    app.setRoute(qsp.route);
   }
 });

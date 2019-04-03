@@ -96,7 +96,7 @@ const mutations = {
   },
   setRoute(state, route) {
     state.currentRoute = route;
-    log(`set currentRoute to ${route}`);
+    log(`set currentRoute to ${route} on ${window.location.pathname}${window.location.search}`);
   },
   setSlideshowDelay(state, delay) {
     if (delay) {
@@ -160,12 +160,6 @@ const actions = {
     commit("setLoadingPhotos", true);
     const foldersCount = (state.folders && state.folders.length) || 0;
     return getPhotosFromFolders(state.folders);
-  },
-  navigate({ state, commit, dispatch }, options) {
-    log(`navigate: ${window.location.pathname}${window.location.search} => ${JSON.stringify(options)}`);
-    if (state.currentRoute !== options.route) {
-      commit("setRoute", options.route);
-    }
   },
   showNextPhoto({ state, commit }, options) {
     if (state.loadingPhotos) {

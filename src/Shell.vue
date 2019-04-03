@@ -49,8 +49,8 @@ export default {
     clearTimeout(this.refreshRemoteConfigTaskId);
   },
   methods: {
-    ...mapActions(["navigate", "refreshRemoteConfig"]),
-    ...mapMutations(["logError"]),
+    ...mapActions(["refreshRemoteConfig"]),
+    ...mapMutations(["logError", "setRoute"]),
     updateRemoteConfig(doRefresh = true) {
       clearTimeout(this.refreshRemoteConfigTaskId);
       (doRefresh ? this.refreshRemoteConfig() : Promise.resolve())
@@ -66,7 +66,7 @@ export default {
         });
     },
     settings() {
-      this.navigate({ route: "settings" });
+      this.setRoute("settings");
     }
   },
   watch: {
