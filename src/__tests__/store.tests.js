@@ -70,11 +70,11 @@ describe("Store", () => {
       store.dispatch("getPhotos").then(() => {
         expect(store.state.folders).toEqual([]);
         expect(store.state.photos).toEqual(["p", "q"]);
-        expect(sortPhotosMock).toBeCalledTimes(1);
+        expect(sortPhotosMock).not.toBeCalled();
         expect(shufflePhotosMock).not.toBeCalled();
         expect(store.state.isLoadingPhotos).toEqual(false);
-        expect(setIsLoadingPhotosMock.mock.calls.map(p => p[1])).toEqual([true, false]);
-        expect(showNextPhotoMock).toBeCalledTimes(1);
+        expect(setIsLoadingPhotosMock).not.toBeCalled();
+        expect(showNextPhotoMock).not.toBeCalled();
         done();
       });
     });
@@ -87,7 +87,7 @@ describe("Store", () => {
         store = new Vuex.Store(testStore);
         store.dispatch("getPhotos").then(() => {
           expect(store.state.photos).toEqual(["a"]);
-          expect(sortPhotosMock).toBeCalledTimes(2);
+          expect(sortPhotosMock).toBeCalledTimes(1);
           expect(shufflePhotosMock).not.toBeCalled();
           expect(store.state.isLoadingPhotos).toEqual(false);
           expect(setIsLoadingPhotosMock.mock.calls.map(p => p[1])).toEqual([true, false]);
@@ -107,7 +107,7 @@ describe("Store", () => {
         store.dispatch("getPhotos").then(() => {
           expect(store.state.photos).toEqual(["a", "b"]);
           expect(sortPhotosMock).not.toBeCalled();
-          expect(shufflePhotosMock).toBeCalledTimes(2);
+          expect(shufflePhotosMock).toBeCalledTimes(1);
           expect(store.state.isLoadingPhotos).toEqual(false);
           expect(setIsLoadingPhotosMock.mock.calls.map(p => p[1])).toEqual([true, false]);
           expect(showNextPhotoMock).toBeCalledTimes(1);
