@@ -7,7 +7,7 @@ const state = {
   folders: [],
   fontSize: "150%",
   isNextRandom: false,
-  loadingPhotos: false,
+  isLoadingPhotos: false,
   manualFolders: [],
   manualTimestamp: null,
   nextPhotoId: null,
@@ -58,9 +58,9 @@ const mutations = {
     state.folders = folders;
     log(`set folders to ${JSON.stringify(folders)}`);
   },
-  setLoadingPhotos(state, value) {
-    state.loadingPhotos = value;
-    log(`set loadingPhotos to ${JSON.stringify(value)}`);
+  setIsLoadingPhotos(state, value) {
+    state.isLoadingPhotos = value;
+    log(`set isLoadingPhotos to ${JSON.stringify(value)}`);
   },
   setNextPhotoId(state, photoId) {
     state.nextPhotoId = photoId;
@@ -133,7 +133,7 @@ const actions = {
     function getPhotosFromFolders(folders) {
       if (folders.length <= 0) {
         // loading folders is finished
-        commit("setLoadingPhotos", false);
+        commit("setIsLoadingPhotos", false);
         if (state.isNextRandom) {
           commit("shufflePhotos");
         } else {
@@ -162,13 +162,13 @@ const actions = {
       });
     }
     log(`getPhotos '${state.folders}'`);
-    commit("setLoadingPhotos", true);
+    commit("setIsLoadingPhotos", true);
     const foldersCount = (state.folders && state.folders.length) || 0;
     return getPhotosFromFolders(state.folders);
   },
   showNextPhoto({ state, commit }) {
-    if (state.loadingPhotos) {
-      log("showNextPhoto - loadingPhotos");
+    if (state.isLoadingPhotos) {
+      log("showNextPhoto - isLoadingPhotos");
       return Promise.resolve();
     }
     if (state.photos.length === 0) {

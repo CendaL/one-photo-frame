@@ -48,32 +48,32 @@ describe("Store", () => {
     let testStore;
     const sortPhotosMock = jest.fn();
     const shufflePhotosMock = jest.fn();
-    const setLoadingPhotosMock = jest.fn();
+    const setIsLoadingPhotosMock = jest.fn();
     const showNextPhotoMock = jest.fn();
 
     beforeEach(() => {
       sortPhotosMock.mockClear();
       shufflePhotosMock.mockClear();
-      setLoadingPhotosMock.mockClear();
+      setIsLoadingPhotosMock.mockClear();
       showNextPhotoMock.mockClear();
       testStore = cloneDeep(storeConfig);
       testStore.mutations.sortPhotos = sortPhotosMock;
       testStore.mutations.shufflePhotos = shufflePhotosMock;
-      testStore.mutations.setLoadingPhotos = setLoadingPhotosMock;
+      testStore.mutations.setIsLoadingPhotos = setIsLoadingPhotosMock;
       testStore.actions.showNextPhoto = showNextPhotoMock;
     });
 
     test("with empty folders", done => {
       testStore.state.photos = ["p", "q"];
       store = new Vuex.Store(testStore);
-      expect(store.state.loadingPhotos).toEqual(false);
+      expect(store.state.isLoadingPhotos).toEqual(false);
       store.dispatch("getPhotos").then(() => {
         expect(store.state.folders).toEqual([]);
         expect(store.state.photos).toEqual(["p", "q"]);
         expect(sortPhotosMock).toBeCalledTimes(1);
         expect(shufflePhotosMock).not.toBeCalled();
-        expect(store.state.loadingPhotos).toEqual(false);
-        expect(setLoadingPhotosMock.mock.calls.map(p => p[1])).toEqual([true, false]);
+        expect(store.state.isLoadingPhotos).toEqual(false);
+        expect(setIsLoadingPhotosMock.mock.calls.map(p => p[1])).toEqual([true, false]);
         expect(showNextPhotoMock).toBeCalledTimes(1);
         done();
       });
@@ -89,8 +89,8 @@ describe("Store", () => {
           expect(store.state.photos).toEqual(["a"]);
           expect(sortPhotosMock).toBeCalledTimes(2);
           expect(shufflePhotosMock).not.toBeCalled();
-          expect(store.state.loadingPhotos).toEqual(false);
-          expect(setLoadingPhotosMock.mock.calls.map(p => p[1])).toEqual([true, false]);
+          expect(store.state.isLoadingPhotos).toEqual(false);
+          expect(setIsLoadingPhotosMock.mock.calls.map(p => p[1])).toEqual([true, false]);
           expect(showNextPhotoMock).toBeCalledTimes(1);
           done();
         });
@@ -108,8 +108,8 @@ describe("Store", () => {
           expect(store.state.photos).toEqual(["a", "b"]);
           expect(sortPhotosMock).not.toBeCalled();
           expect(shufflePhotosMock).toBeCalledTimes(2);
-          expect(store.state.loadingPhotos).toEqual(false);
-          expect(setLoadingPhotosMock.mock.calls.map(p => p[1])).toEqual([true, false]);
+          expect(store.state.isLoadingPhotos).toEqual(false);
+          expect(setIsLoadingPhotosMock.mock.calls.map(p => p[1])).toEqual([true, false]);
           expect(showNextPhotoMock).toBeCalledTimes(1);
           done();
         });
