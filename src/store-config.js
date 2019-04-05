@@ -175,15 +175,14 @@ const actions = {
     return Promise.resolve();
   },
   showNextPhoto({ state, commit }) {
-    if (state.isLoadingPhotos && !state.nextPhotoId) {
+    if (state.isLoadingPhotos && state.nextPhotoId) {
       log("showNextPhoto - isLoadingPhotos with nextPhotoId");
-      return Promise.resolve();
+      return Promise.resolve("isLoadingPhotos with nextPhotoId");
     }
     if (state.photos.length === 0) {
       log("showNextPhoto: no photos");
       return Promise.resolve("no photos");
     }
-    commit("setStatusText", "nahrávám...");
     log("showNextPhoto");
     let nextIndex = 0;
     const nextPhoto = state.photos.filter(p => state.nextPhotoId && p.id == state.nextPhotoId);
@@ -202,6 +201,11 @@ const actions = {
     log(`showNextPhoto ${state.currentPhoto && state.currentPhoto.path} => ${photo.path}`);
     commit("setNextPhotoId", null);
 
+    if (state.currentPhoto && state.currentPhoto.id === photo.id) {
+      return Promise.resolve("the same photo");
+    }
+
+    commit("setStatusText", "nahrávám...");
     return graphService
       .getPhotoUrl(photo)
       .then(photoUrl => {

@@ -1,6 +1,7 @@
 <template>
   <div>
     <photo v-bind:photo="currentPhoto"></photo>
+    <button class="previous" @click="slideshowPrevious"></button>
     <button class="next" @click="slideshowNext"></button>
   </div>
 </template>
@@ -35,6 +36,9 @@ export default {
   methods: {
     ...mapActions(["showNextPhoto"]),
     ...mapMutations(["logError"]),
+    slideshowPrevious() {
+      window.history.go(-1);
+    },
     slideshowNext() {
       clearTimeout(this.slideshowNextTaskId);
       this.showNextPhoto()
@@ -63,10 +67,21 @@ export default {
 
 <style scoped>
 button.next {
-  height: 100%;
+  height: 80%;
   left: 30%;
-  top: 0;
+  top: 10%;
   width: 70%;
+  position: fixed;
+  z-index: 1;
+  background-color: transparent;
+  border-color: transparent;
+  outline: 0;
+}
+button.previous {
+  height: 80%;
+  left: 0;
+  top: 10%;
+  width: 30%;
   position: fixed;
   z-index: 1;
   background-color: transparent;

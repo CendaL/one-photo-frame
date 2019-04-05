@@ -104,6 +104,8 @@ button.rightbottom {
 }
 p.infotext {
   margin: 0;
+  position: fixed;
+  width: 100%;
 }
 .z5 {
   z-index: 5;

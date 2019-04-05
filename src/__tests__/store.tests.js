@@ -235,6 +235,16 @@ describe("Store", () => {
     });
 
     describe("with nextPhotoId", () => {
+      test("when loading", done => {
+        mockedStoreConfig.state.isLoadingPhotos = true;
+        mockedStoreConfig.state.nextPhotoId = "p";
+        store = new Vuex.Store(mockedStoreConfig);
+        store.dispatch("showNextPhoto").then(res => {
+          expect(res).toEqual("isLoadingPhotos with nextPhotoId");
+          done();
+        });
+      });
+
       test("p after second", done => {
         mockedStoreConfig.state.nextPhotoId = "p";
         mockedStoreConfig.state.currentPhoto = mockedStoreConfig.state.photos[1];
@@ -244,6 +254,22 @@ describe("Store", () => {
           const expectedPhoto = cloneDeep(mockedStoreConfig.state.photos[0]);
           expectedPhoto.url = "p_url";
           expect(store.state.currentPhoto).toEqual(expectedPhoto);
+          expect(mockedShufflePhotos).not.toBeCalled();
+          expect(store.state.nextPhotoId).toEqual(null);
+          done();
+        });
+      });
+
+      test("p after p", done => {
+        mockedStoreConfig.state.nextPhotoId = "p";
+        mockedStoreConfig.state.currentPhoto = mockedStoreConfig.state.photos[0];
+        graphService.getPhotoUrl = jest.fn();
+        store = new Vuex.Store(mockedStoreConfig);
+        store.dispatch("showNextPhoto").then(res => {
+          expect(res).toEqual("the same photo");
+          const expectedPhoto = cloneDeep(mockedStoreConfig.state.photos[0]);
+          expect(store.state.currentPhoto).toEqual(expectedPhoto);
+          expect(graphService.getPhotoUrl).not.toBeCalled();
           expect(mockedShufflePhotos).not.toBeCalled();
           expect(store.state.nextPhotoId).toEqual(null);
           done();
