@@ -130,17 +130,20 @@ const actions = {
     }
   },
   getPhotos({ state, commit, dispatch }) {
+    function dispatchShowNextPhoto() {
+      if (state.isNextRandom) {
+        commit("shufflePhotos");
+      } else {
+        commit("sortPhotos");
+      }
+      dispatch("showNextPhoto");
+    }
     function getPhotosFromFolders(folders) {
       if (folders.length <= 0) {
         // loading more folders is finished
         commit("setIsLoadingPhotos", false);
-        if (foldersCount === 1) {
-          if (state.isNextRandom) {
-            commit("shufflePhotos");
-          } else {
-            commit("sortPhotos");
-          }
-          dispatch("showNextPhoto");
+        if (foldersCount === 1 || state.nextPhotoId) {
+          dispatchShowNextPhoto();
         }
         return Promise.resolve();
       }
@@ -153,14 +156,9 @@ const actions = {
         if (folders.length === foldersCount) {
           // the first folder is loaded
           commit("setPhotos", photos);
-          if (foldersCount > 1) {
+          if (foldersCount > 1 && !state.nextPhotoId) {
             // showNextPhoto only when loading more folders
-            if (state.isNextRandom) {
-              commit("shufflePhotos");
-            } else {
-              commit("sortPhotos");
-            }
-            dispatch("showNextPhoto");
+            dispatchShowNextPhoto();
           }
         } else {
           commit("addPhotos", photos);
@@ -177,8 +175,8 @@ const actions = {
     return Promise.resolve();
   },
   showNextPhoto({ state, commit }) {
-    if (state.isLoadingPhotos) {
-      log("showNextPhoto - isLoadingPhotos");
+    if (state.isLoadingPhotos && !state.nextPhotoId) {
+      log("showNextPhoto - isLoadingPhotos with nextPhotoId");
       return Promise.resolve();
     }
     if (state.photos.length === 0) {

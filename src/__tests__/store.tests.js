@@ -55,7 +55,7 @@ describe("Store", () => {
       sortPhotosMock.mockClear();
       shufflePhotosMock.mockClear();
       setIsLoadingPhotosMock.mockClear();
-      showNextPhotoMock.mockClear();
+      showNextPhotoMock.mockReset();
       testStore = cloneDeep(storeConfig);
       testStore.mutations.sortPhotos = sortPhotosMock;
       testStore.mutations.shufflePhotos = shufflePhotosMock;
@@ -65,6 +65,23 @@ describe("Store", () => {
 
     test("with empty folders", done => {
       testStore.state.photos = ["p", "q"];
+      store = new Vuex.Store(testStore);
+      expect(store.state.isLoadingPhotos).toEqual(false);
+      store.dispatch("getPhotos").then(() => {
+        expect(store.state.folders).toEqual([]);
+        expect(store.state.photos).toEqual(["p", "q"]);
+        expect(sortPhotosMock).not.toBeCalled();
+        expect(shufflePhotosMock).not.toBeCalled();
+        expect(store.state.isLoadingPhotos).toEqual(false);
+        expect(setIsLoadingPhotosMock).not.toBeCalled();
+        expect(showNextPhotoMock).not.toBeCalled();
+        done();
+      });
+    });
+
+    test("with empty folders and nextPhotoId", done => {
+      testStore.state.photos = ["p", "q"];
+      testStore.state.nextPhotoId = "p";
       store = new Vuex.Store(testStore);
       expect(store.state.isLoadingPhotos).toEqual(false);
       store.dispatch("getPhotos").then(() => {
@@ -95,13 +112,58 @@ describe("Store", () => {
           done();
         });
       });
+
+      test("one folder and nextPhotoId", done => {
+        graphService.getPhotoList = jest.fn().mockResolvedValue(["a"]);
+        testStore.state.folders = ["f"];
+        testStore.state.photos = ["p", "q"];
+        testStore.state.nextPhotoId = "a";
+        store = new Vuex.Store(testStore);
+        store.dispatch("getPhotos").then(() => {
+          expect(store.state.photos).toEqual(["a"]);
+          expect(sortPhotosMock).toBeCalledTimes(1);
+          expect(shufflePhotosMock).not.toBeCalled();
+          expect(store.state.isLoadingPhotos).toEqual(false);
+          expect(setIsLoadingPhotosMock.mock.calls.map(p => p[1])).toEqual([true, false]);
+          expect(showNextPhotoMock).toBeCalledTimes(1);
+          done();
+        });
+      });
+
       test("two folders", done => {
         graphService.getPhotoList = jest
           .fn()
           .mockResolvedValueOnce(["a"])
-          .mockResolvedValueOnce(["b"]);
+          .mockImplementationOnce(() => {
+            expect(showNextPhotoMock).toBeCalledTimes(1);
+            return Promise.resolve(["b"]);
+          });
         testStore.state.folders = ["f", "g"];
         testStore.state.photos = ["p", "q"];
+        testStore.state.isNextRandom = true;
+        store = new Vuex.Store(testStore);
+        store.dispatch("getPhotos").then(() => {
+          expect(store.state.photos).toEqual(["a", "b"]);
+          expect(sortPhotosMock).not.toBeCalled();
+          expect(shufflePhotosMock).toBeCalledTimes(1);
+          expect(store.state.isLoadingPhotos).toEqual(false);
+          expect(setIsLoadingPhotosMock.mock.calls.map(p => p[1])).toEqual([true, false]);
+          expect(showNextPhotoMock).toBeCalledTimes(1);
+          done();
+        });
+      });
+
+      test("two folders with nextPhotoId", done => {
+        graphService.getPhotoList = jest
+          .fn()
+          .mockResolvedValueOnce(["a"])
+          .mockImplementationOnce(() => {
+            expect(showNextPhotoMock).toBeCalledTimes(0);
+            return Promise.resolve(["b"]);
+          });
+        testStore.state.folders = ["f", "g"];
+        testStore.state.photos = ["p", "q"];
+        testStore.state.nextPhotoId = "b";
         testStore.state.isNextRandom = true;
         store = new Vuex.Store(testStore);
         store.dispatch("getPhotos").then(() => {
