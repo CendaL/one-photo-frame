@@ -32,6 +32,7 @@ const mutations = {
       state.manualFolders.filter(i => i.id === folder.id).length === 0
     ) {
       state.manualFolders.push({ id: folder.id, name: folder.name || folder.id });
+      state.manualTimestamp = new Date().toISOString();
     }
     log(`manualFolders: ${JSON.stringify(state.manualFolders)}`);
   },
@@ -217,7 +218,7 @@ const actions = {
         document.title = state.currentPhoto && state.currentPhoto.name;
       });
   },
-  refreshRemoteConfig({ getters, commit, dispatch }) {
+  refreshRemoteConfig({ state, getters, commit, dispatch }) {
     if (!getters.isSignedIn) {
       log("skip refreshing remote config - user not signed in");
       return Promise.resolve();
@@ -228,6 +229,11 @@ const actions = {
       commit("setRemoteRefreshDelay", config.remoteRefreshDelay);
       commit("setSlideshowDelay", config.slideshowDelay);
       dispatch("setFolders", config.folders);
+      if (state.folders.length > 0 && state.manualTimestamp > config.foldersUpdated) {
+        log("manual folders newer then remoteConfig folders");
+      } else {
+        dispatch("setFolders", config.folders);
+      }
       if (config.version > VERSION) {
         commit("logError", "app refresh");
         window.location.reload(true);
