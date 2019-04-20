@@ -25,13 +25,16 @@ const app = new Vue({
     ...mapMutations(["setNextPhotoId", "setRoute"])
   },
   created() {
-    log(`created ${window.location.pathname}`);
-    let qsp = qs.parse(window.location.hash);
-    if (qsp.id_token || qsp.access_token) {
+    log(
+      `created ${window.location.pathname} with hash: '${window.location.hash}' and search: '${
+        window.location.search
+      }'`
+    );
+    if (window.location.hash.includes("id_token=") || window.location.hash.includes("access_token=")) {
       log("auth redirect detected");
       return;
     }
-    qsp = qs.parse(window.location.search);
+    const qsp = qs.parse(window.location.search);
     this.setNextPhotoId(qsp.photo);
     this.setRoute(qsp.route || "slideshow");
   },
