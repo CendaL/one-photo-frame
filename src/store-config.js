@@ -199,7 +199,10 @@ const actions = {
       }
     }
     const photo = state.photos[nextIndex];
-    log(`showNextPhoto ${state.currentPhoto && state.currentPhoto.path} => ${photo.path}`);
+    log(
+      `showNextPhoto ${state.currentPhoto && state.currentPhoto.path} (${state.currentPhoto &&
+        state.currentPhoto.id}) => ${photo.path} (${photo.id})`
+    );
     commit("setNextPhotoId", null);
 
     if (state.currentPhoto && state.currentPhoto.id === photo.id) {

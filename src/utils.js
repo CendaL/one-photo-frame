@@ -27,11 +27,12 @@ export function isVideo(name) {
 }
 
 export function log(text) {
+  text = `${new Date().toISOString()} ${text}`;
+  console.log(text);
   const log_element = document.querySelector("pre.log");
   if (log_element) {
     log_element.textContent = `${text}\n\n` + log_element.textContent;
   }
-  console.log(text);
 }
 
 export function logError(text) {
