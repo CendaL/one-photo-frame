@@ -43,6 +43,13 @@ export default {
   },
   mounted() {
     log(`mounted Shell: isSignedIn = ${this.isSignedIn}`);
+    const localManualFolders = localStorage.getItem("manualFolders");
+    if (localManualFolders) {
+      this.setManualFoldersAndTimestamp({
+        manualFolders: localManualFolders,
+        manualTimestamp: localStorage.getItem("manualTimestamp")
+      });
+    }
     this.updateRemoteConfig(false);
   },
   beforeDestroy() {
@@ -50,15 +57,15 @@ export default {
   },
   methods: {
     ...mapActions(["refreshRemoteConfig"]),
-    ...mapMutations(["logError", "setRoute"]),
+    ...mapMutations(["logError", "setRoute", "setManualFoldersAndTimestamp"]),
     updateRemoteConfig(doRefresh = true) {
-      clearTimeout(this.refreshRemoteConfigTaskId);
       (doRefresh ? this.refreshRemoteConfig() : Promise.resolve())
         .catch(e => {
           this.logError(`updateRemoteConfig error ${e}`);
         })
         .then(() => {
-          log(`update remote config in ${this.remoteRefreshDelay}`);
+          log(`update remote config again in ${this.remoteRefreshDelay}s`);
+          clearTimeout(this.refreshRemoteConfigTaskId);
           this.refreshRemoteConfigTaskId = setTimeout(
             this.updateRemoteConfig,
             this.remoteRefreshDelay * 1000

@@ -64,14 +64,16 @@ describe("Store", () => {
       });
     });
 
-    test("newer", done => {
+    test("newer and same folders", done => {
       mockedStoreConfig.state.manualTimestamp = "2020";
+      mockedStoreConfig.state.manualFolders = ["f2020"];
       mockedStoreConfig.state.folders = ["f2020"];
       store = new Vuex.Store(mockedStoreConfig);
       expect(store.getters.isSignedIn).toEqual(true);
       graphService.getRemoteConfig = jest.fn().mockResolvedValue({ folders: ["a"], foldersUpdated: "2019" });
       store.dispatch("refreshRemoteConfig").then(() => {
-        expect(mockedStoreConfig.actions.setFolders).not.toBeCalled();
+        expect(mockedStoreConfig.actions.setFolders).toBeCalledTimes(1);
+        expect(mockedStoreConfig.actions.getPhotos).not.toBeCalled();
         expect(store.state.folders).toEqual(["f2020"]);
         done();
       });
