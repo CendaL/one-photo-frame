@@ -242,7 +242,11 @@ const actions = {
       commit("setIsNextRandom", config.isNextRandom === true);
       commit("setRemoteRefreshDelay", config.remoteRefreshDelay);
       commit("setSlideshowDelay", config.slideshowDelay);
-      if (state.manualTimestamp > config.foldersUpdated) {
+      if (
+        state.manualFolders &&
+        state.manualFolders.length > 0 &&
+        state.manualTimestamp > config.foldersUpdated
+      ) {
         log("manual folders newer then remoteConfig folders");
         dispatch("setFolders", state.manualFolders.map(i => i.id));
       } else {

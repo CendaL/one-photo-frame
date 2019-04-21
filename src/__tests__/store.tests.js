@@ -66,7 +66,7 @@ describe("Store", () => {
 
     test("newer and same folders", done => {
       mockedStoreConfig.state.manualTimestamp = "2020";
-      mockedStoreConfig.state.manualFolders = ["f2020"];
+      mockedStoreConfig.state.manualFolders = [{ id: "f2020" }];
       mockedStoreConfig.state.folders = ["f2020"];
       store = new Vuex.Store(mockedStoreConfig);
       expect(store.getters.isSignedIn).toEqual(true);
