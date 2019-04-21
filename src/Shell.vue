@@ -2,8 +2,9 @@
   <div>
     <p class="center infotext" v-bind:style="{ fontSize: fontSize }">{{statusText}}</p>
     <log/>
-    <login class="leftbottom"></login>
+    <login v-show="showDescriptions" class="leftbottom"></login>
     <button
+      v-show="showDescriptions"
       class="rightbottom infotext z5"
       v-bind:style="{ fontSize: fontSize }"
       @click="settings"
@@ -37,7 +38,8 @@ export default {
       "currentRoute",
       "fontSize",
       "remoteRefreshDelay",
-      "statusText"
+      "statusText",
+      "showDescriptions"
     ]),
     ...mapGetters(["isSignedIn"])
   },

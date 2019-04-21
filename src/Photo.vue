@@ -1,7 +1,7 @@
 <template>
   <div>
-    <span v-html="name"></span>
-    <span class="right infotext" v-show="isLoaded" v-html="taken"></span>
+    <span v-show="showDescriptions" v-html="name"></span>
+    <span class="right infotext" v-show="isLoaded && showDescriptions" v-html="taken"></span>
     <transition name="fade">
       <video
         v-if="isVideo"
@@ -28,7 +28,7 @@
 import { isVideo } from "./utils";
 import { mapMutations, mapState } from "vuex";
 export default {
-  props: ["photo"],
+  props: ["photo", "showDescriptions"],
   data() {
     return {
       isLoaded: false,
@@ -88,6 +88,9 @@ export default {
 </script>
 
 <style scoped>
+span {
+  top: 1%;
+}
 img,
 video {
   left: 50%;

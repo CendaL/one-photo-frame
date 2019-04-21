@@ -13,6 +13,7 @@ const state = {
   nextPhotoId: null,
   photos: [],
   remoteRefreshDelay: 10,
+  showDescriptions: true,
   slideshowDelay: 300,
   statusText: "inicializece...",
   user: null
@@ -124,6 +125,9 @@ const mutations = {
   setUser(state, user) {
     state.user = user;
     log(`set user to ${JSON.stringify(user)}`);
+  },
+  toggleDescriptions(state) {
+    state.showDescriptions = !state.showDescriptions;
   }
 };
 
