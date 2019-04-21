@@ -42,7 +42,7 @@ export default {
   computed: {
     name() {
       if (!this.isLoaded) {
-        return "nahrávám...";
+        return "";
       }
       if (this.photo) {
         return `${this.photo.folder}<br>${this.photo.description}`;

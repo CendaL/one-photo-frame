@@ -1,8 +1,8 @@
 <template>
   <div>
     <photo v-bind:photo="currentPhoto" v-bind:showDescriptions="showDescriptions"></photo>
-    <button class="center" @click="toggleDescriptions"></button>
     <button class="previous" @click="slideshowPrevious"></button>
+    <button class="center" @click="toggleDescriptionsLocal"></button>
     <button class="next" @click="slideshowNext"></button>
   </div>
 </template>
@@ -37,10 +37,18 @@ export default {
   methods: {
     ...mapActions(["showNextPhoto"]),
     ...mapMutations(["logError", "toggleDescriptions"]),
-    slideshowPrevious() {
+    slideshowPrevious(event) {
+      event.target.blur();
       window.history.go(-1);
     },
-    slideshowNext() {
+    toggleDescriptionsLocal(event) {
+      event.target.blur();
+      this.toggleDescriptions();
+    },
+    slideshowNext(event) {
+      if (event) {
+        event.target.blur();
+      }
       clearTimeout(this.slideshowNextTaskId);
       this.showNextPhoto()
         .then(() => {
@@ -68,9 +76,9 @@ export default {
 
 <style scoped>
 button.center {
-  height: 80%;
+  height: 70%;
   left: 33%;
-  top: 10%;
+  top: 15%;
   width: 33%;
   position: fixed;
   z-index: 1;
@@ -79,9 +87,9 @@ button.center {
   outline: 0;
 }
 button.next {
-  height: 80%;
+  height: 70%;
   left: 66%;
-  top: 10%;
+  top: 15%;
   width: 34%;
   position: fixed;
   z-index: 1;
@@ -90,9 +98,9 @@ button.next {
   outline: 0;
 }
 button.previous {
-  height: 80%;
+  height: 70%;
   left: 0;
-  top: 10%;
+  top: 15%;
   width: 33%;
   position: fixed;
   z-index: 1;
