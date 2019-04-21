@@ -1,6 +1,6 @@
 <template>
   <div>
-    <span v-show="showDescriptions" v-html="name"></span>
+    <span class="infotext" v-show="showDescriptions" v-html="name"></span>
     <span class="right infotext" v-show="isLoaded && showDescriptions" v-html="taken"></span>
     <transition name="fade">
       <video
@@ -90,6 +90,8 @@ export default {
 <style scoped>
 span {
   top: 1%;
+  left: 1%;
+  position: fixed;
 }
 img,
 video {
