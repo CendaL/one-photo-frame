@@ -34,7 +34,7 @@ const mutations = {
     ) {
       state.manualFolders.push({ id: folder.id, name: folder.name || folder.id });
       state.manualTimestamp = new Date().toISOString();
-      localStorage.setItem("manualFolders", state.manualFolders);
+      localStorage.setItem("manualFolders", JSON.stringify(state.manualFolders));
       localStorage.setItem("manualTimestamp", state.manualTimestamp);
     }
     log(`manualFolders: ${JSON.stringify(state.manualFolders)}`);
@@ -242,9 +242,9 @@ const actions = {
       commit("setIsNextRandom", config.isNextRandom === true);
       commit("setRemoteRefreshDelay", config.remoteRefreshDelay);
       commit("setSlideshowDelay", config.slideshowDelay);
-      if (state.folders.length > 0 && state.manualTimestamp > config.foldersUpdated) {
+      if (state.manualTimestamp > config.foldersUpdated) {
         log("manual folders newer then remoteConfig folders");
-        dispatch("setFolders", state.manualFolders);
+        dispatch("setFolders", state.manualFolders.map(i => i.id));
       } else {
         dispatch("setFolders", config.folders);
       }

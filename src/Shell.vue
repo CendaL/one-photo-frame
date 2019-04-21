@@ -45,8 +45,10 @@ export default {
   },
   mounted() {
     log(`mounted Shell: isSignedIn = ${this.isSignedIn}`);
-    const localManualFolders = localStorage.getItem("manualFolders");
-    if (localManualFolders) {
+    const localManualFolders = JSON.parse(
+      localStorage.getItem("manualFolders")
+    );
+    if (localManualFolders && localManualFolders.length > 0) {
       this.setManualFoldersAndTimestamp({
         manualFolders: localManualFolders,
         manualTimestamp: localStorage.getItem("manualTimestamp")
