@@ -1,7 +1,17 @@
 <template>
   <div>
-    <span class="infotext" v-show="showDescriptions" v-html="name"></span>
-    <span class="right infotext" v-show="isLoaded && showDescriptions" v-html="taken"></span>
+    <span
+      class="infotext"
+      v-show="showDescriptions"
+      v-bind:style="{ fontSize: fontSize }"
+      v-html="name"
+    ></span>
+    <span
+      class="right infotext"
+      v-show="isLoaded && showDescriptions"
+      v-bind:style="{ fontSize: fontSize }"
+      v-html="taken"
+    ></span>
     <transition name="fade">
       <video
         v-if="isVideo"
@@ -40,6 +50,7 @@ export default {
     };
   },
   computed: {
+    ...mapState(["fontSize"]),
     name() {
       if (!this.isLoaded) {
         return "";

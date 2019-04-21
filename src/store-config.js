@@ -102,6 +102,11 @@ const mutations = {
     state.photos.sort((a, b) => a.path.localeCompare(b.path));
     log(`photos sorted ${JSON.stringify(state.photos.map(p => p.name))}`);
   },
+  setFontSize(state, size) {
+    state.fontSize = size;
+    localStorage.setItem("fontSize", state.fontSize);
+    log(`set fontSize to ${state.fontSize}`);
+  },
   setRemoteRefreshDelay(state, delay) {
     if (delay) {
       state.remoteRefreshDelay = delay;
@@ -110,6 +115,10 @@ const mutations = {
   },
   setRoute(state, route) {
     state.currentRoute = route;
+    if (state.currentRoute === "settings") {
+      window.history.replaceState(null, "", `?route=${state.currentRoute}`);
+      document.title = state.currentRoute;
+    }
     log(`set currentRoute to ${route} on ${window.location.pathname}${window.location.search}`);
   },
   setSlideshowDelay(state, delay) {

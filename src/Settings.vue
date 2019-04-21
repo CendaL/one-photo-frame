@@ -10,6 +10,10 @@
       </ul>
     </div>
     <div class="selected-photos">
+      <h2 class="infotext" v-bind:style="{ fontSize: fontSize }">
+        Velikost fontu:
+        <input class="infotext" v-model="fontSize">
+      </h2>
       <h2 class="infotext">Vybrané fotky:</h2>
       <ul>
         <li v-for="item in manualFolders" :key="item.id">
@@ -33,7 +37,15 @@ export default {
     };
   },
   computed: {
-    ...mapState(["manualFolders"])
+    ...mapState(["manualFolders"]),
+    fontSize: {
+      get() {
+        return this.$store.state.fontSize;
+      },
+      set(value) {
+        this.$store.commit("setFontSize", value);
+      }
+    }
   },
   mounted() {
     log("Settings: mounted");

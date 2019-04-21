@@ -54,6 +54,10 @@ export default {
         manualTimestamp: localStorage.getItem("manualTimestamp")
       });
     }
+    const fontSize = localStorage.getItem("fontSize");
+    if (fontSize) {
+      this.setFontSize(fontSize);
+    }
     this.updateRemoteConfig(false);
   },
   beforeDestroy() {
@@ -61,7 +65,12 @@ export default {
   },
   methods: {
     ...mapActions(["refreshRemoteConfig"]),
-    ...mapMutations(["logError", "setRoute", "setManualFoldersAndTimestamp"]),
+    ...mapMutations([
+      "logError",
+      "setRoute",
+      "setManualFoldersAndTimestamp",
+      "setFontSize"
+    ]),
     updateRemoteConfig(doRefresh = true) {
       (doRefresh ? this.refreshRemoteConfig() : Promise.resolve())
         .catch(e => {
@@ -92,6 +101,7 @@ export default {
 <style>
 .infotext {
   font-family: sans-serif;
+  font-weight: bold;
   color: #dddddd;
   text-shadow: 2px 2px 3px rgba(0, 0, 0, 1);
   background-color: transparent;
@@ -114,6 +124,7 @@ button.rightbottom {
   padding: 1em 0 0 1em;
 }
 p.infotext {
+  top: 1%;
   margin: 0;
   position: fixed;
   width: 100%;
