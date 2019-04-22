@@ -16,7 +16,8 @@ const state = {
   showDescriptions: true,
   slideshowDelay: 300,
   statusText: "inicializece...",
-  user: null
+  user: null,
+  version: VERSION
 };
 
 const getters = {
@@ -261,7 +262,7 @@ const actions = {
       } else {
         dispatch("setFolders", config.folders);
       }
-      if (config.version > VERSION) {
+      if (config.version > this.version) {
         commit("logError", "app refresh");
         window.location.reload(true);
       }

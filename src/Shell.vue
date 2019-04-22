@@ -5,7 +5,7 @@
     <component v-bind:is="currentRoute"></component>
     <login class="leftbottom"></login>
     <button
-      v-show="showDescriptions && isSignedIn"
+      v-show="showDescriptions && isSignedIn && currentRoute !== 'settings'"
       class="rightbottom infotext"
       v-bind:style="{ fontSize: fontSize }"
       @click="settings"
@@ -113,18 +113,19 @@ export default {
 
 <style scoped>
 .leftbottom {
-  bottom: 0;
+  bottom: 0.3em;
+  left: 0.3em;
   position: fixed;
 }
 button.rightbottom {
-  bottom: 0;
-  right: 0;
+  bottom: 0.3em;
+  right: 0.3em;
   position: fixed;
   border-width: 0px;
   padding: 2em 0 0 2em;
 }
 p.infotext {
-  top: 1%;
+  top: 0.5em;
   margin: 0;
   position: fixed;
   width: 100%;

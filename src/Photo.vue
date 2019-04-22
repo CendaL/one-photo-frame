@@ -100,8 +100,8 @@ export default {
 
 <style scoped>
 span {
-  top: 1%;
-  left: 1%;
+  top: 0.5em;
+  left: 0.5em;
   position: fixed;
 }
 img,
@@ -112,7 +112,7 @@ video {
   transform: translate(-50%, -50%);
 }
 .right {
-  right: 1%;
+  right: 0.5em;
   position: fixed;
   text-align: right;
 }

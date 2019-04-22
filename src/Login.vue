@@ -53,7 +53,7 @@ export default {
 <style scoped>
 button {
   border-width: 0px;
-  padding: 2em 2em 0 0;
+  padding: 2em 1em 0 0;
 }
 button.login {
   left: 50%;

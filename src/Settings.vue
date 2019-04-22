@@ -1,5 +1,6 @@
 <template>
   <div>
+    <div class="infotext rightbottom">v{{version}}</div>
     <div class="photo-folders">
       <h2 class="infotext">{{title}}</h2>
       <ul>
@@ -38,7 +39,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["manualFolders"]),
+    ...mapState(["manualFolders", "version"]),
     fontSize: {
       get() {
         return this.$store.state.fontSize;
@@ -122,5 +123,12 @@ button.ok-button {
   position: fixed;
   right: 0.5em;
   top: 0.5em;
+}
+div.rightbottom {
+  bottom: 0.5em;
+  right: 0.5em;
+  position: fixed;
+  border-width: 0px;
+  padding: 2em 0 0 2em;
 }
 </style>
