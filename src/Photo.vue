@@ -109,7 +109,6 @@ video {
   left: 50%;
   top: 50%;
   position: fixed;
-  z-index: -1;
   transform: translate(-50%, -50%);
 }
 .right {

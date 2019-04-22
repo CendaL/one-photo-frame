@@ -2,14 +2,14 @@
   <div>
     <p class="center infotext" v-bind:style="{ fontSize: fontSize }">{{statusText}}</p>
     <log/>
-    <login v-show="showDescriptions" class="leftbottom"></login>
+    <component v-bind:is="currentRoute"></component>
+    <login class="leftbottom"></login>
     <button
-      v-show="showDescriptions"
-      class="rightbottom infotext z5"
+      v-show="showDescriptions && isSignedIn"
+      class="rightbottom infotext"
       v-bind:style="{ fontSize: fontSize }"
       @click="settings"
     >⚙</button>
-    <component v-bind:is="currentRoute"></component>
   </div>
 </template>
 
@@ -121,15 +121,12 @@ button.rightbottom {
   right: 0;
   position: fixed;
   border-width: 0px;
-  padding: 1em 0 0 1em;
+  padding: 2em 0 0 2em;
 }
 p.infotext {
   top: 1%;
   margin: 0;
   position: fixed;
   width: 100%;
-}
-.z5 {
-  z-index: 5;
 }
 </style>

@@ -81,7 +81,6 @@ button.center {
   top: 15%;
   width: 33%;
   position: fixed;
-  z-index: 1;
   background-color: transparent;
   border-color: transparent;
   outline: 0;
@@ -92,7 +91,6 @@ button.next {
   top: 15%;
   width: 34%;
   position: fixed;
-  z-index: 1;
   background-color: transparent;
   border-color: transparent;
   outline: 0;
@@ -103,7 +101,6 @@ button.previous {
   top: 15%;
   width: 33%;
   position: fixed;
-  z-index: 1;
   background-color: transparent;
   border-color: transparent;
   outline: 0;

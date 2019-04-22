@@ -1,14 +1,14 @@
 <template>
   <div>
     <button
-      class="infotext z5"
+      class="infotext login center"
       v-if="!isSignedIn"
       v-bind:style="{ fontSize: fontSize }"
       @click="login"
     >Login</button>
     <button
-      class="infotext z5"
-      v-if="isSignedIn"
+      class="infotext"
+      v-if="isSignedIn && currentRoute === 'settings'"
       v-bind:style="{ fontSize: fontSize }"
       @click="logout"
     >L</button>
@@ -23,7 +23,7 @@ import { log } from "./utils";
 export default {
   computed: {
     ...mapGetters(["isSignedIn"]),
-    ...mapState(["fontSize"])
+    ...mapState(["currentRoute", "fontSize"])
   },
   created() {
     this.setUser(authService.getUser());
@@ -53,6 +53,12 @@ export default {
 <style scoped>
 button {
   border-width: 0px;
-  padding: 1em 1em 0 0;
+  padding: 2em 2em 0 0;
+}
+button.login {
+  left: 50%;
+  top: 50%;
+  position: fixed;
+  transform: translate(-50%, -50%);
 }
 </style>
