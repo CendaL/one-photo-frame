@@ -61,7 +61,7 @@ function getPhotosFromPhotoList(photoList) {
         path: `${photo.parentReference.path}/${photo.name}`,
         url: null,
         duration: photo.video ? parseInt(photo.video.duration) / 1000 : 0,
-        taken: photo.photo ? formatDateTime(photo.photo.takenDateTime) : ""
+        taken: photo.photo && photo.photo.takenDateTime ? formatDateTime(photo.photo.takenDateTime) : ""
       };
     });
 }
