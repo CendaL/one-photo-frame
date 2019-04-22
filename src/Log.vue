@@ -1,6 +1,6 @@
 <template>
   <div>
-    <pre class="log"></pre>
+    <!-- <pre class="log"></pre> -->
     <pre class="logError"></pre>
   </div>
 </template>
