@@ -49,15 +49,21 @@ export default {
   },
   mounted() {
     log("Settings: mounted");
-    this.load();
+    this.load(JSON.parse(localStorage.getItem("baseFolder")));
   },
   beforeDestroy() {
     log("Settings: beforeDestroy");
   },
   methods: {
     ...mapActions(["setFolders"]),
-    ...mapMutations(["addManualFolder", "logError", "removeManualFolder", "setRoute"]),
+    ...mapMutations([
+      "addManualFolder",
+      "logError",
+      "removeManualFolder",
+      "setRoute"
+    ]),
     load(baseFolder) {
+      localStorage.setItem("baseFolder", JSON.stringify(baseFolder));
       graphService
         .listPhotoFolders(baseFolder)
         .then(data => {
