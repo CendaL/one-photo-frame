@@ -1,17 +1,5 @@
 <template>
   <div>
-    <span
-      class="infotext"
-      v-show="showDescriptions"
-      v-bind:style="{ fontSize: fontSize }"
-      v-html="name"
-    ></span>
-    <span
-      class="right infotext"
-      v-show="isLoaded && showDescriptions"
-      v-bind:style="{ fontSize: fontSize }"
-      v-html="taken"
-    ></span>
     <transition name="fade">
       <video
         v-if="isVideo"
@@ -31,6 +19,18 @@
         v-on:load="isLoaded = true"
       >
     </transition>
+    <span
+      class="infotext"
+      v-show="showDescriptions"
+      v-bind:style="{ fontSize: fontSize }"
+      v-html="name"
+    ></span>
+    <span
+      class="right infotext"
+      v-show="isLoaded && showDescriptions"
+      v-bind:style="{ fontSize: fontSize }"
+      v-html="taken"
+    ></span>
   </div>
 </template>
 
