@@ -37,7 +37,7 @@ export default {
       authService.login();
     },
     logout() {
-      localStorage.removeItem("vuex");
+      localStorage.clear();
       authService.logout();
     },
     ...mapMutations(["setStatusText", "setUser"])
