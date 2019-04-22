@@ -30,7 +30,10 @@ const app = new Vue({
         window.location.search
       }'`
     );
-    if (window.location.hash.includes("id_token=") || window.location.hash.includes("access_token=")) {
+    if (
+      window.location.hash.indexOf("id_token=") >= 0 ||
+      window.location.hash.indexOf("access_token=") >= 0
+    ) {
       log("auth redirect detected");
       return;
     }
