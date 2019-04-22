@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="photo-folders">
-      <h2 class="infotext">Přidat fotky:</h2>
+      <h2 class="infotext">{{title}}</h2>
       <ul>
         <li v-for="item in onedriveFolders" :key="item.id">
           <button class="infotext" @click="addManualFolder(item)">+</button>
@@ -33,7 +33,8 @@ import graphService from "./services/graph.service";
 export default {
   data() {
     return {
-      onedriveFolders: [{ name: "nahrávám..." }]
+      onedriveFolders: [],
+      title: "nahrávám..."
     };
   },
   computed: {
@@ -60,13 +61,16 @@ export default {
       "addManualFolder",
       "logError",
       "removeManualFolder",
-      "setRoute"
+      "setRoute",
+      "setStatusText"
     ]),
     load(baseFolder) {
+      this.title = "nahrávám...";
       localStorage.setItem("baseFolder", JSON.stringify(baseFolder));
       graphService
         .listPhotoFolders(baseFolder)
         .then(data => {
+          this.title = "Přidat fotky:";
           this.onedriveFolders = data;
         })
         .catch(error => {
