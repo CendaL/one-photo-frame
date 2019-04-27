@@ -34,9 +34,8 @@ const mutations = {
       state.manualFolders.filter(i => i.id === folder.id).length === 0
     ) {
       state.manualFolders.push({ id: folder.id, name: folder.name || folder.id });
-      state.manualTimestamp = new Date().toISOString();
       localStorage.setItem("manualFolders", JSON.stringify(state.manualFolders));
-      localStorage.setItem("manualTimestamp", state.manualTimestamp);
+      mutations.setManualTimestamp(state);
     }
     log(`manualFolders: ${JSON.stringify(state.manualFolders)}`);
   },
@@ -53,6 +52,14 @@ const mutations = {
     log(`remove ${JSON.stringify(folder)}`);
     state.manualFolders = state.manualFolders.filter(i => i.id !== folder.id);
     log(`manualFolders: ${JSON.stringify(state.manualFolders)}`);
+  },
+  setManualTimestamp(state, timestamp) {
+    if (!timestamp) {
+      timestamp = new Date().toISOString();
+    }
+    state.manualTimestamp = timestamp;
+    localStorage.setItem("manualTimestamp", state.manualTimestamp);
+    log(`set manualTimestamp to ${JSON.stringify(state.manualTimestamp)}`);
   },
   setManualFoldersAndTimestamp(state, data) {
     state.manualTimestamp = data.manualTimestamp;
