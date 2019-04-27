@@ -262,7 +262,7 @@ const actions = {
       } else {
         dispatch("setFolders", config.folders);
       }
-      if (config.version > this.version) {
+      if (config.version > state.version) {
         commit("logError", "app refresh");
         window.location.reload(true);
       }
