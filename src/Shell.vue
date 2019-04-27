@@ -1,8 +1,8 @@
 <template>
   <div>
+    <component v-bind:is="currentRoute"></component>
     <p class="center infotext" v-bind:style="{ fontSize: fontSize }">{{statusText}}</p>
     <log/>
-    <component v-bind:is="currentRoute"></component>
     <login class="leftbottom"></login>
     <button
       v-show="showDescriptions && isSignedIn && currentRoute !== 'settings'"
