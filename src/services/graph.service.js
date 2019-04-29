@@ -160,7 +160,7 @@ export default {
             i.name = prefix + i.name;
             return i;
           });
-          res.splice(0, 0, { id: parentId, name: parent });
+          res.splice(0, 0, { id: parentId, name: parent, title: "▲" });
           return res;
         });
     }

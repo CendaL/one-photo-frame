@@ -5,8 +5,8 @@
       <h2 class="infotext">{{title}}</h2>
       <ul>
         <li v-for="item in onedriveFolders" :key="item.id">
-          <button class="infotext" @click="addManualFolder(item)">+</button>
-          <button class="infotext" @click="load(item)">{{ item.name }}</button>
+          <button v-if="!item.title" class="infotext" @click="addManualFolder(item)">+</button>
+          <button class="infotext" @click="load(item)">{{ item.title || item.name }}</button>
         </li>
       </ul>
     </div>
