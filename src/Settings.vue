@@ -63,6 +63,7 @@ export default {
       "logError",
       "removeManualFolder",
       "setManualTimestamp",
+      "setPhotos",
       "setRoute",
       "setStatusText"
     ]),
@@ -83,6 +84,7 @@ export default {
     startSlideshow() {
       log("settings - startSlideshow");
       this.setManualTimestamp();
+      this.setPhotos([]);
       this.setFolders(this.manualFolders.map(i => i.id));
       this.setRoute("slideshow");
     }
