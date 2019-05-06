@@ -76,23 +76,19 @@ export default {
       this.isLoaded = false;
       this.height = window.innerHeight;
       this.width = window.innerWidth;
-      this.newPhotoSrc = new Image();
 
       if (isVideo(this.photo.name)) {
-        // do not wait until video is fully loaded
-        setTimeout(() => {
-          this.photoSrc = this.photo.url;
-          this.isVideo = true;
-          this.isLoaded = true;
-        }, 5000);
+        this.photoSrc = this.photo.url;
+        this.isVideo = true;
+        this.isLoaded = true;
       } else {
+        this.newPhotoSrc = new Image();
         this.newPhotoSrc.onload = () => {
           this.photoSrc = this.photo.url;
           this.isVideo = isVideo(this.photo.name);
         };
+        this.newPhotoSrc.src = this.photo.url;
       }
-
-      this.newPhotoSrc.src = this.photo.url;
     }
   }
 };
