@@ -73,15 +73,15 @@ export default {
       }
     },
     photo() {
-      this.isLoaded = false;
       this.height = window.innerHeight;
       this.width = window.innerWidth;
 
       if (isVideo(this.photo.name)) {
         this.photoSrc = this.photo.url;
         this.isVideo = true;
-        this.isLoaded = true;
+        this.setStatusText("");
       } else {
+        this.isLoaded = false;
         this.newPhotoSrc = new Image();
         this.newPhotoSrc.onload = () => {
           this.photoSrc = this.photo.url;
