@@ -64,8 +64,7 @@ export default {
       "removeManualFolder",
       "setManualTimestamp",
       "setPhotos",
-      "setRoute",
-      "setStatusText"
+      "setRoute"
     ]),
     load(baseFolder) {
       this.title = "nahrávám...";

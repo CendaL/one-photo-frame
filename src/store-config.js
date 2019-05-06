@@ -173,6 +173,14 @@ const actions = {
         commit("setIsLoadingPhotos", false);
         if (foldersCount === 1 || state.nextPhotoId) {
           dispatchShowNextPhoto();
+        } else {
+          // shuffle/sort all photos once all folders are loaded
+          if (state.isNextRandom) {
+            commit("shufflePhotos");
+          } else {
+            commit("sortPhotos");
+          }
+          commit("setStatusText", "");
         }
         return Promise.resolve();
       }
