@@ -152,6 +152,7 @@ const actions = {
   setFolders({ commit, dispatch, state }, folders) {
     if (state.folders.toString() !== folders.toString()) {
       log(`setFolders action ${folders}`);
+      commit("setPhotos", []);
       commit("setFolders", folders);
       dispatch("getPhotos", folders);
     } else {
