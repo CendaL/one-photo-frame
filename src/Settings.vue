@@ -3,7 +3,7 @@
     <div class="infotext rightbottom">v{{version}}</div>
     <div class="photo-folders">
       <h2 class="infotext">{{title}}</h2>
-      <ul>
+      <ul v-bind:style="{ fontSize: fontSize }">
         <li v-for="item in onedriveFolders" :key="item.id">
           <button v-if="!item.title" class="infotext" @click="addManualFolder(item)">+</button>
           <button class="infotext" @click="load(item)">{{ item.title || item.name }}</button>
@@ -11,12 +11,12 @@
       </ul>
     </div>
     <div class="selected-photos">
-      <h2 class="infotext" v-bind:style="{ fontSize: fontSize }">
+      <h2 class="infotext">
         Velikost fontu:
         <input class="infotext" v-model="fontSize">
       </h2>
       <h2 class="infotext">Vybrané fotky:</h2>
-      <ul>
+      <ul v-bind:style="{ fontSize: fontSize }">
         <li v-for="item in manualFolders" :key="item.id">
           <button class="infotext" @click="removeManualFolder(item)">{{ item.name }}</button>
         </li>
