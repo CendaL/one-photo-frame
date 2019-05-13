@@ -256,6 +256,9 @@ const actions = {
         const newLocation = `?route=${state.currentRoute}&photo=${state.currentPhoto.id}`;
         window.history.pushState(null, "", newLocation);
         document.title = state.currentPhoto && state.currentPhoto.name;
+        if (state.currentRoute !== "slideshow") {
+          commit("setStatusText", "");
+        }
       });
   },
   refreshRemoteConfig({ state, getters, commit, dispatch }) {
