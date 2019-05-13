@@ -22,7 +22,11 @@
         </li>
       </ul>
     </div>
-    <button class="infotext ok-button" @click="startSlideshow">OK</button>
+    <button
+      class="infotext ok-button"
+      @click="startSlideshow"
+      v-bind:style="{ fontSize: fontSize }"
+    >OK</button>
   </div>
 </template>
 
