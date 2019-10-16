@@ -13,7 +13,7 @@
     <div class="selected-photos">
       <h2 class="infotext">
         Velikost fontu:
-        <input class="infotext" v-model="fontSize">
+        <input class="infotext" v-model="fontSize" />
       </h2>
       <h2 class="infotext" @click="copyFolderIdsToClipboard">Vybrané fotky:</h2>
       <ul v-bind:style="{ fontSize: fontSize }">

@@ -17,7 +17,7 @@
         v-bind:src="photoSrc"
         v-bind:key="photoSrc"
         v-on:load="isLoaded = true"
-      >
+      />
     </transition>
     <span
       class="infotext"

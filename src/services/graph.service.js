@@ -148,9 +148,8 @@ export default {
       parent.pop();
       parent = parent.join(sep) || "/";
       return prepareRequest(
-        `${graphUrl}/drives/${folder}/items/${
-          baseFolder.id
-        }/children?filter=folder%20ne%20null&select=id,name,parentReference`
+        `${graphUrl}/drives/${folder}/items/${baseFolder.id}/children?` +
+          `filter=folder%20ne%20null&select=id,name,parentReference`
       )
         .then(response => response.json())
         .then(data => {

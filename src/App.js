@@ -26,9 +26,8 @@ const app = new Vue({
   },
   created() {
     log(
-      `created ${window.location.pathname} with hash: '${window.location.hash}' and search: '${
-        window.location.search
-      }'`
+      `created ${window.location.pathname} with hash: '${window.location.hash}' and` +
+        ` search: '${window.location.search}'`
     );
     if (
       window.location.hash.indexOf("id_token=") >= 0 ||
