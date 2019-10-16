@@ -19,6 +19,8 @@ For detailed explanation on how things work, consult the [docs for vue-loader](h
 
 ## Update packages
 
+npm WARN vue-jest@3.0.5 requires a peer of babel-core@^6.25.0 and babel-jest@23.6.0
+
 ```bash
 # Find out outdated packages:
 npm outdated
