@@ -2,7 +2,6 @@
   <div>
     <component v-bind:is="currentRoute"></component>
     <p class="center infotext" v-bind:style="{ fontSize: fontSize }">{{statusText}}</p>
-    <log/>
     <login class="leftbottom"></login>
     <button
       v-show="showDescriptions && isSignedIn && currentRoute !== 'settings'"
@@ -16,7 +15,6 @@
 <script>
 import { mapActions, mapGetters, mapMutations, mapState } from "vuex";
 import { log } from "./utils";
-import Log from "./Log.vue";
 import Login from "./Login.vue";
 import Settings from "./Settings.vue";
 import Slideshow from "./Slideshow.vue";
@@ -28,7 +26,6 @@ export default {
     };
   },
   components: {
-    log: Log,
     login: Login,
     settings: Settings,
     slideshow: Slideshow
