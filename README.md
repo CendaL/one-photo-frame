@@ -16,3 +16,13 @@ npm run build
 ```
 
 For detailed explanation on how things work, consult the [docs for vue-loader](http://vuejs.github.io/vue-loader).
+
+## Update packages
+
+```bash
+# Find out outdated packages:
+npm outdated
+
+# Update a package
+npm install PACKAGE
+```
